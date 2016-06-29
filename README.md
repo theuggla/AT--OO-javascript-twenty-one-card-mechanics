@@ -11,6 +11,7 @@
 - Detta är en **obligatorisk** och **examinerande** uppgift som **du ska lösa helt på egen hand**.
 - Du måste göra **regelbundna "commits" och "pushes"** av koden till ditt repo för uppgiften för att kursledningen ska kunna följa ditt arbetet med uppgiften.
 - Du ska kunna förklara alla konstruktioner och satser som din lösning av uppgiften innehåller.  
+
 ***
 
 ## <i class="fa fa-flag-o"></i> Introduktion
