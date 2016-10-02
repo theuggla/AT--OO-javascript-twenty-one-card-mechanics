@@ -8,7 +8,7 @@
 'use strict';
 
 class Card {
-    constructor(suit = getRandomSuit(), value = getRandomValue()) {
+    constructor(suit, value) {
         let theSuit;
         let theValue;
 
@@ -35,7 +35,9 @@ class Card {
                 if (Card.getSuits.indexOf(suit.toUpperCase()) !== -1) {
                     theSuit = suit;
                 }
-                else {
+                else if (!suit) {
+                    theSuit = getRandomSuit();
+                } else {
                     throw new Error(suit + ' is not a valid suit.');
                 }
             } else {
@@ -50,10 +52,12 @@ class Card {
                 if (Card.getValues.indexOf(value.toUpperCase()) !== -1) {
                     theValue = value;
                 }
-                else {
+                else if (!value) {
+                    theValue = getRandomValue();
+                } else {
                     throw new Error(value + ' is not a valid value.');
                 }
-            }  else {
+            } else {
                 throw new Error('Can\'t change existing value.');
             }
         }
@@ -61,8 +65,15 @@ class Card {
         this.suit = suit;
         this.value = value;
 
-        function getRandomSuit() {}
-        function getRandomValue() {}
+        function getRandomSuit() {
+            let suit = Card.getSuits()[Math.random() * Card.getSuits.length];
+            return suit;
+        }
+
+        function getRandomValue() {
+            let value = Card.getValues()[Math.random() * Card.getValues.length];
+            return value;
+        }
     }
 
     getSuits() {
