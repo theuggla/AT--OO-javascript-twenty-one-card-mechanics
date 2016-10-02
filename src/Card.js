@@ -35,11 +35,10 @@ class Card {
         }
         function setSuit(suit) {
             if (!theSuit) { //only set the suit if it hasn't already been set
-                if (this.getSuits().indexOf(suit.toUpperCase()) !== -1) {
-                    theSuit = suit;
-                }
-                else if (!suit) {
+                if (!suit) {
                     theSuit = getRandomSuit();
+                } else if (theSuits.indexOf(suit.toUpperCase()) !== -1) {
+                    theSuit = suit.toUpperCase();
                 } else {
                     throw new Error(suit + ' is not a valid suit.');
                 }
@@ -52,11 +51,10 @@ class Card {
         }
         function setValue(value) {
             if (!theValue) { //only set the value if it hasn't already been set
-                if (this.getValues().indexOf(value.toUpperCase()) !== -1) {
-                    theValue = value;
-                }
-                else if (!value) {
+                if (!value) {
                     theValue = getRandomValue();
+                } else if (theValues.indexOf(value.toUpperCase()) !== -1) {
+                    theValue = value.toUpperCase();
                 } else {
                     throw new Error(value + ' is not a valid value.');
                 }
@@ -69,12 +67,12 @@ class Card {
         this.value = value;
 
         function getRandomSuit() {
-            let suit = this.getSuits()[Math.random() * Card.getSuits.length];
+            let suit = theSuits[Math.floor(Math.random() * theSuits.length)];
             return suit;
         }
 
         function getRandomValue() {
-            let value = this.getValues()[Math.random() * Card.getValues.length];
+            let value = theValues[Math.floor(Math.random() * theValues.length + 1)];
             return value;
         }
     }
@@ -85,7 +83,7 @@ class Card {
 
     toString() {
         let output = '';
-        switch (this.suit.toUpperCase()) {
+        switch (this.suit) {
             case 'HEARTS':
                 output += 'H';
                 break;
@@ -99,7 +97,7 @@ class Card {
                 output += 'D';
                 break;
         }
-        output += this.getValues().indexOf(this.value.toUpperCase());
+        output += this.getValues().indexOf(this.value);
         return output;
     }
 
