@@ -85,7 +85,7 @@ class Card {
     }
 
     valueOf() {
-
+        return Card.getValues().indexOf(this.value);
     }
 
     toString() {
@@ -104,7 +104,7 @@ class Card {
                 output += 'D';
                 break;
         }
-        output += getValues.indexOf(this.value);
+        output += Card.getValues().indexOf(this.value);
         return output;
     }
 
