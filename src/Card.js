@@ -106,8 +106,6 @@ class Card {
         }
         output += getValues.indexOf(this.value);
         return output;
-        }
-
     }
 
     equals(otherCard) {
@@ -115,14 +113,19 @@ class Card {
             return false;
         } else if (otherCard !== otherCard) {
             return false;
-        } else if (!otherCard.hasOwnProperty('suit') && !otherCard.hasOwnProperty('value')) {
+        } else if (otherCard instanceof Card) {
+            return (otherCard.suit === this.suit) && otherCard.value === this.value;
+        } else {
             return false;
         }
-        return (otherCard.suit === this.suit) && otherCard.value === this.value;
     }
 
-    compareTo() {
-
+    compareTo(otherCard) {
+        if (otherCard instanceof Card) {
+            return this.value - otherCard.value;
+        } else {
+            throw new TypeError('Can\'t compare ' + otherCard + ' with a Card.');
+        }
     }
 
     toJson() {
