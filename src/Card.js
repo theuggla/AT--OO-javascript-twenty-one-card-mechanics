@@ -101,6 +101,12 @@ class Card {
     }
 
     toJson() {
-
+        let aSuit = this.suit;
+        let aValue = this.value;
+        let jsonobject = {
+            suit: aSuit,
+            value: aValue
+        };
+        return JSON.stringify(jsonobject);
     }
 }
