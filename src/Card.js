@@ -92,8 +92,15 @@ class Card {
 
     }
 
-    equals() {
-
+    equals(otherCard) {
+        if (typeof otherCard !== 'object') {
+            return false;
+        } else if (otherCard !== otherCard) {
+            return false;
+        } else if (!otherCard.hasOwnProperty('suit') && !otherCard.hasOwnProperty('value')) {
+            return false;
+        }
+        return (otherCard.suit === this.suit) && otherCard.value === this.value;
     }
 
     compareTo() {
