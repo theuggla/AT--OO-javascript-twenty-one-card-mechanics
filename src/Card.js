@@ -9,11 +9,8 @@
 
 class Card {
     constructor(suit = getRandomSuit(), value = getRandomValue()) {
-        let theSuit = undefined;
-        let theValue = undefined;
-
-        let theSuits = ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
-        let theValues = ['JOKER, ACE, TWO, THREE, FOUR, FIVE, SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
+        let theSuit;
+        let theValue;
 
         Card.prototype.defineProperties(this, {
             suit: {
@@ -35,12 +32,14 @@ class Card {
         }
         function setSuit(suit) {
             if (!theSuit) { //only set the suit if it hasn't already been set
-                if (theSuits.indexOf(suit.toUpperCase()) !== -1) {
+                if (Card.getSuits.indexOf(suit.toUpperCase()) !== -1) {
                     theSuit = suit;
                 }
                 else {
                     throw new Error(suit + ' is not a valid suit.');
                 }
+            } else {
+                throw new Error('Can\'t change existing suit.');
             }
         }
         function getValue() {
@@ -48,17 +47,30 @@ class Card {
         }
         function setValue(value) {
             if (!theValue) { //only set the value if it hasn't already been set
-                if (theValues.indexOf(value.toUpperCase()) !== -1) {
+                if (Card.getValues.indexOf(value.toUpperCase()) !== -1) {
                     theValue = value;
                 }
                 else {
                     throw new Error(value + ' is not a valid value.');
                 }
+            }  else {
+                throw new Error('Can\'t change existing value.');
             }
         }
 
+        this.suit = suit;
+        this.value = value;
+
         function getRandomSuit() {}
         function getRandomValue() {}
+    }
+
+    getSuits() {
+        return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
+    }
+
+    getValues() {
+        return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
     }
 
     valueOf() {
