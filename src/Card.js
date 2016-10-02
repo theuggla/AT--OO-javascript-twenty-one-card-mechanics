@@ -89,6 +89,24 @@ class Card {
     }
 
     toString() {
+        let output;
+        switch (this.suit) {
+            case 'HEARTS':
+                output += 'H';
+                break;
+            case 'SPADES':
+                output += 'S';
+                break;
+            case 'CLUBS':
+                output += 'C';
+                break;
+            case 'DIAMONDS':
+                output += 'D';
+                break;
+        }
+        output += getValues.indexOf(this.value);
+        return output;
+        }
 
     }
 
