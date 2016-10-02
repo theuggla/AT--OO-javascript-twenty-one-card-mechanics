@@ -12,7 +12,10 @@ class Card {
         let theSuit;
         let theValue;
 
-        Card.prototype.defineProperties(this, {
+        let theValues = ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
+        let theSuits = ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
+
+        Object.defineProperties(this, {
             suit: {
                 get: getSuit,
                 set: setSuit,
@@ -32,7 +35,7 @@ class Card {
         }
         function setSuit(suit) {
             if (!theSuit) { //only set the suit if it hasn't already been set
-                if (Card.getSuits.indexOf(suit.toUpperCase()) !== -1) {
+                if (this.getSuits().indexOf(suit.toUpperCase()) !== -1) {
                     theSuit = suit;
                 }
                 else if (!suit) {
@@ -49,7 +52,7 @@ class Card {
         }
         function setValue(value) {
             if (!theValue) { //only set the value if it hasn't already been set
-                if (Card.getValues.indexOf(value.toUpperCase()) !== -1) {
+                if (this.getValues().indexOf(value.toUpperCase()) !== -1) {
                     theValue = value;
                 }
                 else if (!value) {
@@ -66,31 +69,23 @@ class Card {
         this.value = value;
 
         function getRandomSuit() {
-            let suit = Card.getSuits()[Math.random() * Card.getSuits.length];
+            let suit = this.getSuits()[Math.random() * Card.getSuits.length];
             return suit;
         }
 
         function getRandomValue() {
-            let value = Card.getValues()[Math.random() * Card.getValues.length];
+            let value = this.getValues()[Math.random() * Card.getValues.length];
             return value;
         }
     }
 
-    getSuits() {
-        return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
-    }
-
-    getValues() {
-        return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
-    }
-
     valueOf() {
-        return Card.getValues().indexOf(this.value);
+        return this.getValues().indexOf(this.value);
     }
 
     toString() {
-        let output;
-        switch (this.suit) {
+        let output = '';
+        switch (this.suit.toUpperCase()) {
             case 'HEARTS':
                 output += 'H';
                 break;
@@ -104,7 +99,7 @@ class Card {
                 output += 'D';
                 break;
         }
-        output += Card.getValues().indexOf(this.value);
+        output += this.getValues().indexOf(this.value.toUpperCase());
         return output;
     }
 
@@ -137,4 +132,17 @@ class Card {
         };
         return JSON.stringify(jsonobject);
     }
+
+    getSuits() {
+        return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
+    }
+
+    getValues() {
+        return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
+    }
 }
+
+/**
+ *  Exports.
+ */
+module.exports = Card;
