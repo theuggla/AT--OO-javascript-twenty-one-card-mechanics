@@ -1,5 +1,5 @@
 /**
- * Module for ToDoItem.
+ * Module for Card.
  *
  * @author Molly Arhammar
  * @version 1.0.0
@@ -12,8 +12,8 @@ class Card {
         let theSuit;
         let theValue;
 
-        let theValues = ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
-        let theSuits = ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
+        let theSuits = Card.getSuits();
+        let theValues = Card.getValues();
 
         Object.defineProperties(this, {
             suit: {
@@ -78,7 +78,7 @@ class Card {
     }
 
     valueOf() {
-        return this.getValues().indexOf(this.value);
+        return Card.getValues().indexOf(this.value);
     }
 
     toString() {
@@ -97,7 +97,7 @@ class Card {
                 output += 'D';
                 break;
         }
-        output += this.getValues().indexOf(this.value);
+        output += Card.getValues().indexOf(this.value);
         return output;
     }
 
@@ -115,7 +115,7 @@ class Card {
 
     compareTo(otherCard) {
         if (otherCard instanceof Card) {
-            return this.value - otherCard.value;
+            return Card.getValues().indexOf(this.value) - Card.getValues().indexOf(otherCard.value);
         } else {
             throw new TypeError('Can\'t compare ' + otherCard + ' with a Card.');
         }
@@ -131,11 +131,15 @@ class Card {
         return JSON.stringify(jsonobject);
     }
 
-    getSuits() {
+    clone() {
+        return new Card(this.suit, this.value);
+    }
+
+    static getSuits() {
         return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
     }
 
-    getValues() {
+    static getValues() {
         return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
     }
 }
