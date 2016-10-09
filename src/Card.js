@@ -142,6 +142,15 @@ class Card {
     static getValues() {
         return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
     }
+
+    static isValid(Card) { //duck-typed Cards okay
+        if (!this.suit || !this.value) {
+            return false;
+        } else if (Card.getSuits().indexOf(this.suit) === -1 || Card.getValues().indexOf(this.value) === -1) {
+            return false;
+        }
+        return true;
+    }
 }
 
 /**
