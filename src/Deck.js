@@ -9,6 +9,7 @@ const Card = require('../src/Card.js');
 class Deck {
     constructor() {
         let unused = [];
+        let inPlay = [];
         let used = [];
 
         let suits = Card.getSuits();
@@ -28,6 +29,12 @@ class Deck {
                 configurable:
             },
             usedCards: {
+                get: ,
+                set: ,
+                enumerable: ,
+                configurable:
+            }
+            cardsInPlay: {
                 get: ,
                 set: ,
                 enumerable: ,
