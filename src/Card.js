@@ -78,7 +78,11 @@ function Card(suit, value) {
 }
 
 Card.prototype.valueOf = function() {
-     return Card.values.indexOf(this.value);
+    if (this.value === 'JOKER') {
+        return -1;
+    } else {
+        return Card.values.indexOf(this.value);
+    }
  };
 
 Card.prototype.toString = function() {
@@ -100,7 +104,7 @@ Card.prototype.toString = function() {
                 output += 'D';
                 break;
         }
-        output += values.indexOf(this.value);
+        output += Card.values.indexOf(this.value);
     }
 
     return output;
@@ -120,7 +124,7 @@ Card.prototype.equals = function(other) {
 
 Card.prototype.compareTo = function(otherCard) {
     if (otherCard instanceof Card) {
-        return Card.values().indexOf(this.value) - Card.values.indexOf(otherCard.value);
+        return this.valueOf() - otherCard.valueOf();
     } else {
         throw new TypeError('Can\'t compare ' + otherCard + ' with a Card.');
     }
