@@ -11,8 +11,8 @@ function Card(suit, value) {
     let theSuit;
     let theValue;
 
-    let theSuits = Card.getSuits();
-    let theValues = Card.getValues();
+    let theSuits = Card.suits;
+    let theValues = Card.values;
 
     Object.defineProperties(this, {
         suit: {
@@ -32,6 +32,7 @@ function Card(suit, value) {
     function getSuit() {
         return theSuit;
     }
+
     function setSuit(suit) {
         if (!theSuit) { //only set the suit if it hasn't already been set
             if (!suit) {
@@ -45,9 +46,11 @@ function Card(suit, value) {
             throw new Error('Can\'t change existing suit.');
         }
     }
+
     function getValue() {
         return theValue;
     }
+
     function setValue(value) {
         if (!theValue) { //only set the value if it hasn't already been set
             if (!value) {
@@ -66,45 +69,50 @@ function Card(suit, value) {
     this.value = value;
 
     function getRandomSuit() {
-        let suit = theSuits[Math.floor(Math.random() * theSuits.length)];
-        return suit;
+        return theSuits[Math.floor(Math.random() * theSuits.length)];
     }
+
     function getRandomValue() {
-        let value = theValues[Math.floor(Math.random() * theValues.length + 1)];
-        return value;
+        return value = theValues[Math.ceil(Math.random() * (theValues.length - 1))];
     }
 }
- Card.prototype.valueOf = function() {
-     return Card.getValues().indexOf(this.value);
+
+Card.prototype.valueOf = function() {
+     return Card.values.indexOf(this.value);
  };
 
 Card.prototype.toString = function() {
     let output = '';
-    switch (this.suit) {
-        case 'HEARTS':
-            output += 'H';
-            break;
-        case 'SPADES':
-            output += 'S';
-            break;
-        case 'CLUBS':
-            output += 'C';
-            break;
-        case 'DIAMONDS':
-            output += 'D';
-            break;
+    if (this.value === 'JOKER') {
+        output = this.value;
+    } else {
+        switch (this.suit) {
+            case 'HEARTS':
+                output += 'H';
+                break;
+            case 'SPADES':
+                output += 'S';
+                break;
+            case 'CLUBS':
+                output += 'C';
+                break;
+            case 'DIAMONDS':
+                output += 'D';
+                break;
+        }
+        output += values.indexOf(this.value);
     }
-    output += Card.getValues().indexOf(this.value);
+
     return output;
 };
 
-Card.prototype.equals = function(otherCard) {
-    if (typeof otherCard !== 'object') {
+Card.prototype.equals = function(other) {
+    if (typeof other !== 'object') {
         return false;
-    } else if (otherCard !== otherCard) {
+    } else if (other !== other) {
         return false;
-    } else if (otherCard instanceof Card) {
-        return (otherCard.suit === this.suit) && otherCard.value === this.value;
+    } else if (other instanceof Card) {
+        return (other.suit === this.suit && other.value === this.value);
     } else {
         return false;
     }
@@ -112,7 +120,7 @@ Card.prototype.equals = function(otherCard) {
 
 Card.prototype.compareTo = function(otherCard) {
     if (otherCard instanceof Card) {
-        return Card.getValues().indexOf(this.value) - Card.getValues().indexOf(otherCard.value);
+        return Card.values().indexOf(this.value) - Card.values.indexOf(otherCard.value);
     } else {
         throw new TypeError('Can\'t compare ' + otherCard + ' with a Card.');
     }
@@ -129,24 +137,33 @@ Card.prototype.clone = function() {
     return new Card(this.suit, this.value);
 };
 
-Card.getSuits = function() {
-    return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
-};
-
-Card.getValues = function() {
-    return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
-};
-
-Card.isValid = function(card) {
-    if (!(card instanceof Card))  {
-        return false;
-    } else if (!card.suit || !card.value) {
-        return false;
-    } else if (Card.getSuits().indexOf(card.suit) === -1 || Card.getValues().indexOf(card.value) === -1) {
-        return false;
+Object.defineProperties(Card, {
+    suits: {
+        get: function() {return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];},
+        enumerable: false,
+        configurable: false
+    },
+    values: {
+        get: function() {return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];},
+        enumerable: false,
+        configurable: false
+    },
+    isValid: {
+        value: function(card) {
+            if (!(card instanceof Card)) {
+                return false;
+            } else if (!card.suit || !card.value) {
+                return false;
+            } else if (Card.getSuits().indexOf(card.suit) === -1 || Card.getValues().indexOf(card.value) === -1) {
+                return false;
+            }
+            return true;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
     }
-    return true;
-};
+});
 
 /**
  *  Exports.
