@@ -45,6 +45,12 @@ describe('Card', () => {
             done();
         });
 
+        it('should return randomized value and suit when not passed a parameter', (done) => {
+            let anotherCard = new Card();
+            expect(anotherCard.suit).to.not.equal('undefined');
+            expect(anotherCard.value).to.not.equal('undefined');
+            done();
+        });
     });
 
     describe('Properties', () => {
@@ -101,6 +107,179 @@ describe('Card', () => {
                 expect(() => {
                     new Card(SUIT, 'hej');
                 }).to.throw(Error);
+                done();
+            });
+
+        });
+    });
+
+    describe('Prototype methods', () => {
+        let aCard;
+
+        beforeEach(() => {
+            // Create a new Card before every test.
+            aCard = new Card(SUIT, VALUE);
+        });
+
+        describe('clone method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.property('clone').that.is.a('Function');
+                done();
+            });
+
+            it('should return a Card object', (done) => {
+                expect(aCard.clone()).to.be.an.instanceof(Card);
+                done();
+            });
+
+            it('should return a copy', (done) => {
+                expect(aCard.clone()).to.not.equal(aCard);
+                expect(aCard.clone()).to.deep.equal(aCard);
+                done();
+            });
+        });
+
+        describe('toJSON method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.property('toJSON').that.is.a('Function');
+                done();
+            });
+
+            it('should return valid JSON', (done) => {
+                let json = JSON.stringify(aCard.toJSON());
+                expect(() => {
+                    JSON.parse(json);
+                }).not.to.throw(SyntaxError);
+                expect(json.indexOf(VALUE), 'expected json to contain TEN').to.not.equal(-1);
+                done();
+            });
+        });
+
+        describe('toString method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.ownProperty('toString');
+                expect(Card.prototype).to.have.property('toString').that.is.a('Function');
+                done();
+            });
+
+            it('should return a string', (done) => {
+                expect(Card.prototype).to.have.ownProperty('toString');
+                expect(aCard.toString()).to.be.a('string');
+                done();
+            });
+
+            it('should return valid string when Card was called without parameters', (done) => {
+                aCard  = new Card();
+                expect(aCard.toString()).to.not.equal('undefined');
+                done();
+            });
+
+            it('should return valid string when card is a joker', (done) => {
+                aCard = new Card(undefined, 'JOKER');
+                expect(aCard.toString()).to.equal('JOKER');
+                done();
+            });
+
+        });
+
+        describe('equals method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.ownProperty('equals');
+                expect(Card.prototype).to.have.property('equals').that.is.a('Function');
+                done();
+            });
+
+            it('should return true', (done) => {
+                let anotherCard = new Card(SUIT, VALUE);
+                expect(aCard.equals(anotherCard)).to.equal(true);
+                done();
+            });
+
+            it('should return false', (done) => {
+                let anotherCard = new Card('spades', 'four');
+                expect(aCard.equals(anotherCard)).to.equal(false);
+                expect(aCard.equals({suit: 'HEARTS', value: 'TEN'})).to.equal(false);
+                expect(aCard.equals([])).to.equal(false);
+                expect(aCard.equals(42)).to.equal(false);
+                expect(aCard.equals('Hej')).to.equal(false);
+                done();
+            });
+
+        });
+
+        describe('compareTo method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.ownProperty('compareTo');
+                expect(Card.prototype).to.have.property('compareTo').that.is.a('Function');
+                done();
+            });
+
+            it('should throw a TypeError when called to compare not-a-Card', (done) => {
+                expect( () => {
+                    aCard.compareTo({});
+                }).to.throw(TypeError);
+                expect( () => {
+                    aCard.compareTo(42);
+                }).to.throw(TypeError);
+                expect( () => {
+                    aCard.compareTo([]);
+                }).to.throw(TypeError);
+                expect( () => {
+                    aCard.compareTo({suit: 'HEARTS', value: 'TEN'});
+                }).to.throw(TypeError);
+                expect( () => {
+                    aCard.compareTo('hej');
+                }).to.throw(TypeError);
+                done();
+            });
+
+            it('should return valid result when card is a Joker', (done) => {
+                let anotherCard = new Card(undefined, 'JOKER');
+                expect(aCard.compareTo(anotherCard)).to.equal(11);
+                done();
+            });
+
+            it('should return 0', (done) => {
+                let anotherCard = new Card(SUIT, VALUE);
+                expect(aCard.compareTo(anotherCard)).to.equal(0);
+                done();
+            });
+
+            it('should return -3', (done) => {
+                let anotherCard = new Card('HEARTS', 'KING');
+                expect(aCard.compareTo(anotherCard)).to.equal(-3);
+                done();
+            });
+
+            it('should return 8', (done) => {
+                let anotherCard = new Card('HEARTS', 'TWO');
+                expect(aCard.compareTo(anotherCard)).to.equal(8);
+                done();
+            });
+
+        });
+
+        describe('valueOf method', () => {
+            it('should be defined', (done) => {
+                expect(Card.prototype).to.have.ownProperty('valueOf');
+                expect(Card.prototype).to.have.property('valueOf').that.is.a('Function');
+                done();
+            });
+
+            it('should return a number', (done) => {
+                expect(Card.prototype).to.have.ownProperty('valueOf');
+                expect(aCard.valueOf()).to.be.a('number');
+                done();
+            });
+
+            it('should return 10', (done) => {
+                expect(aCard.valueOf()).to.equal(10);
+                done();
+            });
+
+            it('should return valid result when card is a joker', (done) => {
+                aCard = new Card(undefined, 'JOKER');
+                expect(aCard.valueOf()).to.equal(-1);
                 done();
             });
 
