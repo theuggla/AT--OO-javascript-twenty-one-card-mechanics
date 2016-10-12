@@ -61,6 +61,13 @@ function Player(name = 'a Player') {
             },
             enumerable: true,
             configurable: false
+        },
+        points: {
+            get: function() {
+                return this.valueOf();
+            },
+            enumerable: true,
+            configurable:false,
         }
     });
 
@@ -115,7 +122,7 @@ Object.defineProperties(Player.prototype, {
             }
             return false;
         },
-        writable: false,
+        writable: true,
         enumerable: false,
         configurable: false
     },

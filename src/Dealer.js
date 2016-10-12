@@ -11,7 +11,7 @@
 const Card = require('../src/Card.js');
 const Player = require('../src/Player.js');
 
-function Dealer(name) {
+function Dealer(name = 'a dealer') {
     Player.call(this, name);
 }
 
@@ -21,3 +21,5 @@ Dealer.prototype.constructor = Dealer;
 Dealer.prototype.requestCard = function() {
     return this.inPlay();
 };
+
+module.exports = Dealer;
