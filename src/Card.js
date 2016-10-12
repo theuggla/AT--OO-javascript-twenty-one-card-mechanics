@@ -81,16 +81,16 @@ Object.defineProperties(Card.prototype, {
             } else {
                 switch (this.suit) {
                     case 'HEARTS':
-                        output += 'H';
+                        output += '♡';
                         break;
                     case 'SPADES':
-                        output += 'S';
+                        output += '♤';
                         break;
                     case 'CLUBS':
-                        output += 'C';
+                        output += '♧';
                         break;
                     case 'DIAMONDS':
-                        output += 'D';
+                        output += '♢';
                         break;
                 }
                 output += Card.values.indexOf(this.value);

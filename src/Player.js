@@ -13,7 +13,7 @@ function Player(name = 'a Player') {
 
     let theName;
     let theHand = [];
-    const LIMIT = 15;
+    const LIMIT = 12;
 
     Object.defineProperties(this, {
         name: {
@@ -50,7 +50,7 @@ function Player(name = 'a Player') {
         },
         inPlay: {
             get: function() {
-                return this.valueOf() < 21;
+                return this.points < 21;
             },
             enumerable: false,
             configurable: false
@@ -105,10 +105,14 @@ Object.defineProperties(Player.prototype, {
     },
     toString: {
         value: function() {
-            let output = this.name + ' ';
+            let output = this.name + ': ';
             this.hand.forEach(function(card) {
                 output += card.toString() + ' ';
             });
+            output += '(' + this.points + ')';
+            if (this.points > 21) {
+                output += ' BUSTED!';
+            }
             return output;
         },
         writable: false,
@@ -118,7 +122,7 @@ Object.defineProperties(Player.prototype, {
     requestCard: {
         value: function() {
             if (this.inPlay) {
-                return this.valueOf() < this.limit;
+                return this.points < this.limit;
             }
             return false;
         },

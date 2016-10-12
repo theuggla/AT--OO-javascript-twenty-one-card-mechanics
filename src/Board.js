@@ -33,14 +33,14 @@ function Board() {
     });
 }
 
-Board.prototype.round = function(thePlayer) {
+Board.prototype.playRound = function(thePlayer) {
     let theWinner;
     this.theDeck.shuffle();
 
-    while (thePlayer.requestCard) {
+    while (thePlayer.requestCard()) {
         let theCard = this.theDeck.deal();
         thePlayer.addToHand(theCard);
-        if ((thePlayer.points === 21) || (thePlayer.hand.length === 4 && thePlayer.points < 21)) {
+        if ((thePlayer.points === 21) || (thePlayer.hand.length === 5 && thePlayer.points < 21)) {
             theWinner = thePlayer;
             break;
         } else if (thePlayer.points > 21) {
@@ -50,9 +50,9 @@ Board.prototype.round = function(thePlayer) {
     }
 
     if (!theWinner) {
-        while (this.theDealer.requestCard) {
+        while (this.theDealer.requestCard()) {
             this.theDealer.addToHand(this.theDeck.deal());
-            if (this.theDealer.points > thePlayer.points) {
+            if (this.theDealer.points >= thePlayer.points) {
                 theWinner = this.theDealer;
                 break;
             } else if (this.theDealer.points > 21) {

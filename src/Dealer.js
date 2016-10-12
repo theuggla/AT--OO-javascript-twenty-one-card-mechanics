@@ -19,7 +19,7 @@ Dealer.prototype = Object.create(Player.prototype);
 Dealer.prototype.constructor = Dealer;
 
 Dealer.prototype.requestCard = function() {
-    return this.inPlay();
+    return this.inPlay;
 };
 
 module.exports = Dealer;
