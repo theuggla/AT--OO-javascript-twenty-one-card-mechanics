@@ -9,7 +9,7 @@
 
 const Card = require('../src/Card.js');
 
-function Player(name) {
+function Player(name = 'a Player') {
 
     let theName;
     let theHand = [];
@@ -77,38 +77,63 @@ function Player(name) {
     }
 }
 
-Player.prototype.valueOf = function() {
-    this.hand.reduce(function(a, b) {
-        return a + b;
-    });
-};
-
-Player.prototype.toString = function() {
-    let output = this.name + ' ';
-    this.hand.forEach(function(card) {
-        output += card.toString() + ' ';
-    });
-    return output;
-};
-
-Player.prototype.requestCard = function() {
-    if (this.inPlay) {
-        return this.valueOf() < 15;
+Object.defineProperties(Player.prototype, {
+    valueOf: {
+        value: function() {
+            this.hand.reduce(function (a, b) {
+                return a + b;
+            });
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    toString: {
+        value: function() {
+            let output = this.name + ' ';
+            this.hand.forEach(function(card) {
+                output += card.toString() + ' ';
+            });
+            return output;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    requestCard: {
+        value: function() {
+            if (this.inPlay) {
+                return this.valueOf() < 15;
+            }
+            return false;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    addToHand: {
+        value: function(card) {
+            let theHand = this.hand;
+            if (Card.isValid(card)) {
+                theHand.push(card.clone());
+            }
+            this.hand = theHand;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    reset: {
+        value: function() {
+            let theHand = this.hand;
+            this.hand = [];
+            return theHand;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
     }
-    return false;
-};
-
-Player.prototype.addToHand = function(card) {
-    let theHand = this.hand;
-    if (Card.isValid(card)) {
-        theHand.push(card.clone());
-    }
-    this.hand = theHand;
-};
-
-Player.prototype.reset = function() {
-    this.hand = [];
-};
+});
 
 /*
 * Exports.
