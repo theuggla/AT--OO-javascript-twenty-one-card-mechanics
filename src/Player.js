@@ -13,6 +13,7 @@ function Player(name = 'a Player') {
 
     let theName;
     let theHand = [];
+    const LIMIT = 15;
 
     Object.defineProperties(this, {
         name: {
@@ -53,6 +54,13 @@ function Player(name = 'a Player') {
             },
             enumerable: false,
             configurable: false
+        },
+        limit: {
+            get: function() {
+                return LIMIT;
+            },
+            enumerable: true,
+            configurable: false
         }
     });
 
@@ -80,9 +88,9 @@ function Player(name = 'a Player') {
 Object.defineProperties(Player.prototype, {
     valueOf: {
         value: function() {
-            this.hand.reduce(function (a, b) {
+            return this.hand.reduce(function(a, b) {
                 return a + b;
-            });
+            }, 0);
         },
         writable: false,
         enumerable: false,
@@ -103,7 +111,7 @@ Object.defineProperties(Player.prototype, {
     requestCard: {
         value: function() {
             if (this.inPlay) {
-                return this.valueOf() < 15;
+                return this.valueOf() < this.limit;
             }
             return false;
         },
