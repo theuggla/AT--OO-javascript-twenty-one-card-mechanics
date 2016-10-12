@@ -9,58 +9,71 @@
 
 const Card = require('../src/Card.js');
 
-function Deck() {
+function Deck(joker) {
     let used = [];
-    let unused = [];
+    let unused = createDeck(joker);
 
     Object.defineProperties(this, {
         usedCards: {
-            get: getUsedCards,
-            set: setUsedCards
+            get: function() {
+                return copyCards(used);
+            },
+            set: function(cards) {
+                if (Array.isArray(cards)) {
+                    if (cards.length === 0) { //allow to be set to 0
+                        used = [];
+                    } else if (areValidCards(cards) && (!contains(unused, cards))) { //the cards can't already be in the unused Array, we don't want two of the same card
+                        used = copyCards(cards);
+                    } else {
+                        throw new Error('Can\'t add these cards to the deck!');
+                    }
+                } else {
+                    throw new TypeError('Must be Array!');
+                }
+            },
+            enumerable: true,
+            configurable: false
         },
         unusedCards: {
-            get: getUnusedCards,
-            set: setUnusedCards
+            get: function() {
+                return copyCards(unused);
+            },
+            set: function(cards) {
+                if (Array.isArray(cards)) {
+                    if (cards.length === 0) { //allow to be set to 0;
+                        unused = [];
+                    } else if (areValidCards(cards) && (!contains(used, cards))) { //the cards can't already be in the used Array, we don't want two of the same card
+                        unused = copyCards(cards);
+                    } else {
+                        throw new Error('Can\'t add these cards to the deck!');
+                    }
+                } else {
+                    throw new TypeError('Must be Array!');
+                }
+            },
+            enumerable: true,
+            configurable: false
         }
     });
 
-    function getUnusedCards() {
-        return copyCards(unused);
+    //helper functions
+    function createDeck(joker) {
+        let newDeck = [];
+        let suits = Card.suits;
+        let values = Card.values;
+        suits.forEach(function(suit) {
+            values.forEach(function(value) {
+                if(!joker) {
+                    if (value !== 'JOKER') {
+                        newDeck.push(new Card(suit, value));
+                    }
+                } else {
+                    newDeck.push(new Card(suit, value));
+                }
+            });
+        });
+        return newDeck;
     }
-
-    function setUnusedCards(cards) {
-        if (Array.isArray(cards)) {
-            if (cards.length === 0) { //allow to be set to 0;
-                unused = [];
-            } else if (areValidCards(cards) && (!contains(used, cards))) { //the cards can't already be in the used Array, we don't want two of the same card
-                unused = copyCards(cards);
-            } else {
-                throw new Error('Can\'t add these cards to the deck!');
-            }
-        } else {
-            throw new TypeError('Must be Array!');
-        }
-    }
-
-    function getUsedCards() {
-        return copyCards(used);
-    }
-
-    function setUsedCards(Cards) {
-        if (Array.isArray(Cards)) {
-            if (Cards.length === 0) { //allow to be set to 0
-                used = [];
-            } else if (areValidCards(Cards) && (!contains(unused, Cards))) { //the cards can't already be in the unused Array, we don't want two of the same card
-                used = copyCards(Cards);
-            } else {
-                throw new Error('Can\'t add these cards to the deck!');
-            }
-        } else {
-            throw new TypeError('Must be Array!');
-        }
-    }
-
-    this.unusedCards = createDeck();
 
     function copyCards(cards) {
         let theCopy = [];
@@ -73,7 +86,6 @@ function Deck() {
     function areValidCards(cards) {
         cards.forEach(function(card) {
             if (!Card.isValid(card)) {
-                console.log('it\'s me, ' + card.toString());
                 return false;
             }
         });
@@ -94,71 +106,79 @@ function Deck() {
         }
         return false;
     }
-
-    function createDeck() {
-        let newDeck = [];
-        let suits = Card.getSuits();
-        let values = Card.getValues();
-        suits.forEach(function(suit) {
-            values.forEach(function(value) {
-                if (value !== 'JOKER') {
-                    newDeck.push(new Card(suit, value));
-                }
-            });
-        });
-        return newDeck;
-    }
-
 }
 
-Deck.prototype.toString = function() {
-    let output = '';
-    this.unusedCards.forEach(function(card) {
-        output += ' ' + card.toString();
-    });
-    return output;
-};
-
-Deck.prototype.reshuffle = function() {
-    let newDeck = [];
-    newDeck = this.unusedCards;
-    this.usedCards.forEach(function(card) {
-        newDeck.push(card);
-    });
-    this.usedCards = [];
-    this.unusedCards = newDeck;
-    this.shuffle();
-};
-
-Deck.prototype.shuffle = function() {
-    let theDeck = this.unusedCards;
-    for (let i = (theDeck.length - 1); i > 0; i -= 1) {
-        let j = Math.floor(Math.random() * i);
-        let iOld = theDeck[i];
-        theDeck[i] = theDeck[j];
-        theDeck[j] = iOld;
+Object.defineProperties(Deck.prototype, {
+    toString: {
+        value: function() {
+            let output = '';
+            this.unusedCards.forEach(function(card) {
+                output += ' ' + card.toString();
+            });
+            return output;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    shuffle: {
+        value: function() {
+            let theDeck = this.unusedCards;
+            for (let i = (theDeck.length - 1); i > 0; i -= 1) {
+                let j = Math.floor(Math.random() * i);
+                let iOld = theDeck[i];
+                theDeck[i] = theDeck[j];
+                theDeck[j] = iOld;
+            }
+            this.unusedCards = theDeck;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    reshuffle: {
+        value: function() {
+            let newDeck = [];
+            newDeck = this.unusedCards;
+            this.usedCards.forEach(function(card) {
+                newDeck.push(card);
+            });
+            this.usedCards = [];
+            this.unusedCards = newDeck;
+            this.shuffle();
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    deal: {
+        value: function() {
+            let theDeck = this.unusedCards;
+            let theCard = theDeck.pop();
+            if (theDeck.length === 1) {
+                this.reshuffle();
+            } else {
+                this.unusedCards = theDeck;
+            }
+            return theCard;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    returnToDeck: {
+        value: function(cards) {
+            let used = this.usedCards;
+            cards.forEach(function(card) {
+                used.push(card.clone());
+            });
+            this.usedCards = used;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
     }
-    this.unusedCards = theDeck;
-};
-
-Deck.prototype.deal = function() {
-    let theDeck = this.unusedCards;
-    let theCard = theDeck.pop();
-    if (theDeck.length === 1) {
-        this.reshuffle();
-    } else {
-        this.unusedCards = theDeck;
-    }
-    return theCard;
-};
-
-Deck.prototype.returnToDeck = function(cards) {
-    let used = this.usedCards;
-    cards.forEach(function(card) {
-        used.push(card); //no need to copy the card as it's handled in the setter
-    });
-    this.usedCards = used;
-};
+});
 
 /**
  * Exports.
