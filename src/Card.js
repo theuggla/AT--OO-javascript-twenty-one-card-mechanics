@@ -158,7 +158,7 @@ Object.defineProperties(Card, {
                 return false;
             } else if (!card.suit || !card.value) {
                 return false;
-            } else if (Card.getSuits().indexOf(card.suit) === -1 || Card.getValues().indexOf(card.value) === -1) {
+            } else if (Card.suits.indexOf(card.suit) === -1 || Card.values.indexOf(card.value) === -1) {
                 return false;
             }
             return true;
