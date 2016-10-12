@@ -17,7 +17,7 @@ describe('Card', () => {
 
     describe('Type', () => {
         it('should be defined', (done) => {
-            Card = require('../src/Card');
+            Card = require('../src/Card.js');
             done();
         });
     });
@@ -67,7 +67,7 @@ describe('Card', () => {
                 done();
             });
 
-            it('should throw an Error if the suit tries to be changed', (done) => {
+            it('should throw an Error if the suit tries to be changed (read only)', (done) => {
                 expect(() => {
                     aCard.suit = 'spades';
                 }).to.throw(Error);
@@ -96,7 +96,7 @@ describe('Card', () => {
                 done();
             });
 
-            it('should throw an Error if the value tries to be changed', (done) => {
+            it('should throw an Error if the value tries to be changed (read only)', (done) => {
                 expect(() => {
                     aCard.value = 'five';
                 }).to.throw(Error);
@@ -114,14 +114,14 @@ describe('Card', () => {
     });
 
     describe('Prototype methods', () => {
-        let aCard;
-
-        beforeEach(() => {
-            // Create a new Card before every test.
-            aCard = new Card(SUIT, VALUE);
-        });
-
         describe('clone method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.property('clone').that.is.a('Function');
                 done();
@@ -140,6 +140,13 @@ describe('Card', () => {
         });
 
         describe('toJSON method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.property('toJSON').that.is.a('Function');
                 done();
@@ -156,6 +163,13 @@ describe('Card', () => {
         });
 
         describe('toString method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.ownProperty('toString');
                 expect(Card.prototype).to.have.property('toString').that.is.a('Function');
@@ -183,6 +197,13 @@ describe('Card', () => {
         });
 
         describe('equals method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.ownProperty('equals');
                 expect(Card.prototype).to.have.property('equals').that.is.a('Function');
@@ -208,6 +229,13 @@ describe('Card', () => {
         });
 
         describe('compareTo method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.ownProperty('compareTo');
                 expect(Card.prototype).to.have.property('compareTo').that.is.a('Function');
@@ -260,6 +288,13 @@ describe('Card', () => {
         });
 
         describe('valueOf method', () => {
+            let aCard;
+
+            beforeEach(() => {
+                // Create a new Card before every test.
+                aCard = new Card(SUIT, VALUE);
+            });
+
             it('should be defined', (done) => {
                 expect(Card.prototype).to.have.ownProperty('valueOf');
                 expect(Card.prototype).to.have.property('valueOf').that.is.a('Function');
