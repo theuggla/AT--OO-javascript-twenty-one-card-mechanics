@@ -67,7 +67,7 @@ function Player(name = 'a Player') {
                 return this.valueOf();
             },
             enumerable: true,
-            configurable:false,
+            configurable:false
         }
     });
 
@@ -114,6 +114,27 @@ Object.defineProperties(Player.prototype, {
                 output += ' BUSTED!';
             }
             return output;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    equals: {
+        value: function(other) {
+            if (!(other instanceof Player)) {
+                return false;
+            } else {
+                return (this.name === other.name && this.hand === other.hand);
+            }
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    clone: {
+        value: function() {
+            let copy = new Player(this.name);
+            copy.hand = this.hand;
         },
         writable: false,
         enumerable: false,
