@@ -42,7 +42,7 @@ function Deck(joker) {
                 if (Array.isArray(cards)) {
                     if (cards.length === 0) { //allow to be set to 0;
                         unused = [];
-                    } else if (areValidCards(cards) && (!contains(used, cards))) { //the cards can't already be in the used Array, we don't want two of the same card
+                    } else if (areValidCards(cards) && (!Deck.contains(used, cards))) { //the cards can't already be in the used Array, we don't want two of the same card
                         unused = copyCards(cards);
                     } else {
                         throw new Error('Can\'t add these cards to the deck!');
@@ -177,13 +177,13 @@ Object.defineProperties(Deck.prototype, {
     deal: {
         value: function() {
             let theDeck = this.unusedCards;
-            let theCard = theDeck.pop();
-            if (theDeck.length === 1) {
-                this.reshuffle();
+            if (theDeck.length === 0) {
+                throw new Error('Deck is empty, cannot deal.');
             } else {
+                let theCard = theDeck.pop();
                 this.unusedCards = theDeck;
+                return theCard;
             }
-            return theCard;
         },
         writable: false,
         enumerable: false,
