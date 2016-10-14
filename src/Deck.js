@@ -22,7 +22,7 @@ function Deck(joker) {
                 if (Array.isArray(cards)) {
                     if (cards.length === 0) { //allow to be set to 0
                         used = [];
-                    } else if (areValidCards(cards) && (!contains(unused, cards))) { //the cards can't already be in the unused Array, we don't want two of the same card
+                    } else if (areValidCards(cards) && (!Deck.contains(unused, cards))) { //the cards can't already be in the unused Array, we don't want two of the same card
                         used = copyCards(cards);
                     } else {
                         throw new Error('Can\'t add these cards to the deck!');
@@ -53,6 +53,11 @@ function Deck(joker) {
             },
             enumerable: true,
             configurable: false
+        },
+        length: {
+            get: function() {
+                return unused.length();
+            }
         }
     });
 
@@ -75,14 +80,6 @@ function Deck(joker) {
         return newDeck;
     }
 
-    function copyCards(cards) {
-        let theCopy = [];
-        cards.forEach(function(card) {
-            theCopy.push(card.clone());
-        });
-        return theCopy;
-    }
-
     function areValidCards(cards) {
         cards.forEach(function(card) {
             if (!Card.isValid(card)) {
@@ -91,24 +88,50 @@ function Deck(joker) {
         });
         return true;
     }
-
-    function contains(theDeck, cards) {
-        if (theDeck.length === 0) {
-            return false;
-        } else {
-            cards.forEach(function(card) {
-                theDeck.forEach(function(cardInDeck) {
-                    if (card.equals(cardInDeck)) {
-                        return true;
-                    }
-                });
-            });
-        }
-        return false;
-    }
 }
 
 Object.defineProperties(Deck.prototype, {
+    equals: {
+        value: function(other) {
+            if (!(other instanceof Deck)) {
+                return false;
+            } else if (other.unusedCards !== this.unusedCards || other.usedCards !== this.usedCards) {
+                return false;
+            } else {
+                let unused = this.unusedCards;
+                let used = this.usedCards;
+                let otherUnused = other.unusedCards;
+                let otherUsed = other.usedCards;
+
+                for (let i = 0; i < unused.length; i += 1) {
+                    if (!unused[i].equals(otherUnused[i])) {
+                        return false;
+                    }
+                }
+
+                for (let i = 0; i < used.length; i += 1) {
+                    if (!used[i].equals(otherUsed[i])) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    clone: {
+        value: function() {
+            let copy = new Deck();
+
+            copy.unusedCards = copyCards(this.unusedCards);
+            copy.usedCards = copyCards(this.usedCards);
+
+            return copy;
+        }
+    },
     toString: {
         value: function() {
             let output = '';
@@ -179,6 +202,37 @@ Object.defineProperties(Deck.prototype, {
         configurable: false
     }
 });
+
+Object.defineProperties(Deck, {
+    contains: {
+        value: function(theDeck, cards) {
+            if (theDeck.length === 0) {
+                return false;
+            } else {
+                cards.forEach(function (card) {
+                    theDeck.forEach(function (cardInDeck) {
+                        if (card.equals(cardInDeck)) {
+                            return true;
+                        }
+                    });
+                });
+            }
+            return false;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    }
+});
+
+//helper functions
+function copyCards(cards) {
+    let theCopy = [];
+    cards.forEach(function (card) {
+        theCopy.push(card.clone());
+    });
+    return theCopy;
+}
 
 /**
  * Exports.
