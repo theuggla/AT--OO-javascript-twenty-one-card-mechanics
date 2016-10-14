@@ -22,7 +22,7 @@ function Deck(joker) {
                 if (Array.isArray(cards)) {
                     if (cards.length === 0) { //allow to be set to 0
                         used = [];
-                    } else if (areValidCards(cards) && (!Deck.contains(unused, cards))) { //the cards can't already be in the unused Array, we don't want two of the same card
+                    } else if (areValidCards(cards) && (!Deck.contains(unused, cards))) { //the cards can't already be in the unused pile, we don't want two of the same card
                         used = copyCards(cards);
                     } else {
                         throw new Error('Can\'t add these cards to the deck!');
@@ -42,7 +42,7 @@ function Deck(joker) {
                 if (Array.isArray(cards)) {
                     if (cards.length === 0) { //allow to be set to 0;
                         unused = [];
-                    } else if (areValidCards(cards) && (!Deck.contains(used, cards))) { //the cards can't already be in the used Array, we don't want two of the same card
+                    } else if (areValidCards(cards) && (!Deck.contains(used, cards))) { //the cards can't already be in the used pile, we don't want two of the same card
                         unused = copyCards(cards);
                     } else {
                         throw new Error('Can\'t add these cards to the deck!');
@@ -56,7 +56,7 @@ function Deck(joker) {
         },
         length: {
             get: function() {
-                return unused.length();
+                return unused.length;
             }
         }
     });
@@ -209,8 +209,8 @@ Object.defineProperties(Deck, {
             if (theDeck.length === 0) {
                 return false;
             } else {
-                cards.forEach(function (card) {
-                    theDeck.forEach(function (cardInDeck) {
+                cards.forEach(function(card) {
+                    theDeck.forEach(function(cardInDeck) {
                         if (card.equals(cardInDeck)) {
                             return true;
                         }
@@ -228,7 +228,7 @@ Object.defineProperties(Deck, {
 //helper functions
 function copyCards(cards) {
     let theCopy = [];
-    cards.forEach(function (card) {
+    cards.forEach(function(card) {
         theCopy.push(card.clone());
     });
     return theCopy;

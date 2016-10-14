@@ -15,6 +15,8 @@ function BlackJackPlayer(name = 'a Blackjack player') {
     CardPlayer.call(this, name);
 
     const LIMIT = 12;
+    this.BET = 10;
+    let bank = 100;
 
     Object.defineProperties(this, {
         limit: {
@@ -31,6 +33,16 @@ function BlackJackPlayer(name = 'a Blackjack player') {
             enumerable: false,
             configurable: false
         },
+        bank: {
+            get: function() {
+                return bank;
+            },
+            set: function(value) {
+                bank = value;
+            },
+            enumerable: true,
+            configurable: false
+        }
     });
 }
 
@@ -51,9 +63,24 @@ Object.defineProperties(BlackJackPlayer.prototype, {
         enumerable: false,
         configurable: false
     },
+    makeBet: {
+        value: function() {
+            let bet;
+            if ((this.bank - this.BET) >= 0) {
+                bet = this.BET;
+            } else {
+                bet = this.bank;
+            }
+            this.bank = this.bank - bet;
+            return bet;
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
     toString: {
         value: function() {
-            let output = this.name + ': ';
+            let output = this.name + ' (£' + this.bank + '): ';
             this.hand.forEach(function(card) {
                 output += card.toString() + ' ';
             });
