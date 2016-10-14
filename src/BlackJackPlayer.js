@@ -1,5 +1,5 @@
 /**
- * Module for Dealer.
+ * Module for BlackJackPlayer.
  * @augments CardPlayer
  *
  * @author Molly Arhammar
@@ -11,10 +11,19 @@
 const Card = require('../src/Card.js');
 const CardPlayer = require('../src/CardPlayer.js');
 
-function Dealer(name = 'a Dealer') {
+function BlackJackPlayer(name = 'a Blackjack player') {
     CardPlayer.call(this, name);
 
+    const LIMIT = 12;
+
     Object.defineProperties(this, {
+        limit: {
+            get: function() {
+                return LIMIT;
+            },
+            enumerable: true,
+            configurable: false,
+        },
         inPlay: {
             get: function() {
                 return this.points < 21;
@@ -25,21 +34,27 @@ function Dealer(name = 'a Dealer') {
     });
 }
 
-Dealer.prototype = Object.create(CardPlayer.prototype);
+BlackJackPlayer.prototype = Object.create(CardPlayer.prototype);
 
-Object.defineProperties(Dealer.prototype, {
+Object.defineProperties(BlackJackPlayer.prototype, {
     constructor: {
-        value: Dealer
+        value: BlackJackPlayer
     },
     requestCard: {
         value: function() {
-            return this.inPlay;
-        }
+            if (this.inPlay) {
+                return this.points < this.limit;
+            }
+            return false;
+        },
+        writable: true,
+        enumerable: false,
+        configurable: false
     },
     toString: {
-        value: function () {
+        value: function() {
             let output = this.name + ': ';
-            this.hand.forEach(function (card) {
+            this.hand.forEach(function(card) {
                 output += card.toString() + ' ';
             });
             output += '(' + this.points + ')';
@@ -51,4 +66,5 @@ Object.defineProperties(Dealer.prototype, {
     }
 });
 
-module.exports = Dealer;
+
+module.exports = BlackJackPlayer;

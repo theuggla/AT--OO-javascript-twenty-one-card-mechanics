@@ -1,5 +1,5 @@
 /**
- * Module for Player.
+ * Module for CardPlayer.
  *
  * @author Molly Arhammar
  * @version 1.0.0
@@ -9,11 +9,13 @@
 
 const Card = require('../src/Card.js');
 
-function Player(name = 'a Player') {
+function CardPlayer(name = 'a CardPlayer') {
+    if (this.constructor === CardPlayer) {
+        throw new Error('Can\'t make instances of this class');
+    }
 
     let theName;
     let theHand = [];
-    const LIMIT = 12;
 
     Object.defineProperties(this, {
         name: {
@@ -48,20 +50,6 @@ function Player(name = 'a Player') {
             enumerable: true,
             configurable: false
         },
-        inPlay: {
-            get: function() {
-                return this.points < 21;
-            },
-            enumerable: false,
-            configurable: false
-        },
-        limit: {
-            get: function() {
-                return LIMIT;
-            },
-            enumerable: true,
-            configurable: false
-        },
         points: {
             get: function() {
                 return this.valueOf();
@@ -92,7 +80,7 @@ function Player(name = 'a Player') {
     }
 }
 
-Object.defineProperties(Player.prototype, {
+Object.defineProperties(CardPlayer.prototype, {
     valueOf: {
         value: function() {
             return this.hand.reduce(function(a, b) {
@@ -105,15 +93,7 @@ Object.defineProperties(Player.prototype, {
     },
     toString: {
         value: function() {
-            let output = this.name + ': ';
-            this.hand.forEach(function(card) {
-                output += card.toString() + ' ';
-            });
-            output += '(' + this.points + ')';
-            if (this.points > 21) {
-                output += ' BUSTED!';
-            }
-            return output;
+            return this.name;
         },
         writable: false,
         enumerable: false,
@@ -121,7 +101,7 @@ Object.defineProperties(Player.prototype, {
     },
     equals: {
         value: function(other) {
-            if (!(other instanceof Player)) {
+            if (!(other instanceof CardPlayer)) {
                 return false;
             } else {
                 return (this.name === other.name && this.hand === other.hand);
@@ -133,21 +113,10 @@ Object.defineProperties(Player.prototype, {
     },
     clone: {
         value: function() {
-            let copy = new Player(this.name);
+            let copy = new CardPlayer(this.name);
             copy.hand = this.hand;
         },
         writable: false,
-        enumerable: false,
-        configurable: false
-    },
-    requestCard: {
-        value: function() {
-            if (this.inPlay) {
-                return this.points < this.limit;
-            }
-            return false;
-        },
-        writable: true,
         enumerable: false,
         configurable: false
     },
@@ -178,6 +147,6 @@ Object.defineProperties(Player.prototype, {
 /*
 * Exports.
 */
-module.exports = Player;
+module.exports = CardPlayer;
 
 
