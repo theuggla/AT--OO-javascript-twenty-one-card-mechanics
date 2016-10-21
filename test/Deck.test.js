@@ -45,6 +45,16 @@ describe('Deck', () => {
       expect(deck).to.have.property('unusedCards');
       done();
     });
+
+    it('should have property inPlay', (done) => {
+      expect(deck).to.have.property('inPlay');
+      done();
+    });
+
+    it('should have property length', (done) => {
+      expect(deck).to.have.property('length');
+      done();
+    });
   });
 
   describe('Properties', () => {
@@ -99,6 +109,63 @@ describe('Deck', () => {
         expect(() => {
           deck.usedCards = [CARD];
           deck.unusedCards = [CARD];
+        }).to.throw(Error);
+        done();
+      });
+    });
+
+    describe('inPlay', () => {
+      let deck;
+
+      beforeEach(() => {
+        // Create a new Deck before every test.
+        deck = new Deck();
+      });
+
+      it('should start out as 0', (done) => {
+        expect(deck.inPlay.length).to.equal(0);
+        done();
+      });
+
+      it('should be able to be changed to an Array of Cards or to an empty Array', (done) => {
+        deck.unusedCards = [new Card('two', 'spades')];
+        deck.inPlay = [CARD];
+        expect(deck.inPlay).to.deep.equal([CARD]);
+        deck.inPlay = [];
+        expect(deck.inPlay).to.deep.equal([]);
+        done();
+      });
+
+      it('should throw a TypeError if usedCards is set to a non-array value', (done) => {
+        expect(() => {
+          deck.inPlay = undefined;
+        }).to.throw(TypeError);
+        expect(() => {
+          deck.inPlay = null;
+        }).to.throw(TypeError);
+        expect(() => {
+          deck.inPlay = 42;
+        }).to.throw(TypeError);
+        expect(() => {
+          deck.inPlay = {};
+        }).to.throw(TypeError);
+        expect(() => {
+          deck.inPlay = CARD;
+        }).to.throw(TypeError);
+        done();
+      });
+
+      it('should throw an Error when if set to an invalid Card Array', (done) => {
+        expect(() => {
+          deck.inPlay = [{Suit: 'HEJ', Value: 'HEJ'}];
+        }).to.throw(Error);
+        done();
+      });
+
+      it('should throw an Error if set to a Card that\'s already in the Deck', (done) => {
+        expect(() => {
+          deck.unusedCards = [CARD];
+          deck.inPlay = [CARD];
         }).to.throw(Error);
         done();
       });
@@ -329,6 +396,16 @@ describe('Deck', () => {
         done();
       });
 
+      it('should add cards to inPlay pile', (done) => {
+        let hand = [];
+        for (let i = 0; i < 6; i += 1) {
+          hand.push(deck.deal());
+        }
+        expect(deck.inPlay.length).to.equal(6);
+        expect(deck.unusedCards.length).to.equal(46);
+        done();
+      });
+
       it('should throw an Error if there are no more cards in the unused pile', (done) => {
         expect(() => {
           deck.unusedCards = [];
@@ -363,13 +440,40 @@ describe('Deck', () => {
 
       it('should not be privacy leakish', (done) => {
         deck.unusedCards = [new Card('two', 'spades')];
-          deck.inPlay = [CARD];
+        deck.inPlay = [CARD];
         deck.returnToDeck([CARD]);
         expect(deck.usedCards).to.not.equal([CARD]);
         done();
       });
     });
+
+    describe('reset method', () => {
+
+      it('should be defined', (done) => {
+        expect(Deck.prototype).to.have.property('reset').that.is.a('Function');
+        done();
+      });
+
+      it('should empty the usedCards and inPlay arrays', (done) => {
+        let hand = [];
+        for (let i = 0; i < 6; i += 1) {
+          hand.push(deck.deal());
+        }
+        expect(deck.length).to.equal(46);
+        expect(deck.unusedCards.length).to.equal(46);
+        expect(deck.inPlay.length).to.equal(6);
+        deck.returnToDeck([hand.pop()]);
+        expect(deck.usedCards.length).to.equal(1);
+        deck.reset();
+        expect(deck.inPlay.length).to.equal(0);
+        expect(deck.usedCards.length).to.equal(0);
+        expect(deck.unusedCards.length).to.equal(52);
+        expect(deck.length).to.equal(52);
+        done();
+      });
+    });
   });
+
   describe('Static methods', () => {
     let deck;
 
