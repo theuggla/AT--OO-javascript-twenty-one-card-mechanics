@@ -104,9 +104,12 @@ Object.defineProperties(Card.prototype, {
             output += '♢';
             break;
         }
-        output += Card.values.indexOf(this.value);
+        if (this.value === 'ACE') {
+          (output += this.acevalue);
+        } else {
+          (output += Card.values.indexOf(this.value));
+        }
       }
-
       return output;
     },
   },
