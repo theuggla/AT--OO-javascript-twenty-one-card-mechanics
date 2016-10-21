@@ -170,22 +170,24 @@ Object.defineProperties(Deck.prototype, {
     value: function(cards) {
       let used = this.usedCards;
       let inPlay = this.inPlay;
-      if (Deck.contains(inPlay, cards)) {
-        for (let j = 0; j < cards.length; j += 1) {
-          let found;
-          for (let i = 0; i < inPlay.length && !found; i++) {
-            if (inPlay[i].equals(cards[j])) {
-              used.push(inPlay[i]);
-              inPlay.splice(i, i + 1);
-              found = true;
+      if (cards.length > 0) {
+        if (Deck.contains(inPlay, cards)) {
+          for (let j = 0; j < cards.length; j += 1) {
+            let found;
+            for (let i = 0; i < inPlay.length && !found; i++) {
+              if (inPlay[i].equals(cards[j])) {
+                used.push(inPlay[i]);
+                inPlay.splice(i, i + 1);
+                found = true;
+              }
             }
           }
+        } else {
+          throw new Error('These cards do not belong in the deck.');
         }
-      } else {
-        throw new Error('These cards do not belong in the deck.');
+        this.inPlay = inPlay;
+        this.usedCards = used;
       }
-      this.inPlay = inPlay;
-      this.usedCards = used;
     },
   },
   reset: {
