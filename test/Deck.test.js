@@ -346,13 +346,24 @@ describe('Deck', () => {
 
       it('should return the cards to the used pile', (done) => {
         deck.unusedCards = [new Card('two', 'spades')];
+        deck.inPlay = [CARD];
         deck.returnToDeck([CARD]);
         expect(deck.usedCards).to.deep.equal([CARD]);
         done();
       });
 
+      it('should remove the cards from the inPlay pile', (done) => {
+        deck.unusedCards = [new Card('two', 'spades')];
+        deck.inPlay = [CARD];
+        deck.returnToDeck([CARD]);
+        expect(deck.usedCards).to.deep.equal([CARD]);
+        expect(deck.inPlay.length).to.equal(0);
+        done();
+      });
+
       it('should not be privacy leakish', (done) => {
         deck.unusedCards = [new Card('two', 'spades')];
+          deck.inPlay = [CARD];
         deck.returnToDeck([CARD]);
         expect(deck.usedCards).to.not.equal([CARD]);
         done();
@@ -377,23 +388,68 @@ describe('Deck', () => {
         expect(Deck).to.have.property('contains').that.is.a('Function');
         done();
       });
-      it('should return true', (done) => {
-        expect(Deck.contains(deck.unusedCards, [CARD])).to.equal(true);
-        expect(Deck.contains(deck.unusedCards, cards)).to.equal(true);
+      it('should return an array of indices', (done) => {
+        expect(Array.isArray(Deck.contains(deck.unusedCards, [CARD]))).to.equal(true);
+        expect(Array.isArray(Deck.contains(deck.unusedCards, cards))).to.equal(true);
         cards.push(CARD);
-        expect(Deck.contains(cards, [CARD])).to.equal(true);
+        expect(Array.isArray(Deck.contains(cards, [CARD]))).to.equal(true);
         done();
       });
-      it('should return false', (done) => {
-        expect(Deck.contains(deck.usedCards, [CARD])).to.equal(false);
+      it('should return undefined', (done) => {
+        expect(Deck.contains(deck.usedCards, [CARD])).to.equal(undefined);
         deck.unusedCards = [CARD];
-        expect(Deck.contains(deck.unusedCards, [new Card('TWO', 'SPADES')])).to.equal(false);
+        expect(Deck.contains(deck.unusedCards, [new Card('TWO', 'SPADES')])).to.equal(undefined);
         done();
       });
       it('should throw a TypeError if called with something that\'s not cards', (done) => {
         expect(() => {
           Deck.contains(deck.unusedCards, 42);
         }).to.throw(Error);
+        done();
+      });
+    });
+    describe('findAll method', () => {
+      it('should be defined', (done) => {
+        expect(Deck).to.have.property('findAll').that.is.a('Function');
+        done();
+      });
+      it('should return an array of indices when card(s) are found', (done) => {
+        expect(Deck.findAll(deck.unusedCards, 'two').length).to.equal(4);
+        done();
+      });
+      it('should return undefined when deck does not contain card(s)', (done) => {
+        deck.unusedCards = [CARD];
+        expect(Deck.findAll(deck.unusedCards, 'ace')).to.equal(undefined);
+        done();
+      });
+      it('should throw a TypeError if called with something that\'s not cards', (done) => {
+        expect(() => {
+          Deck.findAll(deck, ['monkey']);
+        }).to.throw(TypeError);
+        done();
+      });
+    });
+    describe('createSet method', () => {
+      it('should be defined', (done) => {
+        expect(Deck).to.have.property('createSet').that.is.a('Function');
+        done();
+      });
+      it('should return an array of Cards', (done) => {
+        expect(Array.isArray(Deck.createSet(['spades'], Card.values))).to.equal(true);
+        expect(Card.isValid(Deck.createSet(['spades'], Card.values)[0])).to.equal(true);
+        done();
+      });
+      it('should create the desired amount of cards', (done) => {
+        expect(Deck.createSet(['spades'], Card.values).length).to.equal(14);
+        done();
+      });
+      it('should throw a TypeError if called with something that\'s not card values or card suits', (done) => {
+        expect(() => {
+          Deck.createSet(Card.suits, 'monkey');
+        }).to.throw(TypeError);
+        expect(() => {
+          Deck.createSet('monkey', Card.values);
+        }).to.throw(TypeError);
         done();
       });
     });

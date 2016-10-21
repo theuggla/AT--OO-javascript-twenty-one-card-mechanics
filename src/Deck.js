@@ -11,27 +11,10 @@ const Card = require('../src/Card.js');
 
 function Deck(joker) {
   let used = [];
-  let unused = createDeck(Card.suits, Card.values, joker);
+  let inPlay = [];
+  let unused = joker ? Deck.createSet(Card.suits, Card.values) : Deck.createSet(Card.suits, Card.values.slice(1));
 
   Object.defineProperties(this, {
-    usedCards: {
-      get: function() {
-        return copyCards(used);
-      },
-      set: function(cards) {
-        if (areValidCards(cards)) {
-          if (cards.length === 0) { //allow to be set to 0
-            used = [];
-          } else if (!Deck.contains(unused, cards)) { //the cards can't already be in the unused pile, we don't want two of the same card
-            used = copyCards(cards);
-          } else {
-            throw new Error('Can\'t add these cards to the deck!');
-          }
-        }
-      },
-      enumerable: true,
-      configurable: false
-    },
     unusedCards: {
       get: function() {
         return copyCards(unused);
@@ -40,10 +23,46 @@ function Deck(joker) {
         if (areValidCards(cards)) {
           if (cards.length === 0) { //allow to be set to 0;
             unused = [];
-          } else if (!Deck.contains(used, cards)) { //the cards can't already be in the used pile, we don't want two of the same card
+          } else if (!(Deck.contains(inPlay, cards)) && !(Deck.contains(used, cards))) {
             unused = copyCards(cards);
           } else {
-            throw new Error('Can\'t add these cards to the deck!');
+            throw new Error('These cards are already in the deck.');
+          }
+        }
+      },
+      enumerable: true,
+      configurable: false
+    },
+    inPlay: {
+        get: function() {
+          return copyCards(inPlay);
+        },
+        set : function(cards) {
+            if (areValidCards(cards)) {
+              if (cards.length === 0) {
+                inPlay = [];
+              } else if (!(Deck.contains(unused, cards)) && (!Deck.contains(used, cards))) {
+                inPlay = copyCards(cards);
+              } else {
+                throw new Error('These cards are already in the deck.');
+              }
+            }
+          },
+        enumerable: true,
+        configurable: false
+      },
+    usedCards: {
+      get: function() {
+        return copyCards(used);
+      },
+      set: function(cards) {
+        if (areValidCards(cards)) {
+          if (cards.length === 0) { //allow to be set to 0
+            used = [];
+          } else if (!(Deck.contains(unused, cards)) && (!Deck.contains(inPlay, cards))) {
+            used = copyCards(cards);
+          } else {
+            throw new Error('These cards are already in the deck.');
           }
         }
       },
@@ -134,24 +153,60 @@ Object.defineProperties(Deck.prototype, {
   deal: {
     value: function() {
       let theDeck = this.unusedCards;
+      let inPlay = this.inPlay;
+      let theCard;
       if (theDeck.length === 0) {
         throw new Error('Deck is empty, cannot deal.');
       } else {
-        let theCard = theDeck.pop();
+        theCard = theDeck.pop();
+        inPlay.push(theCard);
         this.unusedCards = theDeck;
-        return theCard;
+        this.inPlay = inPlay;
+        return theCard.clone();
       }
     },
   },
   returnToDeck: {
     value: function(cards) {
       let used = this.usedCards;
-      cards.forEach(function(card) {
-        used.push(card.clone());
-      });
+      let inPlay = this.inPlay;
+      if (Deck.contains(inPlay, cards)) {
+        for (let j = 0; j < cards.length; j += 1) {
+          let found;
+          for (let i = 0; i < inPlay.length && !found; i++) {
+            if (inPlay[i].equals(cards[j])) {
+              used.push(inPlay[i]);
+              inPlay.splice(i, i + 1);
+              found = true;
+            }
+          }
+        }
+      } else {
+        throw new Error('These cards do not belong in the deck.');
+      }
+      this.inPlay = inPlay;
       this.usedCards = used;
     },
-  }
+  },
+  reset: {
+      value: function() {
+          let unused = this.unusedCards;
+          let inPlay = this.inPlay;
+          let used = this.usedCards;
+
+          while (inPlay.length > 0) {
+            unused.push(inPlay.pop());
+          }
+          while (used.length > 0) {
+            unused.push(used.pop());
+          }
+
+          this.inPlay = inPlay;
+          this.usedCards = used;
+          this.unusedCards = unused;
+
+        }
+    }
 });
 
 Object.defineProperties(Deck, {
@@ -181,10 +236,12 @@ Object.defineProperties(Deck, {
       return indices;
     }
   },
-  findAll: function(deck, type) {
+  findAll: {
+    value: function(deck, type) {
       let theType;
       let values;
       let suits;
+
       if (Card.values.indexOf(type.toUpperCase()) !== -1) {
         values = [type];
         suits = Card.suits;
@@ -195,10 +252,28 @@ Object.defineProperties(Deck, {
         throw new TypeError('Cant\'t search for ' + type + ' in the deck.');
       }
 
-      theType = createDeck(suits, values);
+      theType = Deck.createSet(suits, values);
 
       return Deck.contains(deck, theType);
     }
+  },
+  createSet: {
+    value: function(suits, values) {
+        let newSet = [];
+        let theCard;
+        suits.forEach(function(suit) {
+          values.forEach(function(value) {
+            try {
+              theCard = new Card(value, suit);
+            } catch (e) {
+              throw new TypeError('Not a valid suit or value.');
+            }
+            newSet.push(theCard);
+          });
+        });
+        return newSet;
+      }
+  }
 });
 
 //helper functions
@@ -223,22 +298,6 @@ function areValidCards(cards) {
     });
     return true;
   }
-}
-
-function createDeck(suits, values, joker) {
-  let newDeck = [];
-  suits.forEach(function(suit) {
-    values.forEach(function(value) {
-      if (!joker) {
-        if (value !== 'JOKER') {
-          newDeck.push(new Card(value, suit));
-        }
-      } else {
-        newDeck.push(new Card(value, suit));
-      }
-    });
-  });
-  return newDeck;
 }
 
 /**
