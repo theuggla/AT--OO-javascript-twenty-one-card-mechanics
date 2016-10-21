@@ -11,7 +11,7 @@ const Card = require('../src/Card.js');
 
 function Deck(joker) {
   let used = [];
-  let unused = createDeck(joker);
+  let unused = createDeck(Card.suits, Card.values, joker);
 
   Object.defineProperties(this, {
     usedCards: {
@@ -156,28 +156,49 @@ Object.defineProperties(Deck.prototype, {
 
 Object.defineProperties(Deck, {
   contains: {
-    value: function(theDeck, cards) {
-      let result = false;
-      if (areValidCards(theDeck) && areValidCards(cards)) {
-        if (theDeck.length === 0) {
-          return false;
-        } else {
-          cards.forEach(function(card) {
-            theDeck.forEach(function(cardInDeck) {
-              if (card.equals(cardInDeck)) {
-                result = true;
-                return result;
-              }
-            });
-            if (result) {
-              return result;
-            }
-          });
-        }
-        return result;
+    value: function(theDeck, card) {
+      let indices;
+      let cards;
+
+      if (!Array.isArray(card)) {
+        cards = [card.clone()];
+      } else {
+        cards = card;
       }
-    },
-  }
+
+      for (let j = 0; j < cards.length; j += 1) {
+        let found;
+        for (let i = 0; i < theDeck.length && !found; i += 1) {
+          if (theDeck[i].equals(cards[j])) {
+            if (!indices) {
+              indices = [];
+            }
+            indices.push(i);
+            found = true;
+          }
+        }
+      }
+      return indices;
+    }
+  },
+  findAll: function(deck, type) {
+      let theType;
+      let values;
+      let suits;
+      if (Card.values.indexOf(type.toUpperCase()) !== -1) {
+        values = [type];
+        suits = Card.suits;
+      } else if (Card.suits.indexOf(type.toUpperCase()) !== -1) {
+        values = Card.values;
+        suits = [type];
+      } else {
+        throw new TypeError('Cant\'t search for ' + type + ' in the deck.');
+      }
+
+      theType = createDeck(suits, values);
+
+      return Deck.contains(deck, theType);
+    }
 });
 
 //helper functions
@@ -204,10 +225,8 @@ function areValidCards(cards) {
   }
 }
 
-function createDeck(joker) {
+function createDeck(suits, values, joker) {
   let newDeck = [];
-  let suits = Card.suits;
-  let values = Card.values;
   suits.forEach(function(suit) {
     values.forEach(function(value) {
       if (!joker) {
