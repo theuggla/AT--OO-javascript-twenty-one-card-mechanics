@@ -48,12 +48,6 @@ describe('CardPlayer', () => {
         done();
       });
     });
-    describe('clone', () => {
-      it('should be defined', (done) => {
-        expect(CardPlayer.prototype).to.have.property('clone').that.is.a('Function');
-        done();
-      });
-    });
     describe('addToHand', () => {
       it('should be defined', (done) => {
         expect(CardPlayer.prototype).to.have.property('addToHand').that.is.a('Function');
