@@ -263,7 +263,7 @@ describe('BlackJackPlayer', () => {
     });
   });
 
-  describe('Inherited Properties', () => {
+  describe('Own Properties', () => {
     describe('limit', () => {
       let aPlayer;
 
@@ -308,10 +308,10 @@ describe('BlackJackPlayer', () => {
         expect(() => {
           aPlayer.bank = undefined;
         }).to.throw(Error);
-       expect(() => {
+        expect(() => {
           aPlayer.bank = null;
         }).to.throw(Error);
-       expect(() => {
+        expect(() => {
           aPlayer.bank = 'hej';
         }).to.throw(Error);
         expect(() => {
@@ -502,7 +502,7 @@ describe('BlackJackPlayer', () => {
 
       it('should set hand to empty array', (done) => {
         aPlayer.hand = HAND;
-          aPlayer.reset()
+        aPlayer.reset()
         expect(aPlayer.hand).to.deep.equal([]);
         done();
       });
@@ -527,7 +527,7 @@ describe('BlackJackPlayer', () => {
 
       it('should be defined', (done) => {
         expect(BlackJackPlayer.prototype).to.have.ownProperty('clone');
-          expect(aPlayer).to.have.property('clone').that.is.a('Function');
+        expect(aPlayer).to.have.property('clone').that.is.a('Function');
         done();
       });
 
@@ -559,7 +559,7 @@ describe('BlackJackPlayer', () => {
 
       it('should be defined', (done) => {
         expect(BlackJackPlayer.prototype).to.have.ownProperty('requestCard');
-          expect(aPlayer).to.have.property('requestCard').that.is.a('Function');
+        expect(aPlayer).to.have.property('requestCard').that.is.a('Function');
         done();
       });
 
@@ -588,11 +588,11 @@ describe('BlackJackPlayer', () => {
         aPlayer = new BlackJackPlayer(NAME);
       });
 
-        it('should be defined', (done) => {
-            expect(BlackJackPlayer.prototype).to.have.ownProperty('makeBet');
-            expect(aPlayer).to.have.property('makeBet').that.is.a('Function');
-            done();
-        });
+      it('should be defined', (done) => {
+        expect(BlackJackPlayer.prototype).to.have.ownProperty('makeBet');
+        expect(aPlayer).to.have.property('makeBet').that.is.a('Function');
+        done();
+      });
 
       it('should return a number', (done) => {
         expect(typeof aPlayer.makeBet()).to.equal('number');
@@ -625,14 +625,9 @@ describe('BlackJackPlayer', () => {
         aPlayer = new BlackJackPlayer(NAME);
       });
 
-        it('should be defined', (done) => {
-            expect(BlackJackPlayer.prototype).to.have.ownProperty('toString');
-            expect(aPlayer).to.have.property('toString').that.is.a('Function');
-            done();
-        });
-
-      it('should return a string', (done) => {
-        expect(typeof aPlayer.toString()).to.equal('string');
+      it('should be defined', (done) => {
+        expect(BlackJackPlayer.prototype).to.have.ownProperty('toString');
+        expect(aPlayer).to.have.property('toString').that.is.a('Function');
         done();
       });
 
