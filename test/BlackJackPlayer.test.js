@@ -609,12 +609,6 @@ describe('BlackJackPlayer', () => {
         expect(aPlayer.makeBet()).to.equal(15);
         done();
       });
-
-      it('should subtract the bet from the bank', (done) => {
-        aPlayer.makeBet();
-        expect(aPlayer.bank).to.equal(70);
-        done();
-      });
     });
 
     describe('toString', () => {

@@ -74,7 +74,6 @@ Object.defineProperties(BlackJackPlayer.prototype, {
       } else {
         bet = this.bank;
       }
-      this.bank -= bet;
       return bet;
     },
   },
