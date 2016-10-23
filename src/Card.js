@@ -57,6 +57,8 @@ function Card(value, suit) {
       set: function(value) {
         if (value === 1 || value === 14) {
           theAceValue = value;
+        } else {
+          throw new Error('Invalid value for ace.');
         }
       }
     });
@@ -141,15 +143,23 @@ Object.defineProperties(Card.prototype, {
   },
   clone: {
     value: function() {
-      return new Card(this.value, this.suit);
+      let copy = new Card(this.value, this.suit);
+      if (this.acevalue) {
+        copy.acevalue = this.acevalue;
+      }
+      return copy;
     },
   },
   toJSON: {
     value: function() {
-      return {
+      let json = {
         suit: this.suit,
         value: this.value
-      };
+      }
+      if (this.acevalue) {
+        json.acevalue = this.acevalue;
+      }
+      return json;
     },
   }
 });
