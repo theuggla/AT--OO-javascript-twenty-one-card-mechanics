@@ -25,7 +25,7 @@ function CardPlayer(name = 'The Player') {
       },
       set: function(name) {
         if (typeof name === 'string') {
-          if (name.length > 0 && name.length < 20) {
+          if (name.length > 0 && name.length < 21) {
             theName = name;
           } else {
             throw new Error('Name has wrong length.');
@@ -103,18 +103,13 @@ Object.defineProperties(CardPlayer.prototype, {
     },
     writable: true
   },
-  clone: {
-    value: function() {
-      let copy = new CardPlayer(this.name);
-      copy.hand = copyHand(this.hand);
-    },
-    writable: true
-  },
   addToHand: {
     value: function(card) {
       let theHand = this.hand;
       if (Card.isValid(card)) {
         theHand.push(card.clone());
+      } else {
+          throw new Error('Tried to add non-valid Card to hand.');
       }
       this.hand = theHand;
     },
@@ -132,11 +127,7 @@ Object.defineProperties(CardPlayer.prototype, {
 
 //helper functions
 function copyHand(hand) {
-  let newHand = [];
-  hand.forEach(function(card) {
-    newHand.push(card.clone());
-  });
-  return newHand;
+  return hand.map((card) => card.clone());
 }
 
 function isValidHand(hand) {
