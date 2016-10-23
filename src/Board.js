@@ -7,99 +7,76 @@
 
 'use strict';
 
-let Player = require('../src/BlackjackPlayer.js');
 let Dealer = require('../src/Dealer.js');
 let Deck = require('../src/Deck.js');
+let BlackJackPlayer = require('../src/BlackJackPlayer.js');
 
-function Board(players) {
-    let theDeck = new Deck();
-    let theDealer = new Dealer();
-    let history;
-
-    Object.defineProperties(this, {
-        theDealer: {
-            get: function() {
-                return theDealer;
-            },
-            enumerable: true,
-            configurable: false
-        },
-        theDeck: {
-            get: function() {
-                return theDeck;
-            },
-            enumerable: true,
-            configurable: false
-        },
-        history: {
-            value: history,
-            writable: true,
-            enumerable: true,
-            configurable: false
-        }
-    });
-
-    theDeck.shuffle();
+function Board() {
+  this.deck = new Deck();
+  this.dealer = new Dealer();
+  this.history = undefined;
+  this.currentPlayer = undefined;
 }
 
-Board.prototype.playRound = function(thePlayer) {
-    let theWinner;
-    let bet = thePlayer.makeBet();
-    this.theDeck.shuffle();
-
-    while (thePlayer.requestCard()) {
-        let theCard = this.theDeck.deal();
-        thePlayer.addToHand(theCard);
-        if ((thePlayer.points === 21) || (thePlayer.hand.length === 5 && thePlayer.points < 21)) {
-            theWinner = thePlayer.name;
-            thePlayer.bank = thePlayer.bank + (bet * 2);
-            break;
-        } else if (thePlayer.points > 21) {
-            theWinner = this.theDealer.name;
-            break;
+Object.defineProperties(Board.prototype, {
+  startGame: {
+    value: function(players) {
+      players.forEach((player) => {
+        if (this.deck.length === 1) {
+          this.deck.reshuffle();
         }
+        player.addToHand(this.deck.deal());
+      });
     }
-
-    if (!theWinner) {
-        while (this.theDealer.requestCard()) {
-            if (this.theDeck.length === 1) {
-                this.theDeck.reshuffle();
-            }
-            this.theDealer.addToHand(this.theDeck.deal());
-            if (this.theDealer.points > 21) {
-                theWinner = thePlayer.name;
-                thePlayer.bank = thePlayer.bank + (bet * 2);
-                break;
-            } else if (this.theDealer.points >= thePlayer.points) {
-                theWinner = this.theDealer.name;
-                break;
-            }
+  },
+  playTurn: {
+    value: function(player) {
+      let that = this;
+      let turn = function(player) {
+        while (player.requestCard()) {
+          if (that.deck.length === 1) {
+            that.deck.reshuffle();
+          }
+          player.addToHand(that.deck.deal());
         }
+        return isWinner(player);
+      };
+
+      let isWinner = function(thePlayer) {
+        if (thePlayer instanceof BlackJackPlayer) {
+          return (thePlayer.points === 21) || (thePlayer.hand.length === 5 && thePlayer.points < 21);
+        } else if (thePlayer instanceof Dealer) {
+          return ((thePlayer.points > that.currentPlayer.points) && (thePlayer.points <= 21));
+        }
+      };
+      let winner;
+      this.currentPlayer = player;
+      let bet = player.makeBet();
+
+      if (turn(player)) {
+        player.bank += bet * 2;
+        winner = player;
+      } else if (turn(this.dealer)) {
+        winner = this.dealer;
+        player.bank -= bet;
+      } else {
+        player.bank += bet * 2;
+        winner = player;
+      }
+
+      this.history = winner.name + ' wins!' + '\n' +
+          'PLAYER: ' + player.toString() + '\n' +
+          'DEALER: ' + this.dealer.toString() + '\n';
+
+      this.deck.returnToDeck(this.dealer.reset());
+      this.deck.returnToDeck(player.reset());
     }
-
-    this.history = theWinner + ' wins!' + '\n' +
-        'PLAYER: ' + thePlayer.toString() + '\n' +
-        'DEALER: ' + this.theDealer.toString() + '\n';
-
-
-    this.theDeck.returnToDeck(this.theDealer.hand);
-    this.theDeck.returnToDeck(thePlayer.hand);
-    thePlayer.hand = [];
-    this.theDealer.hand = [];
-
-};
-
-Board.prototype.toString = function() {
-    return this.history;
-};
-
-Board.prototype.reset = function() {
-    this.theDeck.returnToDeck(this.theDealer.hand);
-    this.theDeck.returnToDeck(this.thePlayer.hand);
-    this.thePlayer.hand = [];
-    this.theDealer.hand = [];
-    console.log(this.thePlayer.toString());
-    console.log(this.theDealer.toString());
-};
+  },
+  toString: {
+    value: function() {
+      return this.history;
+    }
+  }
+});
 
 module.exports = Board;
