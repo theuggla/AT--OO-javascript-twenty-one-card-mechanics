@@ -369,6 +369,7 @@ describe('Deck', () => {
         deck.reshuffle();
         expect(deck.usedCards.length).to.equal(0);
         expect(deck.unusedCards.length).to.equal(2);
+        expect(deck.length).to.equal(2);
         done();
       });
     });

@@ -137,10 +137,11 @@ describe('Card', () => {
         expect(aCard.acevalue).to.equal(14);
         done();
       });
-      it('should be able to be changed to anything that\'s not 1 or 14', (done) => {
+      it('should throw an Error if changed to anything that\'s not 1 or 14', (done) => {
         aCard = new Card('ACE', 'HEARTS');
-        aCard.acevalue = 10;
-        expect(aCard.acevalue).to.not.equal(10);
+        expect(() => {
+          aCard.acevalue = 10;
+        }).to.throw(Error);
         done();
       });
     });
@@ -168,6 +169,12 @@ describe('Card', () => {
       it('should return a copy', (done) => {
         expect(aCard.clone()).to.not.equal(aCard);
         expect(aCard.clone()).to.deep.equal(aCard);
+        done();
+      });
+
+      it('should copy the acevalue', (done) => {
+        let anotherCard = new Card('ACE', 'SPADES');
+        expect(anotherCard.clone().acevalue).to.equal(anotherCard.acevalue);
         done();
       });
     });
