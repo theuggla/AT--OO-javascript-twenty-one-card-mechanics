@@ -177,7 +177,7 @@ Object.defineProperties(Deck.prototype, {
             for (let i = 0; i < inPlay.length && !found; i++) {
               if (inPlay[i].equals(cards[j])) {
                 used.push(inPlay[i]);
-                inPlay.splice(i, i + 1);
+                inPlay.splice(i, 1);
                 found = true;
               }
             }
