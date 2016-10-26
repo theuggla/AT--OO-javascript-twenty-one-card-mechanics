@@ -133,6 +133,7 @@ Object.defineProperties(Card.prototype, { //prototype methods
   },
   /**
   * Compares to Cards to see if they are equal.
+   * @param other {object} the object to compare to.
   * @returns {Boolean} true if the Cards have the same suit and value.
    * */
   equals: {
@@ -154,8 +155,10 @@ Object.defineProperties(Card.prototype, { //prototype methods
   },
   /**
   * Compares the Card with another Card.
+   * @param otherCard {Card} the object to compare to.
   * @returns {Number} >0 if the value of this Card is
    * greater than the value of the other Card.
+   * @throws {TypeError} if the arguments is not a Card.
    * */
   compareTo: {
     value: function(otherCard) {
@@ -200,7 +203,8 @@ Object.defineProperties(Card.prototype, { //prototype methods
 
 Object.defineProperties(Card, { //static properties and methods
   /**
-   * returns {Array} the valid suits for the Card type.
+   * Gives the valid Card suits.
+   * @returns {Array} the valid suits for the Card type.
    */
   suits: {
     get: function() {
@@ -209,7 +213,8 @@ Object.defineProperties(Card, { //static properties and methods
     enumerable: true,
   },
   /**
-   * returns {Array} the valid values for the Card type.
+   * Gives the valid Card values.
+   * @returns {Array} the valid values for the Card type.
    */
   values: {
     get: function() {
@@ -219,7 +224,8 @@ Object.defineProperties(Card, { //static properties and methods
   },
   /**
    * Checks if an object is a valid card.
-   * returns {Boolean} true if the object is of Card type and has a valid suit and value.
+   * @param card {object} the object to check.
+   * @returns {Boolean} true if the object is of Card type and has a valid suit and value.
    */
   isValid: {
     value: function(card) {
