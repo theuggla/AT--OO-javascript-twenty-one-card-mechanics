@@ -10,9 +10,14 @@
 const Card = require('../src/Card.js');
 const Deck = require('../src/Deck.js');
 
+/**
+ * Initiates a CardPlayer.
+ * @abstract don't initiate the type.
+ * @param name {string} the name of the player.
+ */
 function CardPlayer(name = 'The Player') {
   if (this.constructor === CardPlayer) {
-    throw new Error('Can\'t make instances of this class');
+    throw new Error('Can\'t make instances of this class'); //don't let the type be initiated
   }
 
   let theName;
@@ -20,10 +25,10 @@ function CardPlayer(name = 'The Player') {
 
   Object.defineProperties(this, {
     name: {
-      get: function() {
+      get: () => {
         return theName;
       },
-      set: function(name) {
+      set: (name) => {
         if (typeof name === 'string') {
           if (name.length > 0 && name.length < 21) {
             theName = name;
@@ -38,10 +43,10 @@ function CardPlayer(name = 'The Player') {
       enumerable: true,
     },
     hand: {
-      get: function() {
+      get: () => {
         return copyHand(theHand);
       },
-      set: function(hand) {
+      set: (hand) => {
         if (Array.isArray(hand)) {
           if (hand.length === 0) { //allow to be set to 0
             theHand = [];
@@ -57,8 +62,8 @@ function CardPlayer(name = 'The Player') {
       enumerable: true,
     },
     points: {
-      get: function() {
-        if (getPoints(theHand) > 21) {
+      get: () => {
+        if (getPoints(theHand) > 21) { //if points > 21, change the value of potential aces to 1
           theHand = adjustForAce(theHand);
         }
 
@@ -71,19 +76,33 @@ function CardPlayer(name = 'The Player') {
   this.name = name;
 }
 
+//prototype methods
 Object.defineProperties(CardPlayer.prototype, {
+  /**
+   * Gives the value of the Player, by giving the added points of the hand.
+   * @returns {number} the Players points.
+   */
   valueOf: {
     value: function() {
       return this.points;
     },
     writable: true
   },
+  /**
+   * Gives a string representation of the player.
+   * @returns {string} the players name.
+   */
   toString: {
     value: function() {
       return this.name;
     },
     writable: true
   },
+  /**
+   * Compares an object to this CardPlayer to see if they are equal.
+   * @param other {object} the object to compare to.
+   * @returns true if the two CardPlayers have the same name and the same Cards on hand.
+   */
   equals: {
     value: function(other) {
       if (!(other instanceof CardPlayer)) {
@@ -103,18 +122,29 @@ Object.defineProperties(CardPlayer.prototype, {
     },
     writable: true
   },
+  /**
+   * Adds a Card to the player's hand.
+   * @param card {Card} the Card to add.
+   * @returns this.
+   * @throws {Error} if the Card is not valid.
+   */
   addToHand: {
     value: function(card) {
       let theHand = this.hand;
       if (Card.isValid(card)) {
         theHand.push(card.clone());
       } else {
-          throw new Error('Tried to add non-valid Card to hand.');
+        throw new Error('Tried to add non-valid Card to hand.');
       }
       this.hand = theHand;
+      return this;
     },
     writable: true
   },
+  /**
+   * Resets the players hand to the empty Array.
+   * @returns the players hand.
+   */
   reset: {
     value: function() {
       let theHand = this.hand;
@@ -131,16 +161,18 @@ function copyHand(hand) {
 }
 
 function isValidHand(hand) {
-  hand.forEach(function(card) {
+  let result = true;
+  hand.forEach((card) => {
     if (!Card.isValid(card)) {
-      return false;
+      result = false;
+      return result;
     }
   });
-  return true;
+  return result;
 }
 
 function getPoints(hand) {
-  return hand.reduce(function(a, b) {
+  return hand.reduce((a, b) => {
     return a + b;
   }, 0);
 }
