@@ -122,7 +122,7 @@ Object.defineProperties(BlackJackPlayer.prototype, {
    */
   clone: {
     value: function() {
-      let copy = new BlackJackPlayer(this.name);
+      let copy = new BlackJackPlayer(this.name, this.limit);
       copy.hand = copyHand(this.hand);
       copy.bank = this.bank;
       return copy;

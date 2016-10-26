@@ -42,6 +42,7 @@ function Board(players) {
     },
     playRounds: { //plays a round with each of the players against the dealer
       value: function() {
+          history = [];
         let firstDeal = '';
         thePlayers.forEach((player) => { //deal everyone a card
           if (deck.length === 1) {
