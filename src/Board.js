@@ -92,21 +92,25 @@ Object.defineProperties(Board.prototype, {
 //helper functions
 
 function round(aPlayer, aDealer, deck) {
+    let playerResult;
   let winner;
   let bet = aPlayer.makeBet();
 
   if (!(winsTurn(aPlayer)) && (aPlayer.points > 21 || winsTurn(aDealer))) {
     winner = aDealer;
     aPlayer.bank -= bet;
+      playerResult = '-';
   } else {
     aPlayer.bank += bet;
     winner = aPlayer;
+      playerResult = '+';
   }
 
   //record the round
-  let history = winner.name + ' wins!' + '\n' +
-      '(PLAYER) ' + aPlayer.toString() + '\n' +
-      '(DEALER) ' + aDealer.toString() + '\n';
+  let history = '(PLAYER) ' + aPlayer.toString() + '\n' +
+                '(DEALER) ' + aDealer.toString() + '\n' +
+                winner.name + ' wins!' + '\n' +
+                aPlayer.name + ' ' + playerResult + '£' + bet + ', new balance £' + aPlayer.bank + '\n';
 
   //get the cards back
   deck.returnToDeck(aDealer.reset());

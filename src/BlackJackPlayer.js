@@ -98,7 +98,7 @@ Object.defineProperties(BlackJackPlayer.prototype, {
    */
   toString: {
     value: function() {
-      let output = this.name + ' (£' + this.bank + '): ';
+      let output = this.name + ' : ';
       if (this.hand.length === 0) {
         output += '-';
       } else {

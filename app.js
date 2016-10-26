@@ -32,13 +32,14 @@ while (players.length > 1) {
   players = theBoard.players;
   for (let i = 0; i < players.length; i += 1) {
     if (players[i].bank === 0) { //if a player does not have money left
-        console.log(players[i].name + ' was eliminated.');
+      console.log(players[i].name + ' was eliminated.');
       players.splice(i, 1);  //remove the player
     }
   }
   theBoard.players = players;
 
   round += 1;
+  console.log();
 }
 
 //print result
