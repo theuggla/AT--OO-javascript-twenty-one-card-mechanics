@@ -11,72 +11,129 @@ let Dealer = require('../src/Dealer.js');
 let Deck = require('../src/Deck.js');
 let BlackJackPlayer = require('../src/BlackJackPlayer.js');
 
-function Board() {
-  this.deck = new Deck();
-  this.dealer = new Dealer();
-  this.history = undefined;
-  this.currentPlayer = undefined;
+function Board(players) {
+
+  let thePlayers = [];
+  let history = [];
+  let dealer;
+  let deck;
+
+  Object.defineProperties(this, {
+    players: {
+      get: function() {
+        let copy = [];
+        thePlayers.forEach(function(player) {
+          copy.push(player.clone());
+        });
+        return copy;
+      },
+      set: function(players) {
+        if (areValid(players)) {
+          let copy = [];
+          players.forEach(function(player) {
+            copy.push(player.clone());
+          });
+          thePlayers = copy;
+        }
+      }
+    },
+    playRounds: {
+      value: function() {
+        thePlayers.forEach((player) => {
+          if (deck.length === 1) {
+            deck.reshuffle();
+          } else {
+            player.addToHand(deck.deal());
+          }
+        });
+        for (let i = 0; i < thePlayers.length; i += 1) {
+          history.push(round(thePlayers[i], dealer, deck));
+        }
+      }
+    },
+    history: {
+      get: function() {
+        return history.slice();
+      }
+    }
+  });
+
+  this.players = players;
+    deck = new Deck();
+    dealer = new Dealer();
+    deck.shuffle();
 }
 
 Object.defineProperties(Board.prototype, {
-  startGame: {
-    value: function(players) {
-      players.forEach((player) => {
-        if (this.deck.length === 1) {
-          this.deck.reshuffle();
-        }
-        player.addToHand(this.deck.deal());
-      });
-    }
-  },
-  playTurn: {
-    value: function(player) {
-      let that = this;
-      let turn = function(player) {
-        while (player.requestCard()) {
-          if (that.deck.length === 1) {
-            that.deck.reshuffle();
-          }
-          player.addToHand(that.deck.deal());
-        }
-        return isWinner(player);
-      };
-
-      let isWinner = function(thePlayer) {
-        if (thePlayer instanceof BlackJackPlayer) {
-          return (thePlayer.points === 21) || (thePlayer.hand.length === 5 && thePlayer.points < 21);
-        } else if (thePlayer instanceof Dealer) {
-          return ((thePlayer.points > that.currentPlayer.points) && (thePlayer.points <= 21));
-        }
-      };
-      let winner;
-      this.currentPlayer = player;
-      let bet = player.makeBet();
-
-      if (turn(player)) {
-        player.bank += bet * 2;
-        winner = player;
-      } else if (turn(this.dealer)) {
-        winner = this.dealer;
-        player.bank -= bet;
-      } else {
-        player.bank += bet * 2;
-        winner = player;
-      }
-
-      this.history = winner.name + ' wins!' + '\n' +
-          'PLAYER: ' + player.toString() + '\n' +
-          'DEALER: ' + this.dealer.toString() + '\n';
-
-      this.deck.returnToDeck(this.dealer.reset());
-      this.deck.returnToDeck(player.reset());
-    }
-  },
   toString: {
     value: function() {
-      return this.history;
+        let history = this.history;
+        let output = '';
+        history.forEach(function(post) {
+            output += post + '\n';
+        });
+      return output;
     }
   }
 });
+
+//helper functions
+
+function round(aPlayer, aDealer, deck) {
+  let winner;
+  let bet = aPlayer.makeBet();
+
+  if (!(turn(aPlayer)) && (aPlayer.points > 21 || turn(aDealer))) {
+    winner = aDealer;
+    aPlayer.bank -= bet;
+  } else {
+    aPlayer.bank += bet;
+    winner = aPlayer;
+  }
+
+    let history = winner.name + ' wins!' + '\n' +
+        '(PLAYER) ' + aPlayer.toString() + '\n' +
+        '(DEALER) ' + aDealer.toString() + '\n';
+
+  deck.returnToDeck(aDealer.reset());
+  deck.returnToDeck(aPlayer.reset());
+
+    return history;
+
+  //helper functions
+  function turn(player) {
+    while (player.requestCard() && !(isWinner(player))) {
+      if (deck.length === 1) {
+        deck.reshuffle();
+      }
+      player.addToHand(deck.deal());
+    }
+    return isWinner(player);
+  }
+
+  function isWinner(player) {
+    if (player instanceof BlackJackPlayer) {
+      return (player.points === 21) || (player.hand.length === 5 && player.points < 21);
+    } else if (player instanceof Dealer) {
+      return ((player.points > aPlayer.points) && (player.points <= 21));
+    }
+  }
+
+}
+
+function areValid(players) {
+  let result = true;
+
+  if (!Array.isArray(players)) {
+    return players instanceof BlackJackPlayer;
+  }
+
+  players.forEach((player) => {
+    if (!(player instanceof BlackJackPlayer)) {
+      result = false;
+    }
+  });
+  return result;
+}
 
 module.exports = Board;

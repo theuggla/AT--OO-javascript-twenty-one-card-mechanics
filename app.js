@@ -10,32 +10,31 @@
 const Player = require('./src/BlackJackPlayer.js');
 const Board = require('./src/Board.js');
 
-let theBoard = new Board();
-let round = 1;
 let players = [];
 
 for (let i = 0; i < 10; i += 1) {
   players[i] = new Player('Player ' + i);
 }
 
+let theBoard = new Board(players);
+let round = 1;
+
 while (players.length > 1) {
+
   console.log('Round ' + round);
-  theBoard.startGame(players);
-  players.forEach((player) => {
-    console.log(player.toString());
-  });
+  theBoard.playRounds();
+  console.log(theBoard.toString());
 
-  for (let i = 0; i < players.length; i += 1) {
-    theBoard.playTurn(players[i]);
-    console.log(theBoard.toString());
-  }
-
+    players = theBoard.players;
   for (let i = 0; i < players.length; i += 1) {
     if (players[i].bank === 0) { //if a player does not have money left
-      players.splice(i, i + 1);  //remove the player
+      players.splice(i, 1);  //remove the player
     }
   }
+    theBoard.players = players;
+
   round += 1;
 }
 
-console.log(players[0].name + ' is the winner with ' + players[0].bank + 'in the bank!');
+console.log(theBoard.players[0].name + ' is the winner with £' + theBoard.players[0].bank + ' in the bank!');
+
