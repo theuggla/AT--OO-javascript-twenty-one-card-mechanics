@@ -64,10 +64,10 @@ Object.defineProperties(BlackJackPlayer.prototype, {
   constructor: {
     value: BlackJackPlayer
   },
-    /**
-     * Returns a boolean to determine if the player wants another Card.
-     * @returns {Boolean} true if Player is in play and their points is below their limit.
-     */
+  /**
+   * Returns a boolean to determine if the player wants another Card.
+   * @returns {Boolean} true if Player is in play and their points is below their limit.
+   */
   requestCard: {
     value: function() {
       if (this.inPlay) {
@@ -77,10 +77,10 @@ Object.defineProperties(BlackJackPlayer.prototype, {
     },
     writable: true,
   },
-    /**
-     * Makes a bet for the player.
-     * @returns {number} the player's bet.
-     */
+  /**
+   * Makes a bet for the player.
+   * @returns {number} the player's bet.
+   */
   makeBet: {
     value: function() {
       let bet;
@@ -92,24 +92,34 @@ Object.defineProperties(BlackJackPlayer.prototype, {
       return bet;
     },
   },
-    /**
-     * Gives a string representation of the player, consisting of their name and hand.
-     * @returns {string} the name and hand of the player.
-     */
+  /**
+   * Gives a string representation of the player, consisting of their name and hand.
+   * @returns {string} the name and hand of the player.
+   */
   toString: {
     value: function() {
       let output = this.name + ' (£' + this.bank + '): ';
-      this.hand.forEach(function(card) {
-        output += card.toString() + ' ';
-      });
-      output += '(' + this.points + ')';
+      if (this.hand.length === 0) {
+        output += '-';
+      } else {
+        this.hand.forEach(function(card) {
+          output += card.toString() + ' ';
+        });
+        output += '(' + this.points + ')';
+      }
+      if (this.points > 21) {
+        output += ' BUSTED!';
+      }
+      if (this.bank === 0) {
+        output += ' OUT OF FUNDS!';
+      }
       return output;
     }
   },
-    /**
-     * Makes an independent copy of this player.
-     * @returns {BlackJackPlayer} the copy.
-     */
+  /**
+   * Makes an independent copy of this player.
+   * @returns {BlackJackPlayer} the copy.
+   */
   clone: {
     value: function() {
       let copy = new BlackJackPlayer(this.name);

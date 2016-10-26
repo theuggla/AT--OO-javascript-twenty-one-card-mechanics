@@ -34,33 +34,40 @@ Object.defineProperties(Dealer.prototype, {
   constructor: {
     value: Dealer
   },
-    /**
-     * Returns a boolean to determine if the Dealer wants another Card.
-     * @returns {Boolean} true if Dealer's points is below their limit.
-     */
+  /**
+   * Returns a boolean to determine if the Dealer wants another Card.
+   * @returns {Boolean} true if Dealer's points is below their limit.
+   */
   requestCard: {
     value: function() {
       return this.inPlay;
     }
   },
-    /**
-     * Gives a string representation of the  Dealer, consisting of their name and hand.
-     * @returns {string} the name and hand of the Dealer.
-     */
+  /**
+   * Gives a string representation of the  Dealer, consisting of their name and hand.
+   * @returns {string} the name and hand of the Dealer.
+   */
   toString: {
     value: function() {
       let output = this.name + ': ';
-      this.hand.forEach(function(card) {
-        output += card.toString() + ' ';
-      });
-      output += '(' + this.points + ')';
+      if (this.hand.length === 0) {
+        output += '-';
+      } else {
+        this.hand.forEach(function(card) {
+          output += card.toString() + ' ';
+        });
+        output += '(' + this.points + ')';
+      }
+      if (this.points > 21) {
+        output += ' BUSTED!';
+      }
       return output;
     }
   },
-    /**
-     * Makes an independent copy of this player.
-     * @returns {Dealer} the copy.
-     */
+  /**
+   * Makes an independent copy of this player.
+   * @returns {Dealer} the copy.
+   */
   clone: {
     value: function() {
       let copy = new Dealer(this.name);

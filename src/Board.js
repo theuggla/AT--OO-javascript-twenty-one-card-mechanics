@@ -30,7 +30,8 @@ function Board(players) {
       set: (players) => {
         if (areValid(players)) {
           if (!Array.isArray(players)) {
-            thePlayers.push(players.clone);
+            thePlayers = [];
+            thePlayers.push(players.clone());
           } else {
             thePlayers = players.map((player) => player.clone());
           }

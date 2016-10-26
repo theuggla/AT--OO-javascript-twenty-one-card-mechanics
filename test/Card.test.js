@@ -112,7 +112,7 @@ describe('Card', () => {
       });
 
     });
-    describe('value', () => {
+    describe('acevalue', () => {
       let aCard;
 
       it('should be defined', (done) => {

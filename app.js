@@ -1,6 +1,10 @@
 /**
  * Starting  point of the application.
  *
+ * Creates an array of 10 BlackJackPlayers,
+ * and plays rounds with them on the same board
+ * until only one of them has money left.
+ *
  * @author Molly Arhammar
  * @version 1.0.0
  */
@@ -12,8 +16,8 @@ const Board = require('./src/Board.js');
 
 let players = [];
 
-for (let i = 0; i < 10; i += 1) {
-  players[i] = new Player('Player ' + i);
+for (let i = 0, limit = 9; i < 10; i += 1, limit += 1) {
+  players[i] = new Player('Player ' + i, limit); //give them different limits
 }
 
 let theBoard = new Board(players);
@@ -25,16 +29,18 @@ while (players.length > 1) {
   theBoard.playRounds();
   console.log(theBoard.toString());
 
-    players = theBoard.players;
+  players = theBoard.players;
   for (let i = 0; i < players.length; i += 1) {
     if (players[i].bank === 0) { //if a player does not have money left
       players.splice(i, 1);  //remove the player
     }
   }
-    theBoard.players = players;
+  theBoard.players = players;
 
   round += 1;
 }
 
-console.log(theBoard.players[0].name + ' is the winner with £' + theBoard.players[0].bank + ' in the bank!');
+//print result
+console.log(theBoard.players[0].name + ' is the last one standing with £' + theBoard.players[0].bank + ' in the bank!');
+console.log(round + ' rounds were played.');
 
