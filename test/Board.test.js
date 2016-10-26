@@ -10,6 +10,7 @@
 const expect = require('chai').expect;
 
 const BlackJackPlayer = require('../src/BlackJackPlayer.js');
+const Dealer = require('../src/Dealer.js');
 
 describe('Board', () => {
   const PLAYERS = [new BlackJackPlayer('Arthur Dent'), new BlackJackPlayer('Ford')];
@@ -74,6 +75,13 @@ describe('Board', () => {
         expect(aBoard.players).to.deep.equal([aPlayer]);
         done();
       });
+
+        it('should throw a TypeError when if set to an invalid BlackJackPlayer', (done) => {
+            expect(() => {
+                aBoard.players = [new Dealer()];
+            }).to.throw(TypeError);
+            done();
+        });
 
       it('should make a copy of the argument (setter)', (done) => {
         let aPlayer = new BlackJackPlayer('Arthur');
