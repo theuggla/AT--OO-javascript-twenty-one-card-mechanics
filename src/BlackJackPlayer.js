@@ -97,6 +97,7 @@ Object.defineProperties(BlackJackPlayer.prototype, {
     value: function() {
       let copy = new BlackJackPlayer(this.name);
       copy.hand = copyHand(this.hand);
+      copy.bank = this.bank;
       return copy;
     },
     writable: true
