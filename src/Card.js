@@ -7,6 +7,12 @@
 
 'use strict';
 
+/**
+ * Initiates a Card.
+ *
+ * @param value {string} the card value of the card.
+ * @param suit {string} the suit of the card.
+ */
 function Card(value, suit) {
 
   let theSuit;
@@ -48,8 +54,9 @@ function Card(value, suit) {
     }
   });
 
+  //if card is an ace, keep track of whether it's worth 1 or 14
   if (this.value === 'ACE') {
-    let theAceValue = 14;
+    let theAceValue = 14; //start out as 14
     Object.defineProperty(this, 'acevalue', {
       get: function() {
         return theAceValue;
@@ -64,17 +71,22 @@ function Card(value, suit) {
     });
   }
 
+  //helper functions
   function getRandomSuit() {
     return theSuits[Math.floor(Math.random() * theSuits.length)];
   }
 
   function getRandomValue() {
-    return theValues[Math.ceil(Math.random() * (theValues.length - 1))];
+    return theValues[Math.ceil(Math.random() * (theValues.length - 1))]; //don't randomize a Joker
   }
 }
 
 //let writable. configurable and enumerable default to private to lock object down
-Object.defineProperties(Card.prototype, {
+Object.defineProperties(Card.prototype, { //prototype methods
+  /**
+   * Gives the value of the card, disregarding suit.
+   * @returns {Number} the value.
+   */
   valueOf: {
     value: function() {
       if (this.value === 'JOKER') {
@@ -86,6 +98,10 @@ Object.defineProperties(Card.prototype, {
       }
     },
   },
+  /**
+   * Gives a string representation of the cards, containing suit and value.
+   * @returns {String} the string representation.
+   */
   toString: {
     value: function() {
       let output = '';
@@ -115,6 +131,10 @@ Object.defineProperties(Card.prototype, {
       return output;
     },
   },
+  /**
+  * Compares to Cards to see if they are equal.
+  * @returns {Boolean} true if the Cards have the same suit and value.
+   * */
   equals: {
     value: function(other) {
       if (typeof other !== 'object') {
@@ -132,6 +152,11 @@ Object.defineProperties(Card.prototype, {
       }
     },
   },
+  /**
+  * Compares the Card with another Card.
+  * @returns {Number} >0 if the value of this Card is
+   * greater than the value of the other Card.
+   * */
   compareTo: {
     value: function(otherCard) {
       if (otherCard instanceof Card) {
@@ -141,6 +166,10 @@ Object.defineProperties(Card.prototype, {
       }
     },
   },
+  /**
+   * Makes an independent copy of this Card.
+   * @returns {Card} the copy.
+   */
   clone: {
     value: function() {
       let copy = new Card(this.value, this.suit);
@@ -150,6 +179,11 @@ Object.defineProperties(Card.prototype, {
       return copy;
     },
   },
+  /**
+   * Makes a JSON representation of this Card, containing the suit,
+   * value and the acevalue if one exists.
+   * @returns a JSON-object.
+   */
   toJSON: {
     value: function() {
       let json = {
@@ -164,19 +198,29 @@ Object.defineProperties(Card.prototype, {
   }
 });
 
-Object.defineProperties(Card, {
+Object.defineProperties(Card, { //static properties and methods
+  /**
+   * returns {Array} the valid suits for the Card type.
+   */
   suits: {
     get: function() {
       return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
     },
     enumerable: true,
   },
+  /**
+   * returns {Array} the valid values for the Card type.
+   */
   values: {
     get: function() {
       return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
     },
     enumerable: true,
   },
+  /**
+   * Checks if an object is a valid card.
+   * returns {Boolean} true if the object is of Card type and has a valid suit and value.
+   */
   isValid: {
     value: function(card) {
       if (!(card instanceof Card)) {
