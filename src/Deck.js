@@ -355,12 +355,8 @@ Object.defineProperties(Deck, {
 
 //helper functions
 function copyCards(cards) { //copies all the Cards
-  let theCopy = [];
   if (areValidCards) {
-    cards.forEach((card) => {
-      theCopy.push(card.clone());
-    });
-    return theCopy;
+    return cards.map((card) => card.clone());
   }
 }
 

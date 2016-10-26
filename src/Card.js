@@ -41,13 +41,13 @@ function Card(value, suit) {
 
   Object.defineProperties(this, {
     suit: {
-      get: function() {
+      get: () => {
         return theSuit;
       },
       enumerable: true,
     },
     value: {
-      get: function() {
+      get: () => {
         return theValue;
       },
       enumerable: true,
@@ -58,10 +58,10 @@ function Card(value, suit) {
   if (this.value === 'ACE') {
     let theAceValue = 14; //start out as 14
     Object.defineProperty(this, 'acevalue', {
-      get: function() {
+      get: () => {
         return theAceValue;
       },
-      set: function(value) {
+      set: (value) => {
         if (value === 1 || value === 14) {
           theAceValue = value;
         } else {
@@ -192,7 +192,7 @@ Object.defineProperties(Card.prototype, { //prototype methods
       let json = {
         suit: this.suit,
         value: this.value
-      }
+      };
       if (this.acevalue) {
         json.acevalue = this.acevalue;
       }
@@ -207,7 +207,7 @@ Object.defineProperties(Card, { //static properties and methods
    * @returns {Array} the valid suits for the Card type.
    */
   suits: {
-    get: function() {
+    get: () => {
       return ['HEARTS', 'SPADES', 'CLUBS', 'DIAMONDS'];
     },
     enumerable: true,
@@ -217,7 +217,7 @@ Object.defineProperties(Card, { //static properties and methods
    * @returns {Array} the valid values for the Card type.
    */
   values: {
-    get: function() {
+    get: () => {
       return ['JOKER', 'ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
     },
     enumerable: true,

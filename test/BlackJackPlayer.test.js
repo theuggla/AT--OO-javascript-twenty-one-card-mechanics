@@ -340,7 +340,7 @@ describe('BlackJackPlayer', () => {
         done();
       });
       it('should return the bet', (done) => {
-        expect(aPlayer.bet).to.equal(30);
+        expect(aPlayer.bet).to.equal(25);
         done();
       });
       it('should throw an Error if the bet is set (should be read-only!)', (done) => {
@@ -599,8 +599,8 @@ describe('BlackJackPlayer', () => {
         done();
       });
 
-      it('should return 30', (done) => {
-        expect(aPlayer.makeBet()).to.equal(30);
+      it('should return 25', (done) => {
+        expect(aPlayer.makeBet()).to.equal(25);
         done();
       });
 
