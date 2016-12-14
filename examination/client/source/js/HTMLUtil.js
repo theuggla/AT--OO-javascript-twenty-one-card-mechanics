@@ -3,7 +3,7 @@
 */
 
 
-function makeDraggable(el, container, extraFunctionality) {
+function makeDraggable(el, container) {
     let arrowDrag;
     let mouseDrag;
     let dragoffset = {
@@ -30,36 +30,34 @@ function makeDraggable(el, container, extraFunctionality) {
             }
         }));
         addEventListeners(document, 'mousemove keydown', ((event) => {
-            let borders = {};
+            let destination = {};
 
             if (mouseDrag) {
-                    borders.top = (event.pageY - dragoffset.y);
-                    borders.left = (event.pageX - dragoffset.x);
+                    destination.y = (event.pageY - dragoffset.y);
+                    destination.x = (event.pageX - dragoffset.x);
             } else if (arrowDrag) {
-                borders.top = parseInt(el.style.top.slice(0, -2));
-                borders.left = parseInt(el.style.left.slice(0, -2));
+                destination.y = parseInt(el.style.top.slice(0, -2));
+                destination.x = parseInt(el.style.left.slice(0, -2));
 
                 switch (event.key) {
                     case 'ArrowUp':
-                        borders.top -= 5;
+                        destination.y -= 5;
                         break;
                     case 'ArrowDown':
-                        borders.top += 5;
+                        destination.y += 5;
                         break;
                     case 'ArrowLeft':
-                        borders.left -= 5;
+                        destination.x -= 5;
                         break;
                     case 'ArrowRight':
-                        borders.left += 5;
+                        destination.x += 5;
                         break;
                 }
             }
 
             if (mouseDrag || arrowDrag) {
-                borders.bottom = borders.top + el.clientHeight;
-                borders.right = borders.left + el.clientWidth;
-                el.style.left = withinBounds(borders, container).all ? borders.left  + "px" : el.style.left;
-                el.style.top = withinBounds(borders, container).all ? borders.top  + "px" : el.style.top + "px";
+                el.style.left = withinBounds(el, container, destination) ? destination.x  + "px" : el.style.left;
+                el.style.top = withinBounds(el, container, destination) ? destination.y  + "px" : el.style.top + "px";
             }
 
         }));
@@ -67,37 +65,19 @@ function makeDraggable(el, container, extraFunctionality) {
 
     el.style.position = "absolute";
     events();
-    extraFunctionality(el);
 }
 
 function addEventListeners(element, events, handler) {
     events.split(' ').forEach(event => element.addEventListener(event, handler));
 }
 
-function withinBounds(element, container) {
-    let border = {
-        minX: container.left ? container.left : container.getBoundingClientRect().left,
-        maxX: container.right ? container.right : container.getBoundingClientRect().right,
-        minY: container.bottom ? container.bottom : container.getBoundingClientRect().bottom,
-        maxY: container.top ? container.top : container.getBoundingClientRect().top
-    };
+function withinBounds(element, container, coords) {
+    let minX = container.offsetLeft;
+    let maxX = (minX + container.clientWidth) - element.clientWidth;
+    let minY = container.offsetTop;
+    let maxY = (minY + container.clientHeight) - element.clientHeight;
 
-    let el = {
-        left: element.left ? element.left : element.getBoundingClientRect().left,
-        right: element.right ? element.right : element.getBoundingClientRect().right,
-        bottom: element.bottom ? element.bottom : element.getBoundingClientRect().bottom,
-        top: element.top ? element.top : element.getBoundingClientRect().top
-    };
-
-    let result = {
-        top: el.top >= border.maxY,
-        left: el.left >= border.minX,
-        bottom: el.bottom <= border.minY,
-        right: el.right <= border.maxX,
-        all: (el.top >= border.maxY) && (el.left >= border.minX) && (el.bottom <= border.minY) && (el.right <= border.maxX)
-    };
-
-    return result;
+    return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
 }
 
 
