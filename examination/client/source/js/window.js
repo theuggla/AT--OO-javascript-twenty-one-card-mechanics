@@ -1,39 +1,17 @@
-function Window(type) {
-    let name;
-    let symbol;
 
-    class Window {
-        constructor(type) {
-            name = type;
-        }
 
-        get name() {
-            return name;
-        }
+let t = document.querySelector("template") || document.currentScript.ownerDocument.querySelector("template");
 
-        set name(name) {
-
-        }
-
-        get menu() {
-            return menu.clone();
-        }
-
-        set menu(newMenu) {
-
-        }
-
-        addMenuItem(item) {
-
-        }
-
-        removeMenuItem(item) {
-
-        }
+customElements.define('draggable-window', class extends HTMLElement {
+    constructor(type) {
+        super();
+        let shadowRoot = this.attachShadow({mode: "open"});
+        let instance = t.content.cloneNode(true);
+        shadowRoot.appendChild(instance);
     }
 
-    return new Window(type)
-}
+    connectedCallback() {
+        u.makeDraggable(this, this.parentNode);
+    }
 
-
-module.exports = Window;
+});

@@ -1,10 +1,4 @@
-.window {
-    border-style: solid;
-    width: 10%;
-    height: 5em;
-    position: absolute;
-    background-color: yellow;
-}
+
 
 #openWindows {
     border-style: solid;

@@ -1,6 +1,3 @@
-let Window = require("./window.js");
-let u = require("./HTMLUtil.js");
-
 function WindowManager(windowSpace) {
     let wm = {};
 
@@ -12,23 +9,34 @@ function WindowManager(windowSpace) {
             wm.types = 0;
         }
 
-        createWindow(type, space) {
-            let window = Window(type);
-            setupSpace(type, space);
+        createWindow(type) {
+            let aWindow = document.createElement("draggable-window");
+            setupSpace(type, aWindow);
+            windowSpace.appendChild(aWindow);
 
             if (wm[type].open) {
-                wm[type].open.push(window);
+                wm[type].open.push(aWindow);
             } else {
-                wm[type].open = [window];
+                wm[type].open = [aWindow];
             }
 
-            return window;
+            return aWindow;
+        }
+
+        open(type) {
+            let result = [];
+            let windows = wm[type].open;
+            result = windows.filter( (w) => {
+                return w.open;
+            });
+            wm[type].open = result;
+            return result;
         }
     }
 
     return new WindowManager(windowSpace);
 
-    //helper function
+    //helper functions
     function setupSpace(type, space) {
         let destination = {};
         let x;
@@ -38,7 +46,7 @@ function WindowManager(windowSpace) {
             destination.x = (wm[type].latestCoords.x + 50);
             destination.y = (wm[type].latestCoords.y + 50);
 
-            if (!(u.withinBounds(space, windowSpace, destination))) {
+            if (!(withinBounds(space, windowSpace, destination))) {
                 x = wm[type].startCoords.x += 5;
                 y = wm[type].startCoords.y += 5;
             } else {
@@ -53,7 +61,7 @@ function WindowManager(windowSpace) {
             destination.x = (wm.startX + (60 * wm.types));
             destination.y = (wm.startY);
 
-            if (!(u.withinBounds(space, windowSpace, destination))) {
+            if (!(withinBounds(space, windowSpace, destination))) {
                 x = wm.startX;
                 y = wm.startY;
             } else {
@@ -75,6 +83,15 @@ function WindowManager(windowSpace) {
         space.tabIndex = 0;
         space.style.top = y + "px";
         space.style.left = x + "px";
+    }
+
+    function withinBounds(element, container, coords) {
+        let minX = container.offsetLeft;
+        let maxX = (minX + container.clientWidth) - element.getBoundingClientRect().width;
+        let minY = container.offsetTop;
+        let maxY = (minY + container.clientHeight) - element.getBoundingClientRect().height;
+
+        return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
     }
 }
 

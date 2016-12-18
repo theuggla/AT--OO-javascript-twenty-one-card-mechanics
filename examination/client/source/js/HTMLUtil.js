@@ -73,14 +73,12 @@ function addEventListeners(element, events, handler) {
 
 function withinBounds(element, container, coords) {
     let minX = container.offsetLeft;
-    let maxX = (minX + container.clientWidth) - element.clientWidth;
+    let maxX = (minX + container.clientWidth) - element.getBoundingClientRect().width;
     let minY = container.offsetTop;
-    let maxY = (minY + container.clientHeight) - element.clientHeight;
+    let maxY = (minY + container.clientHeight) - element.getBoundingClientRect().height;
 
     return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
 }
-
-
 
 //exports
 module.exports = {

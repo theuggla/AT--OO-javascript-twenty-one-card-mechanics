@@ -1,0 +1,175 @@
+<template id="windowTemplate">
+    <style>
+        :host {
+            width: 5em;
+            height: 5em;
+            position: absolute;
+        }
+        #window {
+            width: 100%;
+            height: 100%;
+            border-style: solid;
+            background-color: yellow;
+        }
+    </style>
+    <div id="window">
+        <a href="" id="close">X</a>
+        <a href="" id="minimize">-</a>
+    </div>
+</template>
+
+<script>
+    let t = document.querySelector("template") || document.currentScript.ownerDocument.querySelector("template");
+    let instance;
+
+    customElements.define('draggable-window', class extends HTMLElement {
+        constructor(type) {
+            super();
+
+            //setup shadow dom styles
+            let shadowRoot = this.attachShadow({mode: "open"});
+            instance = t.content.cloneNode(true);
+            shadowRoot.appendChild(instance);
+        }
+
+        connectedCallback() {
+
+            //set behaviour
+            makeDraggable(this, this.parentNode);
+
+            //add event listeners
+            this.addEventListener("click", (event)=> {
+                let target = event.composedPath()[0];
+                let id = target.getAttribute("id");
+                if (id === "close") {
+                    this.close();
+                } else if (id === "minimize") {
+                    console.log("minimized");
+                    this.minimized = true;
+                }
+                event.preventDefault();
+            });
+
+            this.open = true;
+        }
+
+        get open() {
+            return this.hasAttribute('open');
+        }
+
+        set open(open) {
+            if (open) {
+                this.setAttribute('open', '');
+            } else {
+                this.removeAttribute('open');
+            }
+        }
+
+        get minimized() {
+            return this.hasAttribute('minimized');
+        }
+
+        set minimized(minimize) {
+            if (minimize) {
+                this.setAttribute('minimized', '');
+            } else {
+                this.removeAttribute('minimized');
+            }
+            this.toggleView();
+        }
+
+        toggleView() {
+
+            if (this.style.display === "none") {
+                this.style.display = "";
+            } else {
+                this.style.display = "none";
+            }
+        }
+
+        close() {
+            this.parentElement.removeChild(this);
+            this.open = false;
+            this.minimized = false;
+        }
+
+    });
+
+    //helper functions
+    function makeDraggable(el, container) {
+        let arrowDrag;
+        let mouseDrag;
+        let dragoffset = {
+            x: 0,
+            y: 0
+        };
+
+        let events = function() {
+            addEventListeners(el, 'focusin mousedown', (function(event) {
+                arrowDrag = true;
+                if (event.type === 'mousedown') {
+                    mouseDrag = true;
+                    dragoffset.x = event.pageX - el.offsetLeft;
+                    dragoffset.y = event.pageY - el.offsetTop;
+                }
+            }));
+            addEventListeners(el, 'focusout mouseup', (function() {
+                if (event.type === 'mouseup') {
+                    if (mouseDrag) {
+                        mouseDrag = false;
+                    }
+                } else {
+                    arrowDrag = false;
+                }
+            }));
+            addEventListeners(document, 'mousemove keydown', ((event) => {
+                let destination = {};
+
+                if (mouseDrag) {
+                    destination.y = (event.pageY - dragoffset.y);
+                    destination.x = (event.pageX - dragoffset.x);
+                } else if (arrowDrag) {
+                    destination.y = parseInt(el.style.top.slice(0, -2));
+                    destination.x = parseInt(el.style.left.slice(0, -2));
+
+                    switch (event.key) {
+                        case 'ArrowUp':
+                            destination.y -= 5;
+                            break;
+                        case 'ArrowDown':
+                            destination.y += 5;
+                            break;
+                        case 'ArrowLeft':
+                            destination.x -= 5;
+                            break;
+                        case 'ArrowRight':
+                            destination.x += 5;
+                            break;
+                    }
+                }
+
+                if (mouseDrag || arrowDrag) {
+                    el.style.left = withinBounds(el, container, destination) ? destination.x  + "px" : el.style.left;
+                    el.style.top = withinBounds(el, container, destination) ? destination.y  + "px" : el.style.top + "px";
+                }
+
+            }));
+        };
+
+        events();
+    }
+
+    function addEventListeners(element, events, handler) {
+        events.split(' ').forEach(event => element.addEventListener(event, handler));
+    }
+
+    function withinBounds(element, container, coords) {
+        let minX = container.offsetLeft;
+        let maxX = (minX + container.clientWidth) - element.getBoundingClientRect().width;
+        let minY = container.offsetTop;
+        let maxY = (minY + container.clientHeight) - element.getBoundingClientRect().height;
+
+        return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
+    }
+
+</script>
