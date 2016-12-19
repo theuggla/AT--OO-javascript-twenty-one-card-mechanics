@@ -1,8 +1,11 @@
 
-
 #openWindows {
     border-style: solid;
     background-color: blue;
     width: 100%;
     height: 20em;
+}
+
+[minimized] {
+    display: none;
 }

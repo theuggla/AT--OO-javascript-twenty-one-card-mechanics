@@ -1,0 +1,66 @@
+<template id="menuTemplate">
+    <style>
+        ul {
+            display: block;
+        }
+        ::slotted([expand]) {
+            background-color: deeppink;
+        }
+        ::slotted([hide]) {
+            display: none;
+        }
+    </style>
+    <ul>
+        <li><a><slot name="menuitem"></slot></a></li>
+        <li><a><slot name="subitem" class="sub"></slot></a></li>
+    </ul>
+</template>
+
+/*TODO: om underitem, inserta en annan meny. en meny är en enkel lista av items*/
+<script>
+    let temp = document.querySelector("#menuTemplate") || document.currentScript.ownerDocument.querySelector("#menuTemplate");
+
+    customElements.define('custom-menu', class extends HTMLElement {
+        constructor(type) {
+            super();
+
+            //setup shadow dom styles
+            let shadowRoot = this.attachShadow({mode: "open"});
+            let instance = temp.content.cloneNode(true);
+            shadowRoot.appendChild(instance);
+        }
+
+        connectedCallback() {
+            let subs = Array.prototype.filter.call(this.children, (node) => {
+                return node.getAttribute('slot') === 'subitem';
+            });
+            subs.forEach((sub) => {
+                sub.setAttribute("hide", '');
+            });
+            this.addEventListener("click", (event) => {
+                console.log(event);
+                let item = event.target;
+                if (item.hasAttribute('expand')) {
+                    let label = item.getAttribute('label');
+                    let subs = Array.prototype.filter.call(this.children, (node) => {
+                        let nodeLabel = node.getAttribute('label');
+                        return nodeLabel === label && node.getAttribute('slot') === 'subitem';
+
+                    });
+                    subs.forEach((item) => {
+                        item.removeAttribute("hide");
+                    })
+
+                }
+            });
+        }
+
+        get icon()  {
+            this.getAttribute('src');
+        }
+
+        set icon(iconsrc) {
+            this.setAttribute('src', iconsrc);
+        }
+    });
+</script>

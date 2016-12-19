@@ -1,5 +1,3 @@
-
-
 let t = document.querySelector("template") || document.currentScript.ownerDocument.querySelector("template");
 
 customElements.define('draggable-window', class extends HTMLElement {

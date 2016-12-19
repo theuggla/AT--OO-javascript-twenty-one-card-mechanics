@@ -11,6 +11,7 @@ function WindowManager(windowSpace) {
 
         createWindow(type) {
             let aWindow = document.createElement("draggable-window");
+            this.open(type);
             setupSpace(type, aWindow);
             windowSpace.appendChild(aWindow);
 
@@ -24,13 +25,18 @@ function WindowManager(windowSpace) {
         }
 
         open(type) {
-            let result = [];
-            let windows = wm[type].open;
-            result = windows.filter( (w) => {
-                return w.open;
-            });
-            wm[type].open = result;
-            return result;
+            debugger;
+            if (wm[type]) {
+                let result = [];
+                let windows = wm[type].open;
+                result = windows.filter( (w) => {
+                    return w.open;
+                });
+                wm[type].open = result;
+                return result;
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -43,8 +49,8 @@ function WindowManager(windowSpace) {
         let y;
 
         if (wm[type]) {
-            destination.x = (wm[type].latestCoords.x + 50);
-            destination.y = (wm[type].latestCoords.y + 50);
+            destination.x = (wm[type].startCoords.x + (50 * wm[type].open.length));
+            destination.y = (wm[type].startCoords.y + (50 * wm[type].open.length));
 
             if (!(withinBounds(space, windowSpace, destination))) {
                 x = wm[type].startCoords.x += 5;
@@ -53,9 +59,6 @@ function WindowManager(windowSpace) {
                 x = destination.x;
                 y = destination.y;
             }
-
-            wm[type].latestCoords.x = x;
-            wm[type].latestCoords.y = y;
 
         } else {
             destination.x = (wm.startX + (60 * wm.types));
@@ -70,10 +73,6 @@ function WindowManager(windowSpace) {
             }
 
             wm[type] = {};
-            wm[type].latestCoords = {
-                x: x,
-                y: y
-            };
             wm[type].startCoords = {
                 x: x,
                 y: y

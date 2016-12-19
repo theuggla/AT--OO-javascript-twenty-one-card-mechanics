@@ -14,8 +14,10 @@ let top = 1;
 
 mainMenu.addEventListener("click", (event) => {
     let type = event.target.getAttribute("data-kind");
-    WM.createWindow(type).focus();
-    event.preventDefault();
+    if(type) {
+        WM.createWindow(type).focus();
+        event.preventDefault();
+    }
 });
 
 windowSpace.addEventListener("focus", (event) => {

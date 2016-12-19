@@ -2,6 +2,7 @@
 <head>
     <link rel="stylesheet" href="/stylesheet/style.css" />
     <link rel="import" href="/window.html" />
+    <link rel="import" href="/menu.html" />
 </head>
 <body>
 <nav id="windowSelector">
@@ -12,6 +13,16 @@
     </ul>
 </nav>
 <div id="openWindows">
+    <draggable-window>
+        <custom-menu slot="menubar">
+            <p slot="menuitem" label="ex" expand>Item</p>
+            <p slot="subitem" label="ex">Item sub</p>
+            <p slot="subitem" label="ex">Hallå sub</p>
+            <p slot="subitem" label="inteex">sub3</p>
+            <p slot="menuitem">Item4</p>
+        </custom-menu>
+        <div slot="content">Innehåll</div>
+    </draggable-window>
 </div>
 <footer>
     <script src="/javascript/build.js"></script>
