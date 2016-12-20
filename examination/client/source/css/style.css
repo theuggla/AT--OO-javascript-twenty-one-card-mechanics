@@ -1,5 +1,26 @@
+/*fonts*/
+@font-face {
+    font-family: 'journalregular';
+    src: url("/image/journal-webfont.woff") format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'veteran_typewriterregular';
+    src: url("/image/veteran_typewriter-webfont.woff") format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+/*end fonts*/
+
+
 * {
     box-sizing: border-box;
+    font-family: journalregular, serif;
+    font-size: 1.1em;
 }
 
 div, nav, p, body, html{
@@ -7,20 +28,31 @@ div, nav, p, body, html{
     padding: 0;
 }
 
+a:link {
+    text-decoration: none;
+    color: black;
+}
+
+a:visited {
+    color: black;
+}
+
 body {
     background-image: url("../image/background.jpg");
 }
 
 #openWindows {
-    width: 87vw;
+    width: 77vw;
     height: 100vh;
     float: right;
+    border-style: solid;
 }
 
 #windowSelector {
-    width: 10vw;
+    width: 20vw;
     height: 100vh;
     float: left;
+    border-style: solid;
 }
 
 img {

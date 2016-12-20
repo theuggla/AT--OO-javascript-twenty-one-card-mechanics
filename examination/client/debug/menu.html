@@ -1,22 +1,33 @@
 <template id="menuItemTemplate">
     <style>
+        :host{
+            position: relative;
+        }
         ::slotted(*) {
             display: block;
         }
         ::slotted([hide]) {
             display: none;
         }
+        ::slotted([slot='menuitem']) {
+            width: 40%;
+        }
+        #subitems {
+            padding-left: 10%;
+            width: 40%;
+            float: right;
+        }
     </style>
-    <a href=""><slot name="menuitem"></slot></a>
-    <ul id="subitems">
-        <li><slot name="subitem"></slot></li>
-    </ul>
+    <slot name="menuitem"></slot>
+    <div id="subitems">
+        <slot name="subitem"></slot>
+    </div>
 </template>
 
 <script>
     let menuTemplate = document.querySelector('link[href="/menu.html"]').import.querySelector("#menuItemTemplate");
 
-    customElements.define('custom-menu-item', class extends HTMLElement {
+    customElements.define('expandable-menu-item', class extends HTMLElement {
         constructor() {
             super();
 
@@ -27,65 +38,62 @@
         }
 
         connectedCallback() {
-            if (this.hasAttribute('expand')) {
-                makeExpandable(this);
-            }
+            makeExpandable(this);
+            //lägg in icon. länk? a? varför? vem?
+        }
+
+        get icon() {
+            return this.getAttribute('icon');
+        }
+
+        set icon(src) {
+            this.setAttribute('icon', src);
         }
 
         get subMenu() {
-        }
-
-        addSubMenuItem() {
-
+            let label = this.getAttribute('label');
+            return Array.prototype.filter.call(this.querySelectorAll('[slot="subitem"]'), (node) => {
+                let nodeLabel = node.getAttribute('label');
+                return nodeLabel === label;
+            });
         }
     });
 
 
     //helper functions
-    function toggleSubMenu(context, target) {
-        let label = target.getAttribute('label');
-        let subs = Array.prototype.filter.call(context.children, (node) => {
-            let nodeLabel = node.getAttribute('label');
-            return nodeLabel === label && !(node.hasAttribute('expand'));
-        });
+    function toggleSubMenu(item, show) {
+        if (show) {
+            item.subMenu.forEach((post) => {
+                post.removeAttribute('hide');
+            });
+        } else {
+            item.subMenu.forEach((post) => {
+                post.setAttribute('hide', '');
+            });
+        }
 
-        subs.forEach((item) => {
-            if (item.hasAttribute('hide')) {
-                item.removeAttribute('hide');
-            } else {
-                item.setAttribute('hide', '');
-            }
-        });
     }
 
-    function makeExpandable(context) {
+    function makeExpandable(item) {
         let arrowExpand;
         let mouseExpand;
-        let target;
 
         let events = function() {
-            addEventListeners(this, 'focusin mousedown', ((event) => {
-                target = event.target;
-                if (!(target.hasAttribute('expand'))) {
-                    target = target.parentElement;
-                }
-
-                if (target.hasAttribute('expand')) {
+            addEventListeners(item, 'focusin mousedown', ((event) => {
                     arrowExpand = true;
                     if (event.type === 'mousedown') {
                         mouseExpand = true;
-                        toggleSubMenu(context, target);
+                        toggleSubMenu(item, true);
                     }
-                }
             }));
-            addEventListeners(this, 'focusout mouseup', ((event) => {
+            addEventListeners(item, 'focusout mouseup', ((event) => {
                 if (event.type === 'mouseup') {
                     if (mouseExpand) {
-                        toggleSubMenu(context, target);
+                        toggleSubMenu(item);
                         mouseExpand = false;
                     }
                 } else {
-                    toggleSubMenu(context, target)
+                    toggleSubMenu(item)
                     arrowExpand = false;
                 }
             }));
@@ -93,10 +101,10 @@
                 if (arrowExpand) {
                     switch (event.key) {
                         case 'ArrowLeft':
-                            toggleSubMenu(context, target);
+                            toggleSubMenu(item);
                             break;
                         case 'ArrowRight':
-                            toggleSubMenu(context, target);
+                            toggleSubMenu(item, true);
                             break;
                     }
                 }

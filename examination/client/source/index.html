@@ -12,11 +12,15 @@
 </head>
 <body>
 <nav id="windowSelector">
-    <custom-menu>
-        <a href="" slot="menuitem" data-kind="memory" expand label="memory"><img src="/image/memory.png" /></a>
-        <a href="" slot="menuitem" data-kind="chat" expand label="chat"><img src="/image/chat.png" /></a>
-        <a href="" slot="menuitem" data-kind="gallery" expand label="gallery"><img src="/image/picture.png" /></a>
-    </custom-menu>
+    <expandable-menu-item data-kind="memory" label="memory" icon="/image/memory.png">
+        <a slot="menuitem"></a>
+    </expandable-menu-item>
+    <expandable-menu-item data-kind="chat" label="memory">
+        <img slot="menuitem" src="/image/chat.png" />
+    </expandable-menu-item>
+    <expandable-menu-item data-kind="gallery" label="memory">
+        <img slot="menuitem" src="/image/picture.png" />
+    </expandable-menu-item>
 </nav>
 <div id="openWindows">
 </div>

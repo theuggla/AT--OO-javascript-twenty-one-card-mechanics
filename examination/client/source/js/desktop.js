@@ -4,7 +4,7 @@ let WindowManager = require("./WindowManager.js");
 
 
 //nodes
-let mainMenu = document.querySelector("#windowSelector custom-menu");
+let mainMenu = document.querySelector("#windowSelector");
 let windowSpace = document.querySelector("#openWindows");
 let subMenu = document.querySelector("#subMenu");
 
@@ -13,9 +13,7 @@ let WM = WindowManager(windowSpace);
 let top = 1;
 
 Array.prototype.forEach.call(mainMenu.children, (node) => {
-    if (node.hasAttribute('expand')) {
-        addSubMenu(node);
-    }
+    addSubMenu(node);
 });
 
 mainMenu.addEventListener("click", (event) => {
@@ -50,5 +48,5 @@ function addSubMenu(item) {
         node.setAttribute('label', label);
     });
 
-    mainMenu.appendChild(instance);
+    item.appendChild(instance);
 }
