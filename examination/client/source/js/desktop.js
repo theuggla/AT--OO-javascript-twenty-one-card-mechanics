@@ -1,23 +1,40 @@
 //requires
-let Menu = require("./menu.js");
 let u = require("./HTMLUtil.js");
 let WindowManager = require("./WindowManager.js");
 
 
 //nodes
-let mainMenu = document.querySelector("#windowSelector");
+let mainMenu = document.querySelector("#windowSelector custom-menu");
 let windowSpace = document.querySelector("#openWindows");
+let subMenu = document.querySelector("#subMenu");
 
 //variables
 let WM = WindowManager(windowSpace);
 let top = 1;
 
+Array.prototype.forEach.call(mainMenu.children, (node) => {
+    if (node.hasAttribute('expand')) {
+        addSubMenu(node);
+    }
+});
+
 mainMenu.addEventListener("click", (event) => {
     let type = event.target.getAttribute("data-kind");
-    if(type) {
-        WM.createWindow(type).focus();
-        event.preventDefault();
+    if (type) {
+        let open = WM.open(type);
+        if (open) {
+            WM.createWindow(type).focus();
+        } else {
+            /*make template
+            let link = document.createElement("link");
+            link.setAttribute("rel", "import");
+            link.setAttribute("href", "/window.html");
+            document.head.appendChild(link);
+            event.target.setAttribute("label", type);*/
+            WM.createWindow(type).focus();
+        }
     }
+    event.preventDefault();
 });
 
 windowSpace.addEventListener("focus", (event) => {
@@ -25,6 +42,13 @@ windowSpace.addEventListener("focus", (event) => {
     top += 1;
 }, true);
 
-windowSpace.addEventListener("mousedown", (event) => {
-    event.target.focus();
-});
+function addSubMenu(item) {
+    let instance = document.importNode(subMenu.content, true);
+    let label = item.getAttribute('label');
+
+    Array.prototype.forEach.call(instance.children, (node) => {
+        node.setAttribute('label', label);
+    });
+
+    mainMenu.appendChild(instance);
+}

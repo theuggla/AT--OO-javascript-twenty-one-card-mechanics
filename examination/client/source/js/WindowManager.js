@@ -11,7 +11,6 @@ function WindowManager(windowSpace) {
 
         createWindow(type) {
             let aWindow = document.createElement("draggable-window");
-            this.open(type);
             setupSpace(type, aWindow);
             windowSpace.appendChild(aWindow);
 
@@ -25,7 +24,6 @@ function WindowManager(windowSpace) {
         }
 
         open(type) {
-            debugger;
             if (wm[type]) {
                 let result = [];
                 let windows = wm[type].open;
@@ -37,6 +35,27 @@ function WindowManager(windowSpace) {
             } else {
                 return 0;
             }
+        }
+
+        expand(type) {
+            let wins = wm[type].open;
+            wins.forEach((w) => {
+                w.minimized = false;
+            });
+        }
+
+        minimize(type) {
+            let wins = wm[type].open;
+            wins.forEach((w) => {
+                w.minimized = true;
+            });
+        }
+
+        close(type) {
+            let wins = wm[type].open;
+            wins.forEach((w) => {
+                w.close();
+            });
         }
     }
 

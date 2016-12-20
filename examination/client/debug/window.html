@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    let t = document.querySelector("#windowTemplate") || document.currentScript.ownerDocument.querySelector("#windowTemplate");
+    let windowTemplate = document.querySelector('link[href="/window.html"]').import.querySelector("#windowTemplate");
 
     customElements.define('draggable-window', class extends HTMLElement {
         constructor(type) {
@@ -41,7 +41,7 @@
 
             //setup shadow dom styles
             let shadowRoot = this.attachShadow({mode: "open"});
-            let instance = t.content.cloneNode(true);
+            let instance = windowTemplate.content.cloneNode(true);
             shadowRoot.appendChild(instance);
         }
 
@@ -91,14 +91,13 @@
         }
 
         close() {
-            this.parentElement.removeChild(this);
             this.open = false;
             this.minimized = false;
+            this.parentElement.removeChild(this);
         }
 
     });
 
-    //helper functions
     function makeDraggable(el, container) {
         let arrowDrag;
         let mouseDrag;
@@ -159,6 +158,7 @@
             }));
         };
 
+        el.style.position = "absolute";
         events();
     }
 
@@ -174,5 +174,4 @@
 
         return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
     }
-
 </script>

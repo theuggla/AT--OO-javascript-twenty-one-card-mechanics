@@ -1,28 +1,24 @@
 <!doctype html>
 <head>
     <link rel="stylesheet" href="/stylesheet/style.css" />
-    <link rel="import" href="/window.html" />
     <link rel="import" href="/menu.html" />
+    <link rel="import" href="/window.html" />
+    <template id="subMenu">
+        <a href="" slot="subitem" label="" data-task="open" hide>Open New</a>
+        <a href="" slot="subitem" label="" data-task="expand" hide>Expand All</a>
+        <a href="" slot="subitem" label="" data-task="minimize" hide>Minimize All</a>
+        <a href="" slot="subitem" label="" data-task="close" hide>Close All</a>
+    </template>
 </head>
 <body>
 <nav id="windowSelector">
-    <ul>
-        <li><a data-kind="memory" href="">Memory</a></li>
-        <li><a data-kind="chat" href="">Chat</a></li>
-        <li><a data-kind="custom" href=""></a></li>
-    </ul>
+    <custom-menu>
+        <a href="" slot="menuitem" data-kind="memory" expand label="memory"><img src="/image/memory.png" /></a>
+        <a href="" slot="menuitem" data-kind="chat" expand label="chat"><img src="/image/chat.png" /></a>
+        <a href="" slot="menuitem" data-kind="gallery" expand label="gallery"><img src="/image/picture.png" /></a>
+    </custom-menu>
 </nav>
 <div id="openWindows">
-    <draggable-window>
-        <custom-menu slot="menubar">
-            <p slot="menuitem" label="ex" expand>Item</p>
-            <p slot="subitem" label="ex">Item sub</p>
-            <p slot="subitem" label="ex">Hallå sub</p>
-            <p slot="subitem" label="inteex">sub3</p>
-            <p slot="menuitem">Item4</p>
-        </custom-menu>
-        <div slot="content">Innehåll</div>
-    </draggable-window>
 </div>
 <footer>
     <script src="/javascript/build.js"></script>

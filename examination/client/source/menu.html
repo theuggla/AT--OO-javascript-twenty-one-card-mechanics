@@ -1,66 +1,113 @@
-<template id="menuTemplate">
+<template id="menuItemTemplate">
     <style>
-        ul {
+        ::slotted(*) {
             display: block;
-        }
-        ::slotted([expand]) {
-            background-color: deeppink;
         }
         ::slotted([hide]) {
             display: none;
         }
     </style>
-    <ul>
-        <li><a><slot name="menuitem"></slot></a></li>
-        <li><a><slot name="subitem" class="sub"></slot></a></li>
+    <a href=""><slot name="menuitem"></slot></a>
+    <ul id="subitems">
+        <li><slot name="subitem"></slot></li>
     </ul>
 </template>
 
-/*TODO: om underitem, inserta en annan meny. en meny är en enkel lista av items*/
 <script>
-    let temp = document.querySelector("#menuTemplate") || document.currentScript.ownerDocument.querySelector("#menuTemplate");
+    let menuTemplate = document.querySelector('link[href="/menu.html"]').import.querySelector("#menuItemTemplate");
 
-    customElements.define('custom-menu', class extends HTMLElement {
-        constructor(type) {
+    customElements.define('custom-menu-item', class extends HTMLElement {
+        constructor() {
             super();
 
-            //setup shadow dom styles
+            //set up shadow dom styles
             let shadowRoot = this.attachShadow({mode: "open"});
-            let instance = temp.content.cloneNode(true);
+            let instance = menuTemplate.content.cloneNode(true);
             shadowRoot.appendChild(instance);
         }
 
         connectedCallback() {
-            let subs = Array.prototype.filter.call(this.children, (node) => {
-                return node.getAttribute('slot') === 'subitem';
-            });
-            subs.forEach((sub) => {
-                sub.setAttribute("hide", '');
-            });
-            this.addEventListener("click", (event) => {
-                console.log(event);
-                let item = event.target;
-                if (item.hasAttribute('expand')) {
-                    let label = item.getAttribute('label');
-                    let subs = Array.prototype.filter.call(this.children, (node) => {
-                        let nodeLabel = node.getAttribute('label');
-                        return nodeLabel === label && node.getAttribute('slot') === 'subitem';
-
-                    });
-                    subs.forEach((item) => {
-                        item.removeAttribute("hide");
-                    })
-
-                }
-            });
+            if (this.hasAttribute('expand')) {
+                makeExpandable(this);
+            }
         }
 
-        get icon()  {
-            this.getAttribute('src');
+        get subMenu() {
         }
 
-        set icon(iconsrc) {
-            this.setAttribute('src', iconsrc);
+        addSubMenuItem() {
+
         }
     });
+
+
+    //helper functions
+    function toggleSubMenu(context, target) {
+        let label = target.getAttribute('label');
+        let subs = Array.prototype.filter.call(context.children, (node) => {
+            let nodeLabel = node.getAttribute('label');
+            return nodeLabel === label && !(node.hasAttribute('expand'));
+        });
+
+        subs.forEach((item) => {
+            if (item.hasAttribute('hide')) {
+                item.removeAttribute('hide');
+            } else {
+                item.setAttribute('hide', '');
+            }
+        });
+    }
+
+    function makeExpandable(context) {
+        let arrowExpand;
+        let mouseExpand;
+        let target;
+
+        let events = function() {
+            addEventListeners(this, 'focusin mousedown', ((event) => {
+                target = event.target;
+                if (!(target.hasAttribute('expand'))) {
+                    target = target.parentElement;
+                }
+
+                if (target.hasAttribute('expand')) {
+                    arrowExpand = true;
+                    if (event.type === 'mousedown') {
+                        mouseExpand = true;
+                        toggleSubMenu(context, target);
+                    }
+                }
+            }));
+            addEventListeners(this, 'focusout mouseup', ((event) => {
+                if (event.type === 'mouseup') {
+                    if (mouseExpand) {
+                        toggleSubMenu(context, target);
+                        mouseExpand = false;
+                    }
+                } else {
+                    toggleSubMenu(context, target)
+                    arrowExpand = false;
+                }
+            }));
+            addEventListeners(document, 'keydown', ((event) => {
+                if (arrowExpand) {
+                    switch (event.key) {
+                        case 'ArrowLeft':
+                            toggleSubMenu(context, target);
+                            break;
+                        case 'ArrowRight':
+                            toggleSubMenu(context, target);
+                            break;
+                    }
+                }
+
+            }));
+        };
+
+        events();
+    }
+
+    function addEventListeners(element, events, handler) {
+        events.split(' ').forEach(event => element.addEventListener(event, handler));
+    }
 </script>
