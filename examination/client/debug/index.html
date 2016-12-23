@@ -4,26 +4,27 @@
     <link rel="import" href="/menu.html" />
     <link rel="import" href="/window.html" />
     <template id="subMenu">
-        <a href="" slot="subitem" label="" data-task="open" hide>Open New</a>
-        <a href="" slot="subitem" label="" data-task="expand" hide>Expand All</a>
-        <a href="" slot="subitem" label="" data-task="minimize" hide>Minimize All</a>
-        <a href="" slot="subitem" label="" data-task="close" hide>Close All</a>
+        <a href="" slot="subitem" label="" data-task="open" hide>open new</a>
+        <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a>
+        <a href="" slot="subitem" label="" data-task="minimize" hide>minimize all</a>
+        <a href="" slot="subitem" label="" data-task="close" hide>close all</a>
     </template>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+<div id="openWindows">
+</div>
 <nav id="windowSelector">
-    <expandable-menu-item data-kind="memory" label="memory" icon="/image/memory.png">
-        <a slot="menuitem"></a>
+    <expandable-menu-item data-kind="memory" label="memory">
+        <img slot="menuitem" src="/image/memory.png" />
     </expandable-menu-item>
-    <expandable-menu-item data-kind="chat" label="memory">
+    <expandable-menu-item data-kind="chat" label="chat">
         <img slot="menuitem" src="/image/chat.png" />
     </expandable-menu-item>
-    <expandable-menu-item data-kind="gallery" label="memory">
+    <expandable-menu-item data-kind="gallery" label="gallery">
         <img slot="menuitem" src="/image/picture.png" />
     </expandable-menu-item>
 </nav>
-<div id="openWindows">
-</div>
 <footer>
     <script src="/javascript/build.js"></script>
 </footer>

@@ -1,22 +1,36 @@
 <template id="windowTemplate">
     <style>
         :host {
-            min-width: 5em;
-            min-height: 5em;
+            min-width: 30vw;
+            min-height: 30vw;
             position: absolute;
-            border-style: solid;
-            background-color: yellow;
+            background-color: rgba(156, 141, 127, 0.56);
+            border: solid black 5px;
+            border-radius: 1em;
+            border-image: url("/image/window.png") 10 8;
+        }
+        :host(:focus) {
+            background-color: rgb(202, 187, 164);
+        }
+        :host([minimized]) {
+            display: none;
+        }
+        a:visited {
+            color: black;
+        }
+        a {
+            text-decoration: none;
         }
         #bar {
             height: 10%;
-            background-color: black;
+            background-color: rgba(30, 27, 32, 0.74);
         }
         #menubar {
             height: 10%;
             background-color: white;
         }
         #content {
-            border-style: solid;
+            border-radius: 1em;
         }
     </style>
     <div id="bar">
@@ -60,7 +74,9 @@
                     console.log("minimized");
                     this.minimized = true;
                 }
-                event.preventDefault();
+                if (event.type === 'click') {
+                    event.preventDefault();
+                }
             });
 
             this.open = true;
@@ -107,12 +123,18 @@
         };
 
         let events = function() {
-            addEventListeners(el, 'focusin mousedown', (function(event) {
+            addEventListeners(el, 'focusin mousedown touchmove', (function(event) {
+                let target;
+                if (event.type === 'touchmove') {
+                    target = event.targetTouches[0];
+                } else {
+                    target = event;
+                }
                 arrowDrag = true;
-                if (event.type === 'mousedown') {
+                if (event.type === 'mousedown' || event.type === 'touchmove') {
                     mouseDrag = true;
-                    dragoffset.x = event.pageX - el.offsetLeft;
-                    dragoffset.y = event.pageY - el.offsetTop;
+                    dragoffset.x = target.pageX - el.offsetLeft;
+                    dragoffset.y = target.pageY - el.offsetTop;
                 }
             }));
             addEventListeners(el, 'focusout mouseup', (function() {
@@ -124,7 +146,7 @@
                     arrowDrag = false;
                 }
             }));
-            addEventListeners(document, 'mousemove keydown', ((event) => {
+            addEventListeners(document, 'mousemove keydown touchmove', ((event) => {
                 let destination = {};
 
                 if (mouseDrag) {
@@ -151,8 +173,8 @@
                 }
 
                 if (mouseDrag || arrowDrag) {
-                    el.style.left = withinBounds(el, container, destination) ? destination.x  + "px" : el.style.left;
-                    el.style.top = withinBounds(el, container, destination) ? destination.y  + "px" : el.style.top + "px";
+                    el.style.left = destination.x  + "px";
+                    el.style.top = destination.y  + "px";
                 }
 
             }));
@@ -164,14 +186,5 @@
 
     function addEventListeners(element, events, handler) {
         events.split(' ').forEach(event => element.addEventListener(event, handler));
-    }
-
-    function withinBounds(element, container, coords) {
-        let minX = container.offsetLeft;
-        let maxX = (minX + container.clientWidth) - element.getBoundingClientRect().width;
-        let minY = container.offsetTop;
-        let maxY = (minY + container.clientHeight) - element.getBoundingClientRect().height;
-
-        return (coords.x <= maxX && coords.x >= minX && coords.y <= maxY && coords.y >= minY);
     }
 </script>

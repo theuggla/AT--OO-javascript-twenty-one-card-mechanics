@@ -1,27 +1,30 @@
 <template id="menuItemTemplate">
     <style>
-        :host{
-            position: relative;
+        a#container {
+            text-decoration: none;
+            display: flex;
+            flex-direction: row;
         }
-        ::slotted(*) {
+        ::slotted([slot='subitem']) {
             display: block;
+        }
+        ::slotted([slot='subitem']:focus), ::slotted([slot='subitem']:active), ::slotted([slot='subitem']:hover){
+            background-color: black;
         }
         ::slotted([hide]) {
             display: none;
         }
-        ::slotted([slot='menuitem']) {
-            width: 40%;
-        }
         #subitems {
-            padding-left: 10%;
-            width: 40%;
-            float: right;
+            white-space: nowrap;
+            margin-bottom: 0.2em;
         }
     </style>
+    <a href="" id="container">
     <slot name="menuitem"></slot>
-    <div id="subitems">
-        <slot name="subitem"></slot>
-    </div>
+        <div id="subitems">
+            <slot name="subitem"></slot>
+        </div>
+    </a>
 </template>
 
 <script>
@@ -35,19 +38,11 @@
             let shadowRoot = this.attachShadow({mode: "open"});
             let instance = menuTemplate.content.cloneNode(true);
             shadowRoot.appendChild(instance);
+
         }
 
         connectedCallback() {
             makeExpandable(this);
-            //lägg in icon. länk? a? varför? vem?
-        }
-
-        get icon() {
-            return this.getAttribute('icon');
-        }
-
-        set icon(src) {
-            this.setAttribute('icon', src);
         }
 
         get subMenu() {
@@ -57,54 +52,65 @@
                 return nodeLabel === label;
             });
         }
-    });
 
-
-    //helper functions
-    function toggleSubMenu(item, show) {
-        if (show) {
-            item.subMenu.forEach((post) => {
-                post.removeAttribute('hide');
-            });
-        } else {
-            item.subMenu.forEach((post) => {
-                post.setAttribute('hide', '');
-            });
+        get displayingSubMenu() {
+            return !this.subMenu[0].hasAttribute('hide');
         }
 
-    }
+        toggleSubMenu(show) {
+            if (show) {
+                this.subMenu.forEach((post) => {
+                    post.removeAttribute('hide');
+                });
+            } else {
+                this.subMenu.forEach((post) => {
+                    post.setAttribute('hide', '');
+                });
+            }
+
+        }
+    });
 
     function makeExpandable(item) {
+        let nextFocus = 0;
+        let show = false;
         let arrowExpand;
         let mouseExpand;
 
         let events = function() {
-            addEventListeners(item, 'focusin mousedown', ((event) => {
+            addEventListeners(item, 'focusin click', ((event) => {
                     arrowExpand = true;
-                    if (event.type === 'mousedown') {
+
+                    if (event.type === 'click') {
                         mouseExpand = true;
-                        toggleSubMenu(item, true);
+                        show = !show;
+                        event.preventDefault();
                     }
+
+                item.toggleSubMenu(show);
             }));
-            addEventListeners(item, 'focusout mouseup', ((event) => {
-                if (event.type === 'mouseup') {
-                    if (mouseExpand) {
-                        toggleSubMenu(item);
-                        mouseExpand = false;
-                    }
-                } else {
-                    toggleSubMenu(item)
-                    arrowExpand = false;
-                }
-            }));
-            addEventListeners(document, 'keydown', ((event) => {
+            addEventListeners(item, 'keydown', ((event) => {
                 if (arrowExpand) {
                     switch (event.key) {
-                        case 'ArrowLeft':
-                            toggleSubMenu(item);
-                            break;
                         case 'ArrowRight':
-                            toggleSubMenu(item, true);
+                            item.toggleSubMenu(true);
+                            break;
+                        case 'ArrowLeft':
+                            item.toggleSubMenu(false);
+                            break;
+                        case 'ArrowUp':
+                            nextFocus -= 1;
+                            if (nextFocus < 0) {
+                                nextFocus = 3;
+                            }
+                            item.subMenu[nextFocus].focus();
+                            break;
+                        case 'ArrowDown':
+                            nextFocus += 1;
+                            if (nextFocus > 3) {
+                                nextFocus = 0;
+                            }
+                            item.subMenu[nextFocus].focus();
                             break;
                     }
                 }

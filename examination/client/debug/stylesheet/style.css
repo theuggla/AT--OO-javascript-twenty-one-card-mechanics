@@ -19,8 +19,15 @@
 
 * {
     box-sizing: border-box;
-    font-family: journalregular, serif;
-    font-size: 1.1em;
+    font-family: veteran_typewriterregular, serif;
+    font-size: 100%;
+    color: black;
+}
+
+html {
+    overflow: hidden;
+    height: 100%;
+    font-size: 1.3em;
 }
 
 div, nav, p, body, html{
@@ -30,31 +37,57 @@ div, nav, p, body, html{
 
 a:link {
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
 a:visited {
-    color: black;
+    color: white;
 }
 
 body {
     background-image: url("../image/background.jpg");
+    min-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 #openWindows {
-    width: 77vw;
-    height: 100vh;
-    float: right;
-    border-style: solid;
+    flex: 1;
 }
 
 #windowSelector {
-    width: 20vw;
-    height: 100vh;
-    float: left;
-    border-style: solid;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(30, 27, 32, 0.74);
+    width: 100%;
+    flex-basis: content;
 }
 
-img {
-    max-width: 100%;
+#windowSelector img {
+    max-height: 10vh;
+    background-color: antiquewhite;
+    border-radius: 1em;
+    margin-right: 0.5em;
+
 }
+
+#windowSelector expandable-menu-item {
+    height: auto;
+    margin: 0.5em;
+    flex: 0 1 content;
+}
+
+@media screen and (max-width: 400px) {
+    #windowSelector {
+        font-size: 0.5em;
+        overflow: scroll;
+        justify-content: space-between;
+    }
+
+    draggable-window {
+        width: 50vw;
+        height: 50vw;
+    }
+}
+

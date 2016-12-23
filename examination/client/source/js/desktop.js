@@ -6,7 +6,7 @@ let WindowManager = require("./WindowManager.js");
 //nodes
 let mainMenu = document.querySelector("#windowSelector");
 let windowSpace = document.querySelector("#openWindows");
-let subMenu = document.querySelector("#subMenu");
+let subMenuTemplate = document.querySelector("#subMenu");
 
 //variables
 let WM = WindowManager(windowSpace);
@@ -16,32 +16,30 @@ Array.prototype.forEach.call(mainMenu.children, (node) => {
     addSubMenu(node);
 });
 
-mainMenu.addEventListener("click", (event) => {
-    let type = event.target.getAttribute("data-kind");
+mainMenu.addEventListener('dblclick', (event) => {
+    let type = event.target.getAttribute("data-kind") || event.target.parentNode.getAttribute("data-kind");
     if (type) {
-        let open = WM.open(type);
-        if (open) {
-            WM.createWindow(type).focus();
-        } else {
-            /*make template
-            let link = document.createElement("link");
-            link.setAttribute("rel", "import");
-            link.setAttribute("href", "/window.html");
-            document.head.appendChild(link);
-            event.target.setAttribute("label", type);*/
-            WM.createWindow(type).focus();
-        }
+        WM.createWindow(type).focus();
     }
     event.preventDefault();
 });
 
-windowSpace.addEventListener("focus", (event) => {
+addEventListeners(mainMenu, 'click focusout', (event) => {
+    let mainMenuItems = mainMenu.querySelectorAll('expandable-menu-item');
+    mainMenuItems.forEach((item) => {
+        if ((item !== event.target && item !== event.target.parentElement) && (item.displayingSubMenu)) {
+            item.toggleSubMenu(false);
+        }
+    })
+});
+
+windowSpace.addEventListener('focus', (event) => {
     event.target.style.zIndex = top;
     top += 1;
 }, true);
 
 function addSubMenu(item) {
-    let instance = document.importNode(subMenu.content, true);
+    let instance = document.importNode(subMenuTemplate.content, true);
     let label = item.getAttribute('label');
 
     Array.prototype.forEach.call(instance.children, (node) => {
@@ -49,4 +47,30 @@ function addSubMenu(item) {
     });
 
     item.appendChild(instance);
+
+    item.addEventListener('click', (event) => {
+        switch (event.target.getAttribute('data-task')) {
+            case 'open':
+                WM.createWindow(label).focus();
+                break;
+            case 'close':
+                WM.close(label);
+                break;
+            case 'minimize':
+                WM.minimize(label);
+                break;
+            case 'expand':
+                WM.expand(label);
+                break;
+            default:
+                break;
+        }
+        if (event.type === 'click') {
+            event.preventDefault();
+        }
+    });
+}
+
+function addEventListeners (element, events, handler) {
+    events.split(' ').forEach(event => element.addEventListener(event, handler));
 }
