@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="/stylesheet/style.css" />
     <link rel="import" href="/menu.html" />
     <link rel="import" href="/window.html" />
+    <link rel="import" href="/memory-game.html" />
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a>
         <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a>
@@ -13,6 +14,10 @@
 </head>
 <body>
 <div id="openWindows">
+    <draggable-window>
+        <img slot="icon" src="/image/memory.png" />
+        <memory-game slot="content"></memory-game>
+        </draggable-window>
 </div>
 <nav id="windowSelector">
     <expandable-menu-item data-kind="memory" label="memory">
