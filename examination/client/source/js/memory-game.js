@@ -1,12 +1,8 @@
 let memoryTemplate = document.querySelector('link[href="/memory-game.html"]').import.querySelector("#memoryTemplate");
 let brickTemplate = document.querySelector('link[href="/memory-game.html"]').import.querySelector("#brickTemplate");
 
-let Brick = require("./bricks.js");
+let Brick = require("./memory-bricks.js");
 let Timer = require('./timer.js');
-
-let turnspan;
-let timespan;
-let timer = new Timer(0);
 
 class MemoryGame extends HTMLElement {
     constructor(width, height) {
@@ -21,8 +17,9 @@ class MemoryGame extends HTMLElement {
         this.setAttribute('data-width', width || this.getAttribute('data-width') || 4);
         this.setAttribute('data-height', height || this.getAttribute('data-height')  || 4);
         this.set = [];
-        timespan = this.shadowRoot.querySelector("#time");
-        turnspan = this.shadowRoot.querySelector("#turns");
+        this.timer = new Timer(0);
+        this.timespan = this.shadowRoot.querySelector("#time");
+        this.turnspan = this.shadowRoot.querySelector("#turns");
 
     }
 
@@ -46,9 +43,8 @@ class MemoryGame extends HTMLElement {
         this.shuffle();
         this.draw();
         getGamePlay(this.set, this);
-        timer.start(); //maybe move this to start function
-        timer.display(timespan);
-
+        this.timer.start(); //maybe move this to start function
+        this.timer.display(this.timespan);
     }
 
     get width() {
@@ -124,7 +120,7 @@ customElements.define('memory-game', MemoryGame);
                 img2 = img;
                 choice2 = brick;
 
-                if (choice1.equals(choice2)) {
+                if (choice1.equals(choice2) && img1.getAttribute('brickNumber') !== img2.getAttribute('brickNumber')) {
                     img1.parentElement.parentElement.classList.add("hide");
                     img2.parentElement.parentElement.classList.add("hide");
                     choice1 = "";
@@ -133,7 +129,7 @@ customElements.define('memory-game', MemoryGame);
                     img2 = "";
                     bricksLeft -= 2;
                     if (bricksLeft === 0) {
-                        timer.stop();
+                        this.timer.stop();
                     }
                 } else {
                     setTimeout(function () {
@@ -147,7 +143,7 @@ customElements.define('memory-game', MemoryGame);
                 }
 
                 turns += 1;
-                turnspan.textContent = turns;
+                this.turnspan.textContent = turns;
             }
 
         }

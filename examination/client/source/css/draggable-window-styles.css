@@ -5,7 +5,7 @@
     background-color: rgba(156, 141, 127, 0.56);
     border: solid black 5px;
     border-radius: 1em;
-    border-image: url("/image/window.png") 10 8;
+    border-image: url("/image/draggable-window-border.png") 10 8;
     display: flex;
     flex-direction: column;
 }
@@ -23,23 +23,44 @@ a:visited {
     color: white;
 }
 #bar {
+    display: flex;
+    flex-direction: row;
     flex: 1;
     padding: 2%;
     background-color: rgba(30, 27, 32, 0.74);
     color: white;
-    overflow: auto;
+    overflow: hidden;
+    border-radius: 1em 1em 0 0;
 }
 ::slotted([slot='icon']) {
-    float: left;
+    flex: 0;
     max-height: 90%;
 }
+
+::slotted([slot='title']) {
+    margin: 0;
+    padding: 0;
+    font-variant: small-caps;
+    text-align: center;
+    font-size: 2em;
+    flex: 1;
+}
 #close, #minimize {
-    margin: 2%;
-    float: right;
+    padding-left: 5%;
+    flex: 0;
 }
 #menubar {
     flex: 1;
-    background-color: white;
+    display: flex;
+    flex-direction: row;
+    max-height: 7%;
+    background-color: rgba(180, 180, 180, 0.88);
+    z-index: 1;
+    padding: 1%;
+}
+::slotted([slot='menubar']) {
+    white-space: nowrap;
+    margin-left: 2%;
 }
 #content {
     flex: 5;

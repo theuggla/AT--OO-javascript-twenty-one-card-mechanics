@@ -15,7 +15,7 @@ function WindowManager(windowSpace) {
         /*make template, if no windows open of kind etc
          let link = document.createElement("link");
          link.setAttribute("rel", "import");
-         link.setAttribute("href", "/window.html");
+         link.setAttribute("href", "/draggable-window.html");
          document.head.appendChild(link);
          event.target.setAttribute("label", type);*/
 

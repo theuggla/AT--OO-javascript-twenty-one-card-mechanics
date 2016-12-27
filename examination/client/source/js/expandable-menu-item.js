@@ -1,4 +1,4 @@
-let menuTemplate = document.querySelector('link[href="/menu.html"]').import.querySelector("#menuItemTemplate");
+let menuTemplate = document.querySelector('link[href="/expandable-menu-item.html"]').import.querySelector("#menuItemTemplate");
 
 customElements.define('expandable-menu-item', class extends HTMLElement {
     constructor() {
@@ -18,9 +18,9 @@ customElements.define('expandable-menu-item', class extends HTMLElement {
     get subMenu() {
         let label = this.getAttribute('label');
         return Array.prototype.filter.call(this.querySelectorAll('[slot="subitem"]'), (node) => {
-                let nodeLabel = node.getAttribute('label');
-        return nodeLabel === label;
-    });
+            let nodeLabel = node.getAttribute('label');
+            return nodeLabel === label;
+        });
     }
 
     get displayingSubMenu() {
@@ -31,15 +31,17 @@ customElements.define('expandable-menu-item', class extends HTMLElement {
         if (show) {
             this.subMenu.forEach((post) => {
                 post.removeAttribute('hide');
-        });
+            });
         } else {
             this.subMenu.forEach((post) => {
                 post.setAttribute('hide', '');
-        });
+            });
         }
 
     }
+
 });
+
 
 function makeExpandable(item) {
     let nextFocus = 0;
@@ -47,19 +49,23 @@ function makeExpandable(item) {
     let arrowExpand;
     let mouseExpand;
 
-    let events = function() {
+    let events = function () {
         addEventListeners(item, 'focusin click', ((event) => {
+            console.log(document.activeElement);
+            item.firstElementChild.focus();
+            console.log(document.activeElement);
                 arrowExpand = true;
 
-        if (event.type === 'click') {
-            mouseExpand = true;
-            show = !show;
-            event.preventDefault();
-        }
+                if (event.type === 'click') {
+                    mouseExpand = true;
+                    show = !show;
+                    event.preventDefault();
+                }
 
-        item.toggleSubMenu(show);
-    }));
+                item.toggleSubMenu(show);
+        }));
         addEventListeners(item, 'keydown', ((event) => {
+            item.focus();
                 if (arrowExpand) {
                     switch (event.key) {
                         case 'ArrowRight':
@@ -69,6 +75,9 @@ function makeExpandable(item) {
                             item.toggleSubMenu(false);
                             break;
                         case 'ArrowUp':
+                            if (!item.displayingSubMenu) {
+                                item.toggleSubMenu(true);
+                            }
                             nextFocus -= 1;
                             if (nextFocus < 0) {
                                 nextFocus = 3;
@@ -76,16 +85,20 @@ function makeExpandable(item) {
                             item.subMenu[nextFocus].focus();
                             break;
                         case 'ArrowDown':
+                            if (!item.displayingSubMenu) {
+                                item.toggleSubMenu(true);
+                            }
                             nextFocus += 1;
                             if (nextFocus > 3) {
                                 nextFocus = 0;
                             }
                             item.subMenu[nextFocus].focus();
+                            console.log(document.activeElement.shadowRoot.activeElement);
                             break;
                     }
                 }
 
-            }));
+        }));
     };
 
     events();

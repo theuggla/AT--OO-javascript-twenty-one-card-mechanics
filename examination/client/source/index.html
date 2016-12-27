@@ -1,9 +1,10 @@
 <!doctype html>
 <head>
     <link rel="stylesheet" href="/stylesheet/style.css" />
-    <link rel="import" href="/menu.html" />
-    <link rel="import" href="/window.html" />
-    <link rel="import" href="/memory-game.html" />
+    <link rel="import" href="/expandable-menu-item.html" />
+    <link rel="import" href="/draggable-window.html" />
+    <link rel="import" href="/memory-game.html">
+    <link rel="import" href="/memory-app.html" />
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a>
         <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a>
@@ -14,20 +15,17 @@
 </head>
 <body>
 <div id="openWindows">
-    <draggable-window>
-        <img slot="icon" src="/image/memory.png" />
-        <memory-game slot="content"></memory-game>
-        </draggable-window>
+    <memory-app></memory-app>
 </div>
 <nav id="windowSelector">
-    <expandable-menu-item data-kind="memory" label="memory">
-        <img slot="menuitem" src="/image/memory.png" />
+    <expandable-menu-item data-kind="memory" label="memory" row>
+        <img slot="menuitem" src="/image/memory-icon.png" />
     </expandable-menu-item>
-    <expandable-menu-item data-kind="chat" label="chat">
-        <img slot="menuitem" src="/image/chat.png" />
-    </expandable-menu-item>
-    <expandable-menu-item data-kind="gallery" label="gallery">
-        <img slot="menuitem" src="/image/picture.png" />
+    <expandable-menu-item data-kind="chat" label="chat" row>
+        <img slot="menuitem" src="/image/chat-icon.png" />
+    </expandable-menu-item row>
+    <expandable-menu-item data-kind="gallery" label="gallery" row>
+        <img slot="menuitem" src="/image/gallery-icon.png" />
     </expandable-menu-item>
 </nav>
 <footer>

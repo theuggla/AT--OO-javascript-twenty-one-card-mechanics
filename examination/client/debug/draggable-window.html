@@ -1,7 +1,8 @@
 <template id="windowTemplate">
-    <style>@import 'stylesheet/windowstyles.css';</style>
+    <style>@import 'stylesheet/draggable-window-styles.css';</style>
     <div id="bar">
         <slot name="icon"></slot>
+        <slot name="title"></slot>
         <a href="" id="close">X</a>
         <a href="" id="minimize">-</a>
     </div>
@@ -13,4 +14,4 @@
     </div>
 </template>
 
-<script src="js/window.js"></script>
+<script src="js/draggable-window.js"></script>

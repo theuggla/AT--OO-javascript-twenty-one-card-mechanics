@@ -1,11 +1,11 @@
-let windowTemplate = document.querySelector('link[href="/window.html"]').import.querySelector("#windowTemplate");
+let windowTemplate = document.querySelector('link[href="/draggable-window.html"]').import.querySelector("#windowTemplate");
 
 class DraggableWindow extends HTMLElement {
     constructor(type) {
         super();
 
         //setup shadow dom styles
-        let shadowRoot = this.attachShadow({mode: "open"});
+        let shadowRoot = this.attachShadow({mode: "open", delegatesFocus: true});
         let instance = windowTemplate.content.cloneNode(true);
         shadowRoot.appendChild(instance);
     }
@@ -20,9 +20,9 @@ class DraggableWindow extends HTMLElement {
             let target = event.composedPath()[0];
             let id = target.getAttribute("id");
             if (id === "close") {
+                debugger;
                 this.close();
             } else if (id === "minimize") {
-                console.log("minimized");
                 this.minimized = true;
             }
             if (event.type === 'click') {
@@ -60,10 +60,10 @@ class DraggableWindow extends HTMLElement {
     close() {
         this.open = false;
         this.minimized = false;
-        this.parentElement.removeChild(this);
+        this.parentNode.removeChild(this);
     }
 
-});
+}
 
 function makeDraggable(el, container) {
     let arrowDrag;

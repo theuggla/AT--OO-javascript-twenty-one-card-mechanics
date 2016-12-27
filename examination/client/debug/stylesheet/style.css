@@ -73,6 +73,7 @@ body {
 }
 
 #windowSelector expandable-menu-item {
+    background-color: transparent;
     height: auto;
     margin: 0.5em;
     flex: 0 1 content;
@@ -91,6 +92,7 @@ img {
     }
 
     draggable-window {
+        font-size: 0.5em;
         width: 50vw;
         height: 50vw;
     }
