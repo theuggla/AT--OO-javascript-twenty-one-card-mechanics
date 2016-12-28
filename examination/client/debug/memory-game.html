@@ -1,11 +1,25 @@
+<!-- a web component import for a memory game-->
+
 <template id="memoryTemplate">
     <style> @import 'stylesheet/memory-game-styles.css';</style>
-    <div class="messages">
-        <div>Time: <span id="time"></span></div>
-        <div>Turns: <span id="turns"></span></div>
+    <div id="intro">
+    <slot name="intro">
+        <button>start?</button>
+    </slot>
     </div>
-    <div class="container" id="board">
+    <div id="main" class="hide">
+    <div id="gameMessages">
+        <div>Time: <span id="timespan"></span></div>
+        <div>Turns: <span id="turnspan"></span></div>
+    </div>
+    <div id="board">
         <slot name="brick"></slot>
+    </div>
+    </div>
+    <div id="outro" class="hide">
+    <slot name="outro">
+        <button>play again?</button>
+    </slot>
     </div>
 </template>
 

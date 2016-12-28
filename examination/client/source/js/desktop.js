@@ -1,5 +1,4 @@
 //requires
-let u = require("./HTMLUtil.js");
 let WindowManager = require("./WindowManager.js");
 
 
@@ -28,7 +27,6 @@ addEventListeners(mainMenu, 'click focusout', (event) => {
     let mainMenuItems = mainMenu.querySelectorAll('expandable-menu-item');
     mainMenuItems.forEach((item) => {
         if ((item !== event.target && item !== event.target.parentElement) && (item.displayingSubMenu)) {
-            debugger;
             item.toggleSubMenu(false);
         }
     })

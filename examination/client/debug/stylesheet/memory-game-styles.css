@@ -8,9 +8,14 @@
     visibility: hidden;
 }
 
-.messages div {
+#gameMessages div {
     display: inline-block;
     width: 30%;
 }
+
+.hide {
+    display: none;
+}
+
 
 

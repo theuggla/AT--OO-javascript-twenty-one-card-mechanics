@@ -1,3 +1,4 @@
+/*host styles */
 :host {
     width: 30vw;
     height: 30vw;
@@ -15,6 +16,29 @@
 :host([minimized]) {
     display: none;
 }
+/* end host styles*/
+
+/*slot styles*/
+::slotted([slot='icon']) {
+    flex: 0;
+    max-height: 90%;
+}
+
+::slotted([slot='title']) {
+    margin: 0;
+    padding: 0;
+    font-variant: small-caps;
+    text-align: center;
+    font-size: 2em;
+    flex: 1;
+}
+::slotted([slot='menubar']) {
+    white-space: nowrap;
+    margin-left: 2%;
+}
+/*end slot styles*/
+
+/*shadow DOm styles*/
 a:link {
     text-decoration: none;
     color: white;
@@ -32,19 +56,6 @@ a:visited {
     overflow: hidden;
     border-radius: 1em 1em 0 0;
 }
-::slotted([slot='icon']) {
-    flex: 0;
-    max-height: 90%;
-}
-
-::slotted([slot='title']) {
-    margin: 0;
-    padding: 0;
-    font-variant: small-caps;
-    text-align: center;
-    font-size: 2em;
-    flex: 1;
-}
 #close, #minimize {
     padding-left: 5%;
     flex: 0;
@@ -58,10 +69,6 @@ a:visited {
     z-index: 1;
     padding: 1%;
 }
-::slotted([slot='menubar']) {
-    white-space: nowrap;
-    margin-left: 2%;
-}
 #content {
     flex: 5;
     background-color: rgba(118, 118, 118, 0.64);
@@ -70,3 +77,4 @@ a:visited {
     padding: 2%;
     border-radius: 1em;
 }
+/*end shadow DOM styles*/

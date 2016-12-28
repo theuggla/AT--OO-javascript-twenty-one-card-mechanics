@@ -1,7 +1,19 @@
-let windowTemplate = document.querySelector('link[href="/draggable-window.html"]').import.querySelector("#windowTemplate");
+/*
+* A module for a custom HTML element draggable-window to form part of a web component.
+* It creates a window that can be moved across the screen, closed and minimized.
+* @author Molly Arhammar
+* @version 1.0.0
+*
+*/
+
+
+let windowTemplate = document.querySelector('link[href="/draggable-window.html"]').import.querySelector("#windowTemplate"); //shadow DOM import
 
 class DraggableWindow extends HTMLElement {
-    constructor(type) {
+    /**
+     * Initiates a draggable-window, sets up shadow DOM.
+     */
+    constructor() {
         super();
 
         //setup shadow dom styles
@@ -10,6 +22,10 @@ class DraggableWindow extends HTMLElement {
         shadowRoot.appendChild(instance);
     }
 
+    /**
+     * Runs when window is inserted into the DOM.
+     * Sets up event listeners and behaviour of the window.
+     */
     connectedCallback() {
 
         //set behaviour
@@ -17,15 +33,14 @@ class DraggableWindow extends HTMLElement {
 
         //add event listeners
         this.addEventListener("click", (event) => {
-            let target = event.composedPath()[0];
+            let target = event.composedPath()[0]; //follow the trail through shadow DOM
             let id = target.getAttribute("id");
             if (id === "close") {
-                debugger;
                 this.close();
             } else if (id === "minimize") {
                 this.minimized = true;
             }
-            if (event.type === 'click') {
+            if (event.type === 'click') { //make work with touch events
                 event.preventDefault();
             }
         });
@@ -33,10 +48,37 @@ class DraggableWindow extends HTMLElement {
         this.open = true;
     }
 
+    /**
+     * Sets up what attribute-changes to watch for in the DOM.
+     * @returns {[string]} an array of the names of the attributes to watch.
+     */
+    static get observedAttributes() {
+        return ['open'];
+    }
+
+    /**
+     * Watches for attribute changes in the DOM according to observedAttributes()
+     * @param name the name of the attribute
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (!this.open) {
+            this.close();
+        }
+    }
+
+    /**
+     * @returns {boolean} true if the window has attribute 'open'
+     */
     get open() {
         return this.hasAttribute('open');
     }
 
+    /**
+     * Sets the 'open' attribute on the window.
+     * @param open {boolean} whether to add or remove the 'open' attribute
+     */
     set open(open) {
         if (open) {
             this.setAttribute('open', '');
@@ -45,10 +87,17 @@ class DraggableWindow extends HTMLElement {
         }
     }
 
+    /**
+     * @returns {boolean} true if the window has attribute 'minimized'
+     */
     get minimized() {
         return this.hasAttribute('minimized');
     }
 
+    /**
+     * Sets the 'minimized' attribute on the window.
+     * @param minimize {boolean} whether to add or remove the 'minimized' attribute
+     */
     set minimized(minimize) {
         if (minimize) {
             this.setAttribute('minimized', '');
@@ -57,6 +106,9 @@ class DraggableWindow extends HTMLElement {
         }
     }
 
+    /**
+     * Closes the window. Removes it from the DOM and sets all attributes to false.
+     */
     close() {
         this.open = false;
         this.minimized = false;
@@ -65,19 +117,21 @@ class DraggableWindow extends HTMLElement {
 
 }
 
-function makeDraggable(el, container) {
+//helper function
+//makes an element draggable with  mouse, arrows and touch
+function makeDraggable(el) {
     let arrowDrag;
     let mouseDrag;
-    let dragoffset = {
+    let dragoffset = { //to make the drag not jump from the corner
         x: 0,
         y: 0
     };
 
     let events = function() {
-        addEventListeners(el, 'focusin mousedown touchmove', (function(event) {
+        addEventListeners(el, 'focusin mousedown touchmove', ((event) => {
             let target;
             if (event.type === 'touchmove') {
-                target = event.targetTouches[0];
+                target = event.targetTouches[0]; //make work with touch event
             } else {
                 target = event;
             }
@@ -88,7 +142,7 @@ function makeDraggable(el, container) {
                 dragoffset.y = target.pageY - el.offsetTop;
             }
         }));
-        addEventListeners(el, 'focusout mouseup', (function() {
+        addEventListeners(el, 'focusout mouseup', (() => {
             if (event.type === 'mouseup') {
                 if (mouseDrag) {
                     mouseDrag = false;
@@ -98,7 +152,7 @@ function makeDraggable(el, container) {
             }
         }));
         addEventListeners(document, 'mousemove keydown touchmove', ((event) => {
-            let destination = {};
+            let destination = {}; //as to not keep polling the DOM
 
             if (mouseDrag) {
                 destination.y = (event.pageY - dragoffset.y);
@@ -131,12 +185,14 @@ function makeDraggable(el, container) {
         }));
     };
 
-    el.style.position = "absolute";
     events();
 }
 
-customElements.define('draggable-window', DraggableWindow);
-
-    function addEventListeners(element, events, handler) {
+//helper function
+//adds multiple event listeners with identical handlers
+function addEventListeners(element, events, handler) {
     events.split(' ').forEach(event => element.addEventListener(event, handler));
 }
+
+//defines the element
+customElements.define('draggable-window', DraggableWindow);

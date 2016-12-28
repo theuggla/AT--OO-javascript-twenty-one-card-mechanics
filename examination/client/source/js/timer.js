@@ -15,10 +15,18 @@ class Timer {
     }
 
     /**
-     * @returns the count
+     * @returns {number} the count
      */
     get time() {
         return this.count;
+    }
+
+    /**
+     * Sets the time on the timer.
+     * @param newTime {number} the new time
+     */
+    set time(newTime) {
+        this.count = newTime;
     }
     /**
      * starts the timer. increments time every 100 milliseconds.
@@ -35,7 +43,7 @@ class Timer {
      * @param time {number} what number to start it on.
      */
     countdown(time) {
-        count = time || this.count;
+        this.count = time || this.count;
         this.timer = setInterval(() => {
             this.count -= 100;
         }, 100);
@@ -59,7 +67,7 @@ class Timer {
      */
     display(destination, interval = 100, precision = 1000) {
         return setInterval( ()=> {
-            destination.textContent = Math.round(this.time / precision);
+            destination.textContent = Math.round(this.count / precision);
         }, interval);
     }
 }
