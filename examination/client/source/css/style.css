@@ -45,7 +45,7 @@ a:visited {
 }
 
 body {
-    background-image: url("../image/background.jpg");
+    background-image: url("../image/desktop-background.jpg");
     min-height: 100%;
     overflow: hidden;
     display: flex;

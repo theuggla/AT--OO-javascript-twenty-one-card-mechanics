@@ -54,6 +54,7 @@ class Timer {
      */
     stop() {
         clearInterval(this.timer);
+        clearInterval(this.displayInterval);
         return this.count;
     }
     /**
@@ -66,9 +67,10 @@ class Timer {
      *
      */
     display(destination, interval = 100, precision = 1000) {
-        return setInterval( ()=> {
+        this.displayInterval = setInterval( ()=> {
             destination.textContent = Math.round(this.count / precision);
         }, interval);
+        return this.displayInterval;
     }
 }
 

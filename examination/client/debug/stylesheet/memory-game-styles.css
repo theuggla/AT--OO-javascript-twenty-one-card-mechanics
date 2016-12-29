@@ -1,4 +1,24 @@
-::slotted([slot='brick']) {
+/* non-game styles*/
+#intro button, #outro button {
+    margin-top: 25%;
+    border-style: none;
+    text-align: center;
+    padding: 1em;
+    font-family: veteran_typewriterregular, serif;
+    font-size: 1em;
+    border-radius: 1em;
+}
+/* end non game styles*/
+
+/*game styles*/
+/*slotted styles*/
+#board ::slotted([slot='brick']) {
+    display: inline-block;
+    max-width: 15%;
+    max-height: 15%;
+}
+
+#board ::slotted([slot='brick']) img {
     display: inline-block;
     max-width: 15%;
     max-height: 15%;
@@ -7,11 +27,13 @@
 ::slotted(.hide) {
     visibility: hidden;
 }
+/*slotted styles*/
 
 #gameMessages div {
     display: inline-block;
     width: 30%;
 }
+/*end game styles*/
 
 .hide {
     display: none;

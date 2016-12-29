@@ -74,6 +74,7 @@ class ExpandableMenuItem extends HTMLElement {
 customElements.define('expandable-menu-item', ExpandableMenuItem);
 
 //helper function to make the item expandable
+//takes the item to expand as a parameter
 function makeExpandable(item) {
     let nextFocus = 0;
     let show = false;
