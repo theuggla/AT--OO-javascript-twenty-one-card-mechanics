@@ -7,8 +7,8 @@
  *
  */
 
-let memoryTemplate = document.querySelector('link[href="/memory-game.html"]').import.querySelector("#memoryTemplate"); //shadow DOM import
-let brickTemplate = document.querySelector('link[href="/memory-game.html"]').import.querySelector("#brickTemplate"); //brick template
+let memoryTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector('link[href="/memory-game.html"]').import.querySelector("#memoryTemplate"); //shadow DOM import
+let brickTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector('link[href="/memory-game.html"]').import.querySelector("#brickTemplate"); //brick template
 
 //requires
 let Timer = require('./timer.js');
@@ -32,6 +32,8 @@ class MemoryGame extends HTMLElement {
 
         //set references
         this.set = [];
+        this.timer = new Timer(0);
+        this.gamePlay = undefined;
         this.timespan = this.shadowRoot.querySelector("#timespan");
         this.turnspan = this.shadowRoot.querySelector("#turnspan");
 
@@ -39,8 +41,7 @@ class MemoryGame extends HTMLElement {
 
     /**
      * Runs when memory is inserted into the DOM.
-     * Sets up the behaviour of the game and the bricks to be rendered.
-     * Adds event listeners.
+     * Adds event listeners and renders a board with bricks.
      */
     connectedCallback() {
         this.shadowRoot.querySelector('#outro button').addEventListener('click', (event) => {
@@ -51,23 +52,6 @@ class MemoryGame extends HTMLElement {
             this.play();
         });
 
-        //set height and width
-        this.height = this.getAttribute('data-height') || this.height;
-        this.width = this.getAttribute('data-width') || this.width;
-
-        //initiate bricks
-        let brick;
-        let match;
-        let pairs = Math.round((this.width * this.height)) / 2;
-
-        for (let i = 1; i <= pairs; i += 1) {
-            brick = new Brick(i);
-            this.set.push(brick);
-            match = brick.clone();
-            this.set.push(match);
-        }
-
-        this.shuffle();
         this.draw();
     }
 
@@ -119,8 +103,30 @@ class MemoryGame extends HTMLElement {
      * Adds the bricks to the board and renders them in the DOM.
      */
     draw() {
+        let brick;
+        let match;
+        let pairs = Math.round((this.width * this.height)) / 2;
+        this.set = [];
+        let oldBricks = this.children;
+
+        //remove old bricks if any
+        for (let i = oldBricks.length -1; i >= 0; i -= 1) {
+            let brick = oldBricks[i];
+            if (brick.getAttribute('slot') === 'brick') {
+                brick.parentNode.removeChild(brick);
+            }
+        }
+
+        //initiate bricks
+        for (let i = 1; i <= pairs; i += 1) {
+            brick = new Brick(i);
+            this.set.push(brick);
+            match = brick.clone();
+            this.set.push(match);
+        }
         let theSet = this.set;
 
+        //put them in the dom
         for (let i = 0; i < theSet.length; i += 1) {
             let brickDiv = document.importNode(brickTemplate.content, true);
             let img = brickDiv.querySelector("img");
@@ -138,38 +144,78 @@ class MemoryGame extends HTMLElement {
     }
 
     /**
-     * Restarts the game with the same size of board without re-rendering
+     * Starts a game, plays it through, saves the result and
+     * then displays the outro.
      */
-    restart() {
+    play() {
+        this.shuffle();
         this.shadowRoot.querySelector("#intro").classList.add('hide');
         this.shadowRoot.querySelector("#main").classList.remove('hide');
         this.shadowRoot.querySelector("#outro").classList.add('hide');
-        this.shuffle();
+        this.timer.start(0);
+        this.timer.display(this.timespan);
+        playGame(this.set, this)
+            .then((result) => {
+                result.time = this.timer.stop();
+                this.result = result;
+                this.shadowRoot.querySelector("#intro").classList.add('hide');
+                this.shadowRoot.querySelector("#main").classList.add('hide');
+                this.shadowRoot.querySelector("#outro").classList.remove('hide');
+            });
+    }
+
+    /**
+     * Restarts the game with the same size of board without re-rendering
+     */
+    replay() {
+        this.reset();
+        this.shadowRoot.querySelector("#intro").classList.add('hide');
+        this.shadowRoot.querySelector("#main").classList.remove('hide');
+        this.shadowRoot.querySelector("#outro").classList.add('hide');
+        this.play();
+    }
+
+    /**
+     * Resets the game and then lets the user choose a new game size and
+     * user name, re-rendering the board.
+     */
+    restart() {
+        this.reset();
+        this.shadowRoot.querySelector("#intro").classList.remove('hide');
+        this.shadowRoot.querySelector("#main").classList.add('hide');
+        this.shadowRoot.querySelector("#outro").classList.add('hide');
+    }
+
+    /**
+     * Resets the game to make it playable again. Removes event listeners
+     * and turns the bricks over.
+     */
+    reset() {
         let bricks = this.querySelectorAll('[slot="brick"]');
         Array.prototype.forEach.call(bricks, (brick) => {
             brick.classList.remove('hide');
             let img = brick.querySelector("img");
             if (img) {
                 let brickNumber = img.getAttribute("brickNumber");
-                img.src = '/image/memory-brick-' + this.set[brickNumber].turn() + '.png';
+                if (this.set[brickNumber].draw() !== 0) { //turn the brick over if it's not turned
+                    img.src = '/image/memory-brick-' + this.set[brickNumber].turn() + '.png';
+                }
             }
         });
         this.timespan.textContent = '';
         this.turnspan.textContent = '';
-        this.play();
+        this.timer.stop(); //make sure timer is stopped
+        this.shadowRoot.querySelector('#board').removeEventListener("click", this.gamePlay);
     }
 
-    play() {
+    /**
+     * Ends the game and displays the outro.
+     */
+    end() {
+        this.reset();
         this.shadowRoot.querySelector("#intro").classList.add('hide');
-        this.shadowRoot.querySelector("#main").classList.remove('hide');
-        this.shadowRoot.querySelector("#outro").classList.add('hide');
-        playGame(this.set, this)
-            .then((result) => {
-            this.result = result;
-            this.shadowRoot.querySelector("#intro").classList.add('hide');
-            this.shadowRoot.querySelector("#main").classList.add('hide');
-            this.shadowRoot.querySelector("#outro").classList.remove('hide');
-            });
+        this.shadowRoot.querySelector("#main").classList.add('hide');
+        this.shadowRoot.querySelector("#outro").classList.remove('hide');
     }
 }
 
@@ -235,86 +281,66 @@ class Brick {
  * @returns {Promise} a promise that resolves with the result of the game when the game has been played.
  */
 function playGame(set, game) {
-    let timer = new Timer(0);
-    timer.start(0);
-    let timeDisplay = timer.display(game.timespan);
     let turns = 0;
-    let bricks = game.querySelectorAll("a");
+    let bricks = parseInt(game.width) * parseInt(game.height);
     let board = game.shadowRoot.querySelector('#board');
-    let bricksLeft = bricks.length;
+    let bricksLeft = bricks;
     let choice1;
     let choice2;
     let img1;
     let img2;
 
     return new Promise((resolve, reject) => {
-
-        board.addEventListener("click", gamePlay);
-
-        function gamePlay(event) {
-            if (!choice2) { //two bricks are not turned
+        game.gamePlay = function(event) { //expose the reference so the event listener can be removed from outside the function
+            if (!choice2) { //if two bricks are not turned
                 let img = event.target.querySelector("img") || event.target;
                 let brickNumber = img.getAttribute("brickNumber");
-
                 if (!brickNumber) { //target is not a brick
                     return;
                 }
 
                 let brick = set[brickNumber];
-                img.src = '/image/memory-brick-' + brick.turn() + '.png';
+                img.src = '/image/' + brick.turn() + '.png';
 
-                if (!choice1) { //this is the first turned brick
+                if (!choice1) { //first brick to be turned
                     img1 = img;
                     choice1 = brick;
-                } else { //this is the second turned brick
+                } else { //second brick to be turned
                     img2 = img;
                     choice2 = brick;
 
-                    if (choice1.equals(choice2) && img1.getAttribute('brickNumber') !== img2.getAttribute('brickNumber')) { //the bricks are equal but not the same brick
-                        img1.parentElement.parentElement.classList.add("hide"); //hide the bricks
+                    if (choice1.equals(choice2) && img1.getAttribute('brickNumber') !== img2.getAttribute('brickNumber')) { //the two bricks are equal but not the same
+                        img1.parentElement.parentElement.classList.add("hide");
                         img2.parentElement.parentElement.classList.add("hide");
                         choice1 = "";
                         choice2 = "";
                         img1 = "";
                         img2 = "";
                         bricksLeft -= 2;
-                        if (bricksLeft === 0) { //all bricks have been turned
-                            reset();
-                            resolve({turns: turns, time: timer.stop()}); //resolve with the result
-                        } else { //the bricks are not equal
-                            setTimeout(function () {
-                                img1.src = '/image/memory-brick-' + choice1.turn() + '.png';
-                                img2.src = '/image/memory-brick-' + choice2.turn() + '.png';
-                                choice1 = "";
-                                choice2 = "";
-                                img1 = "";
-                                img2 = "";
-                            }, 1000);
+                        if (bricksLeft === 0) { //all bricks are turned
+                            resolve({turns: turns});
                         }
-
-                        turns += 1;
-                        game.turnspan.textContent = turns;
+                    } else { //bricks are not the same
+                        setTimeout(() => {
+                            img1.src = '/image/' + choice1.turn() + '.png';
+                            img2.src = '/image/' + choice2.turn() + '.png';
+                            choice1 = "";
+                            choice2 = "";
+                            img1 = "";
+                            img2 = "";
+                        }, 1000);
                     }
 
+                    turns += 1;
+                    game.turnspan.textContent = turns;
                 }
-                event.preventDefault();
 
             }
-        }
+            event.preventDefault();
 
-        /**
-         * Resets in case the game is played again
-         */
-        function reset() {
-            choice1 = "";
-            choice2 = "";
-            img1 = "";
-            img2 = "";
-            bricksLeft = bricks.length;
-            timer = "";
-            board.removeEventListener("click", gamePlay);
-            clearInterval(timeDisplay);
-        }
+        };
+
+        board.addEventListener("click", game.gamePlay);
 
     });
 

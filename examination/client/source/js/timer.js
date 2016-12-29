@@ -32,8 +32,8 @@ class Timer {
      * starts the timer. increments time every 100 milliseconds.
      * @param time {number} what number to start it on.
      */
-    start(time) {
-        this.count = time || this.count;
+    start(time = this.time) {
+        this.count = time;
         this.timer = setInterval(() => {
             this.count += 100;
         }, 100);

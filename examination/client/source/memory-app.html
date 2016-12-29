@@ -3,54 +3,44 @@
 <link rel="import" href="/memory-game.html">
 
 <template id="memoryWindowTemplate">
-    <style>
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        img[slot] {
-            background-color: antiquewhite;
-            border-radius: 1em;
-        }
-
-        a:link, a:visited, a {
-            text-decoration: none;
-            color: black;
-        }
-
-        expandable-menu-item a:hover, expandable-menu-item a:active, expandable-menu-item a:focus {
-            background-color: white;
-        }
-
-        expandable-menu-item {
-            margin-left: 5%;
-        }
-
-        @media screen and (max-width: 860px) {
-
-            draggable-window {
-                font-size: 0.8em;
-            }
-        }
-
-        @media screen and (max-width: 400px) {
-
-            draggable-window {
-                font-size: 0.5em;
-                width: 50vw;
-                height: 50vw;
-            }
-        }
-
-    </style>
+    <style>@import 'stylesheet/memory-app-styles.css';</style>
     <draggable-window>
         <img slot="icon" src="/image/memory-icon.png" />
         <p slot="title">memory</p>
-        <expandable-menu-item slot="menubar" label="game" column><a slot="menuitem">game</a><a slot="subitem" label="game" hide>restart</a><a slot="subitem" label="game" hide>new</a><a slot="subitem" label="game" hide>quit</a></expandable-menu-item>
-        <expandable-menu-item slot="menubar" label="highscore" column><a slot="menuitem">highscores</a></expandable-menu-item>
-        <memory-game slot="content"></memory-game>
+        <expandable-menu-item slot="menubaritem" label="game" column>
+            <a slot="menuitem">game</a>
+            <a slot="subitem" label="game" data-task="restart" hide>restart</a>
+            <a slot="subitem" label="game" data-task="new" hide>new</a>
+            <a slot="subitem" label="game" data-task="quit" hide>quit</a>
+        </expandable-menu-item>
+        <expandable-menu-item slot="menubaritem" label="highscore" column>
+            <a slot="menuitem" data-task="highscores">highscores</a>
+        </expandable-menu-item>
+        <memory-game slot="content">
+            <div id="intro" slot="intro">
+                <p>please choose a name and a board size</p>
+                <p>name:</p><input id="name" />
+                <p>size:</p>
+                <ul id="boardsize">
+                    <li><a href="" boardsize="44">4 x 4</a></li>
+                    <li><a href="" boardsize="42">4 x 2</a></li>
+                    <li><a href="" boardsize="24">2 x 4</a></li>
+                </ul>
+            </div>
+            <div id="outro" slot="outro">
+                <p>(your time is mutiplied by your turns and divided by the amount of bricks to get your score)</p>
+                <div id="highscoreDisplay"></div>
+                <a href="" data-task="new">play again</a>
+                <a href="" data-task="highscores">update highscores</a>
+            </div>
+            </memory-game>
     </draggable-window>
+</template>
+
+<template id="highscoresTemplate">
+    <ul>
+        <li></li>
+    </ul>
 </template>
 
 <script src='js/memory-app.js'></script>
