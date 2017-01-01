@@ -15,7 +15,7 @@ let menu = require("./expandable-menu-item.js");
 let memoryGame = require('./memory-game.js');
 let memoryApp = require('./memory-app.js');
 let instaChat= require('./insta-chat.js');
-
+let instaChatApp = require('./insta-chat-app.js');
 
 //requires
 let desktop = require("./desktop.js");

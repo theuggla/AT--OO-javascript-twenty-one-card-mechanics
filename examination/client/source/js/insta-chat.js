@@ -7,8 +7,8 @@
  *
  */
 
-let chatTemplate = document.querySelector('link[href="/insta-chat.html"]').import.querySelector("#chatTemplate"); //shadow DOM import
-let messageTemplate = document.querySelector('link[href="/insta-chat.html"]').import.querySelector("#messageTemplate"); //message display template
+let chatTemplate = document.querySelector('link[href="/insta-chat-app.html"]').import.querySelector('link[href="/insta-chat.html"]').import.querySelector("#chatTemplate"); //shadow DOM import
+let messageTemplate = document.querySelector('link[href="/insta-chat-app.html"]').import.querySelector('link[href="/insta-chat.html"]').import.querySelector("#messageTemplate"); //message display template
 
 class InstaChat extends HTMLElement {
     /**
@@ -98,10 +98,12 @@ class InstaChat extends HTMLElement {
 
                 socket.addEventListener('message', (event) => {
                     let response = JSON.parse(event.data);
+                    console.log(response);
                     if (response.type === 'message') {
                         this.print(response);
                         this.messageManager.setChatLog(response); //save message in local storage
                     } else if (response.type === 'heartbeat') {
+                        console.log('heartbeat');
                         this.resetOnlineChecker(); //reset for every heartbeat
                         this.messageManager.getUnsent().forEach((message) => {
                             this.send(message);
@@ -267,6 +269,4 @@ class InstaChat extends HTMLElement {
 
 //defines the element
 customElements.define('insta-chat', InstaChat);
-
-module.exports = InstaChat;
 
