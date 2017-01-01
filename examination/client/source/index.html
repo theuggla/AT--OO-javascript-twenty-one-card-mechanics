@@ -4,6 +4,7 @@
     <link rel="import" href="/expandable-menu-item.html" />
     <link rel="import" href="/draggable-window.html" />
     <link rel="import" href="/memory-app.html" /> <!--take away later-->
+    <link rel="import" href="/insta-chat-app.html" />
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a> <!--move to template import?-->
         <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a> <!--move to template import?-->
@@ -14,7 +15,10 @@
 </head>
 <body>
 <div id="openWindows">
-    <memory-app></memory-app>
+    <draggable-window>
+        <insta-chat slot="content">
+        </insta-chat>
+    </draggable-window>
 </div>
 <nav id="windowSelector">
     <expandable-menu-item data-kind="memory" label="memory" row>

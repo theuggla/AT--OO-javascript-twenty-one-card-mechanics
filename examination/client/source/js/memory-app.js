@@ -82,14 +82,14 @@ class MemoryApp extends HTMLElement {
                 let newHighScores;
 
                 if (this.storage.memoryHighScores) {
-                    oldHighScores = JSON.parse(this.storage.memoryHighScores);
+                    oldMessages = JSON.parse(this.storage.memoryHighScores);
                 } else {
-                    oldHighScores = [];
+                    oldMessages = [];
                 }
 
-                oldHighScores.push({user: user, score: newScore});
+                oldMessages.push({user: user, score: newScore});
 
-                newHighScores = oldHighScores.sort((a, b) => {
+                newHighScores = oldMessages.sort((a, b) => {
                     return a.score - b.score;
                 });
 

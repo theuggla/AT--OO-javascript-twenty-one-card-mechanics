@@ -1,0 +1,14 @@
+<link rel="import" href="/expandable-menu-item.html" />
+<link rel="import" href="/draggable-window.html" />
+<link rel="import" href="/insta-chat.html">
+
+<template id="memoryWindowTemplate">
+    <style>@import 'stylesheet/insta-chat-app-styles.css';</style>
+    <draggable-window>
+        <img slot="icon" src="/image/chat-icon.png" />
+        <p slot="title">chat</p>
+        <insta-chat slot="content"></insta-chat>
+    </draggable-window>
+</template>
+
+<script src='js/insta-chat-app.js'></script>

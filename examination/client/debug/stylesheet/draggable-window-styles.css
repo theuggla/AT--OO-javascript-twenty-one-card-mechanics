@@ -9,6 +9,7 @@
     border-image: url("/image/draggable-window-border.png") 10 8;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 :host(:focus) {
     background-color: rgb(202, 187, 164);
@@ -49,6 +50,7 @@ a:visited {
 #bar {
     display: flex;
     flex-direction: row;
+    min-height: auto;
     flex: 1;
     padding: 2%;
     background-color: rgba(30, 27, 32, 0.74);
@@ -61,6 +63,7 @@ a:visited {
     flex: 0;
 }
 #menubar {
+    min-height: auto;
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -72,6 +75,7 @@ a:visited {
 #content {
     flex: 5;
     background-color: rgba(118, 118, 118, 0.64);
+    max-height: 75%;
     text-align: center;
     margin: 2%;
     padding: 2%;
