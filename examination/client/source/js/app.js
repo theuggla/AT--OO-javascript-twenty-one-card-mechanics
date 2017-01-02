@@ -16,6 +16,7 @@ let memoryGame = require('./memory-game.js');
 let memoryApp = require('./memory-app.js');
 let instaChat= require('./insta-chat.js');
 let instaChatApp = require('./insta-chat-app.js');
+let imageGallery = require('./image-gallery.js');
 
 //requires
 let desktop = require("./desktop.js");

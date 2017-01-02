@@ -12,6 +12,9 @@ let memoryWindowTemplate = document.querySelector('link[href="/memory-app.html"]
 let highscoresTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#highscoresTemplate");
 
 class MemoryApp extends HTMLElement {
+    /**
+     * Initiates a memory-window, sets up shadow DOM.
+     */
     constructor() {
         super();
 
@@ -20,6 +23,11 @@ class MemoryApp extends HTMLElement {
         shadowRoot.appendChild(instance);
     }
 
+    /**
+     * Runs when memory-app is inserted into the DOM.
+     * Sets up event listeners for
+     * the menu and game board size.
+     */
     connectedCallback() {
         let gamespace = this.shadowRoot.querySelector('memory-game');
         let highscorespace = this.shadowRoot.querySelector('#highscores');
@@ -30,8 +38,9 @@ class MemoryApp extends HTMLElement {
         let highscoresOption = this.shadowRoot.querySelector('[label="highscore"]');
         let aboutOption = this.shadowRoot.querySelector('[label="about"]');
 
+        //menu event listeners
         gameOptions.addEventListener('click', (event) => {
-            let target = event.target.focused || event.target.querySelector('[data-task]') || event.target;
+            let target = event.target.focused || event.target.querySelector('[data-task]') || event.target; //shadow DOM accessibility issues
             let task = target.getAttribute('data-task');
                 if (task) {
                     switch (task) {
@@ -54,8 +63,9 @@ class MemoryApp extends HTMLElement {
                 }
         }, true);
 
+        //menu event listener
         highscoresOption.addEventListener('click', (event) => {
-            let target = event.target.querySelector('[data-task]') || event.target;
+            let target = event.target.querySelector('[data-task]') || event.target; //shadow DOM accessibility issues
             let task = target.getAttribute('data-task');
             if (task) {
                 switch (task) {
@@ -70,8 +80,9 @@ class MemoryApp extends HTMLElement {
             }
         });
 
+        //menu event listener
         aboutOption.addEventListener('click', (event) => {
-            let target = event.target.querySelector('[data-task]') || event.target;
+            let target = event.target.querySelector('[data-task]') || event.target; //shadow DOM accessibility issues
             let task = target.getAttribute('data-task');
             if (task) {
                 switch (task) {
@@ -84,10 +95,11 @@ class MemoryApp extends HTMLElement {
             }
         });
 
+        //board size event listener
         this.addEventListener('click', (event) => {
             let target = event.path[0];
             if (target.getAttribute('boardsize')) {
-                this.user = this.shadowRoot.querySelector('#intro input').value || 'stranger';
+                this.user = this.shadowRoot.querySelector('#intro input').value || 'stranger'; //get the name when board size is chosen
                 switch (target.getAttribute('boardsize')) {
                     case '44':
                         game.width = 4;
@@ -113,10 +125,19 @@ class MemoryApp extends HTMLElement {
 
     }
 
+    /**
+     * Runs when app is removed from the DOM.
+     * Closes the window.
+     */
     disconnectedCallback() {
         this.close();
     }
 
+    /**
+     * Updates highscores by setting them in the local storage
+     * and displaying dem.
+     * @param result
+     */
     updateHighscores(result) {
         let highscores = {
             storage: localStorage,
@@ -149,7 +170,7 @@ class MemoryApp extends HTMLElement {
 
                 oldHighScores.push({user: user, score: newScore});
 
-                newHighScores = oldHighScores.sort((a, b) => {
+                newHighScores = oldHighScores.sort((a, b) => { //sort
                     return a.score - b.score;
                 });
 
@@ -161,12 +182,13 @@ class MemoryApp extends HTMLElement {
             }
         };
 
-        if (result) {
+        if (result) { //a new result is present
             let score = (result.turns * result.time) / (this.shadowRoot.querySelector('memory-game').height * this.shadowRoot.querySelector('memory-game').width);
             highscores.setHighScores(this.user, score);
-            this.shadowRoot.querySelector('memory-game').result = undefined;
+            this.shadowRoot.querySelector('memory-game').result = undefined; //clean the result
         }
 
+        //display the scores
         let scores = highscores.getHighScores();
         let highscoreDisplay = this.shadowRoot.querySelector('#highscoreDisplay');
         let oldList = highscoreDisplay.querySelector('ul');
@@ -192,6 +214,9 @@ class MemoryApp extends HTMLElement {
         }
     }
 
+    /**
+     * Removes the node and closes the window.
+     */
     close() {
         this.parentNode.removeChild(this);
         this.shadowRoot.querySelector('draggable-window').close();

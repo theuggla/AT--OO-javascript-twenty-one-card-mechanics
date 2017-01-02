@@ -5,6 +5,7 @@
     <link rel="import" href="/draggable-window.html" />
     <link rel="import" href="/memory-app.html" /> <!--take away later-->
     <link rel="import" href="/insta-chat-app.html" /> <!--take away later-->
+    <link rel="import" href="/image-gallery.html" /> <!--take away later-->
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a> <!--move to template import?-->
         <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a> <!--move to template import?-->
@@ -25,6 +26,23 @@
             </p>
         </div>
     </draggable-window>
+    <draggable-window>
+        <image-gallery slot="content">
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+            <img src="/image/memory-brick-1.png" slot="picture" />
+        </image-gallery>
+    </draggable-window>
+    <insta-chat-app></insta-chat-app>
+    <memory-app></memory-app>
 </div>
 <nav id="windowSelector">
     <expandable-menu-item data-kind="memory" label="memory" row>

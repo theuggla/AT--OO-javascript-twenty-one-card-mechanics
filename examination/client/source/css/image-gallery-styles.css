@@ -1,0 +1,41 @@
+* {
+    box-sizing: border-box;
+}
+
+a, a:link, a:visited{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+#localNav {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow: auto;
+}
+
+#localNav li {
+    padding-left: 1em;
+    float: left;
+    display: inline-block;
+}
+
+#localNav li:last-of-type {
+    padding-right: 1em;
+    float: right;
+    display: inline-block;
+}
+
+#gallery {
+    overflow: auto;
+    max-height: 75%;
+}
+
+::slotted(img) {
+    border-style: solid;
+    margin: 2%;
+    width: 20%;
+    height: 20%;
+    float: left;
+}
