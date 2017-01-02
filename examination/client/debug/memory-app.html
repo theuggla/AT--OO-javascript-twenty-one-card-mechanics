@@ -1,3 +1,4 @@
+<!-- a web component import for a memory game app-->
 <link rel="import" href="/expandable-menu-item.html" />
 <link rel="import" href="/draggable-window.html" />
 <link rel="import" href="/memory-game.html">
@@ -16,6 +17,9 @@
         <expandable-menu-item slot="menubaritem" label="highscore" column>
             <a slot="menuitem" data-task="highscores">highscores</a>
         </expandable-menu-item>
+        <expandable-menu-item slot="menubaritem" label="about" column>
+            <a slot="menuitem" data-task="about">about</a>
+        </expandable-menu-item>
         <memory-game slot="content">
             <div id="intro" slot="intro">
                 <p>please choose a name and a board size</p>
@@ -27,13 +31,16 @@
                     <li><a href="" boardsize="24">2 x 4</a></li>
                 </ul>
             </div>
-            <div id="outro" slot="outro">
-                <p>(your time is mutiplied by your turns and divided by the amount of bricks to get your score)</p>
-                <div id="highscoreDisplay"></div>
-                <a href="" data-task="new">play again</a>
-                <a href="" data-task="highscores">update highscores</a>
-            </div>
             </memory-game>
+        <div slot="content" id="highscores" class="hide">
+            <p>(your time is mutiplied by your turns and divided by the amount of bricks to get your score. the lower the better!)</p>
+            <div id="highscoreDisplay"></div>
+            <a href="" data-task="new">play again</a>
+        </div>
+        <div slot="content" id="about" class="hide">
+            <p>About about About about About about About about About about About about About about About about
+                About about About about About about About about About about About aboutAbout about About about</p>
+        </div>
     </draggable-window>
 </template>
 

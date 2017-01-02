@@ -213,14 +213,13 @@ class InstaChat extends HTMLElement {
             setUnsent: function(message) {
                 let oldMessages;
 
-                debugger;
                 if (storage.unsent) {
                     oldMessages = JSON.parse(storage.unsent);
                 } else {
                     oldMessages = [];
                 }
 
-                oldMessages.push(message);
+                oldMessages.unshift(message);
 
                 storage.unsent = JSON.stringify(oldMessages);
             },
@@ -244,7 +243,7 @@ class InstaChat extends HTMLElement {
                     oldMessages = [];
                 }
 
-                oldMessages.push(message);
+                oldMessages.unshift(message);
 
                 if (oldMessages.length > 20) { //keep the list to 20 messages
                     oldMessages.length = 20;
@@ -270,3 +269,5 @@ class InstaChat extends HTMLElement {
 //defines the element
 customElements.define('insta-chat', InstaChat);
 
+
+module.exports = InstaChat;

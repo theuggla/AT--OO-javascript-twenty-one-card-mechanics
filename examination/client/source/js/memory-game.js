@@ -193,7 +193,7 @@ class MemoryGame extends HTMLElement {
     reset() {
         let bricks = this.querySelectorAll('[slot="brick"]');
         Array.prototype.forEach.call(bricks, (brick) => {
-            brick.classList.remove('hide');
+            brick.removeAttribute('hidden');
             let img = brick.querySelector("img");
             if (img) {
                 let brickNumber = img.getAttribute("brickNumber");
@@ -310,8 +310,8 @@ function playGame(set, game) {
                     choice2 = brick;
 
                     if (choice1.equals(choice2) && img1.getAttribute('brickNumber') !== img2.getAttribute('brickNumber')) { //the two bricks are equal but not the same
-                        img1.parentElement.parentElement.classList.add("hide");
-                        img2.parentElement.parentElement.classList.add("hide");
+                        img1.parentElement.parentElement.setAttribute('hidden', '');
+                        img2.parentElement.parentElement.setAttribute('hidden', '');
                         choice1 = "";
                         choice2 = "";
                         img1 = "";

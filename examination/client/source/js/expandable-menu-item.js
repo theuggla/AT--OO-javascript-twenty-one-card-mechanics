@@ -148,6 +148,7 @@ function focus(item, element) {
     subs.forEach((sub) => {
         if (sub === element) {
             sub.setAttribute('focused', '');
+            item.focused = element;
         } else {
             sub.removeAttribute('focused');
         }

@@ -1,3 +1,13 @@
+/*
+ * A module for a custom HTML element memory-app to form part of a web component.
+ * It combines the component memory-game with the component draggable-window, to
+ * make a chat in a window with an added menu.
+ * @author Molly Arhammar
+ * @version 1.0.0
+ *
+ */
+
+
 let memoryWindowTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#memoryWindowTemplate");
 let highscoresTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#highscoresTemplate");
 
@@ -11,26 +21,72 @@ class MemoryApp extends HTMLElement {
     }
 
     connectedCallback() {
+        let gamespace = this.shadowRoot.querySelector('memory-game');
+        let highscorespace = this.shadowRoot.querySelector('#highscores');
+        let aboutspace = this.shadowRoot.querySelector('#about');
+
         let game = this.shadowRoot.querySelector('memory-game');
-        this.addEventListener('click', (event) => {
-            let target = event.path[0];
-            if (target.getAttribute('data-task')) {
-                switch (target.getAttribute('data-task')) {
-                    case 'restart':
-                        this.shadowRoot.querySelector('memory-game').replay();
-                        break;
-                    case 'new':
-                        this.shadowRoot.querySelector('memory-game').restart();
-                        break;
-                    case 'quit':
-                        this.close();
-                        break;
+        let gameOptions = this.shadowRoot.querySelector('[label="game"]');
+        let highscoresOption = this.shadowRoot.querySelector('[label="highscore"]');
+        let aboutOption = this.shadowRoot.querySelector('[label="about"]');
+
+        gameOptions.addEventListener('click', (event) => {
+            let target = event.target.focused || event.target.querySelector('[data-task]') || event.target;
+            let task = target.getAttribute('data-task');
+                if (task) {
+                    switch (task) {
+                        case 'restart':
+                            gamespace.classList.remove('hide');
+                            highscorespace.classList.add('hide');
+                            aboutspace.classList.add('hide');
+                            gamespace.replay();
+                            break;
+                        case 'new':
+                            gamespace.classList.remove('hide');
+                            highscorespace.classList.add('hide');
+                            aboutspace.classList.add('hide');
+                            gamespace.restart();
+                            break;
+                        case 'quit':
+                            this.close();
+                            break;
+                    }
+                }
+        }, true);
+
+        highscoresOption.addEventListener('click', (event) => {
+            let target = event.target.querySelector('[data-task]') || event.target;
+            let task = target.getAttribute('data-task');
+            if (task) {
+                switch (task) {
                     case 'highscores':
                         game.end();
-                        this.displayHighscores(game.result);
+                        this.updateHighscores(game.result);
+                        gamespace.classList.add('hide');
+                        highscorespace.classList.remove('hide');
+                        aboutspace.classList.add('hide');
                         break;
                 }
-            } else if (target.getAttribute('boardsize')) {
+            }
+        });
+
+        aboutOption.addEventListener('click', (event) => {
+            let target = event.target.querySelector('[data-task]') || event.target;
+            let task = target.getAttribute('data-task');
+            if (task) {
+                switch (task) {
+                    case 'about':
+                        gamespace.classList.add('hide');
+                        highscorespace.classList.add('hide');
+                        aboutspace.classList.remove('hide');
+                        break;
+                }
+            }
+        });
+
+        this.addEventListener('click', (event) => {
+            let target = event.path[0];
+            if (target.getAttribute('boardsize')) {
                 this.user = this.shadowRoot.querySelector('#intro input').value || 'stranger';
                 switch (target.getAttribute('boardsize')) {
                     case '44':
@@ -57,7 +113,11 @@ class MemoryApp extends HTMLElement {
 
     }
 
-    displayHighscores(result) {
+    disconnectedCallback() {
+        this.close();
+    }
+
+    updateHighscores(result) {
         let highscores = {
             storage: localStorage,
             scores: undefined,
@@ -82,14 +142,14 @@ class MemoryApp extends HTMLElement {
                 let newHighScores;
 
                 if (this.storage.memoryHighScores) {
-                    oldMessages = JSON.parse(this.storage.memoryHighScores);
+                    oldHighScores = JSON.parse(this.storage.memoryHighScores);
                 } else {
-                    oldMessages = [];
+                    oldHighScores = [];
                 }
 
-                oldMessages.push({user: user, score: newScore});
+                oldHighScores.push({user: user, score: newScore});
 
-                newHighScores = oldMessages.sort((a, b) => {
+                newHighScores = oldHighScores.sort((a, b) => {
                     return a.score - b.score;
                 });
 
@@ -102,8 +162,9 @@ class MemoryApp extends HTMLElement {
         };
 
         if (result) {
-            let score = (result.turns * result.time) / (this.height * this.width);
-            highscores.setHighScores(this.user, result.turns);
+            let score = (result.turns * result.time) / (this.shadowRoot.querySelector('memory-game').height * this.shadowRoot.querySelector('memory-game').width);
+            highscores.setHighScores(this.user, score);
+            this.shadowRoot.querySelector('memory-game').result = undefined;
         }
 
         let scores = highscores.getHighScores();
@@ -132,10 +193,17 @@ class MemoryApp extends HTMLElement {
     }
 
     close() {
-        this.shadowRoot.querySelector('draggable-window').close();
         this.parentNode.removeChild(this);
+        this.shadowRoot.querySelector('draggable-window').close();
     }
 
 }
 
+//helper function
+//adds multiple event listeners with identical handlers
+function addEventListeners(element, events, handler) {
+    events.split(' ').forEach(event => element.addEventListener(event, handler));
+}
+
+//define the element
 customElements.define('memory-app', MemoryApp);

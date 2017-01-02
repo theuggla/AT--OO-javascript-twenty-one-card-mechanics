@@ -11,7 +11,7 @@ img[slot] {
 
 a:link, a:visited, a {
     text-decoration: none;
-    color: black;
+    color: #454545;
 }
 /*end window decoration styles*/
 
@@ -55,8 +55,8 @@ expandable-menu-item {
 /* end intro styles*/
 
 
-/*outro styles*/
-#outro a {
+/*highscore styles*/
+#highscores a {
     background-color: rgba(180, 180, 180, 0.88);
     padding: 0.2em;
     white-space: nowrap;
@@ -64,7 +64,7 @@ expandable-menu-item {
     border-bottom-style: ridge;
 }
 
-#outro p {
+#highscores p {
     font-size: 0.7em;
 }
 
@@ -73,7 +73,11 @@ expandable-menu-item {
     padding: 0;
     margin-bottom: 1em;
 }
-/*end outro styles*/
+/*end highscore styles*/
+
+.hide {
+    display: none;
+}
 
 
 

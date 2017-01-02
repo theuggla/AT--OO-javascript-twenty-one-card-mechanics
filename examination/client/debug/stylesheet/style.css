@@ -16,7 +16,7 @@
 }
 /*end fonts*/
 
-
+/*main styles*/
 * {
     box-sizing: border-box;
     font-family: veteran_typewriterregular, serif;
@@ -44,6 +44,13 @@ a:visited {
     color: white;
 }
 
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+/*end main styles*/
+
+/*window space styles*/
 body {
     background-image: url("../image/desktop-background.jpg");
     min-height: 100%;
@@ -55,7 +62,9 @@ body {
 #openWindows {
     flex: 1;
 }
+/*end window space styles*/
 
+/*menu styles*/
 #windowSelector {
     display: flex;
     flex-direction: row;
@@ -78,12 +87,9 @@ body {
     margin: 0.5em;
     flex: 0 1 content;
 }
+/*end menu styles*/
 
-img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
+/*media queries*/
 @media screen and (max-width: 400px) {
     #windowSelector {
         font-size: 0.5em;
@@ -97,4 +103,5 @@ img {
         height: 50vw;
     }
 }
+/*end media queries*/
 

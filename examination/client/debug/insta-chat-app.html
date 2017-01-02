@@ -1,3 +1,4 @@
+<!-- a web component import for an insta chat app-->
 <link rel="import" href="/expandable-menu-item.html" />
 <link rel="import" href="/draggable-window.html" />
 <link rel="import" href="/insta-chat.html">
@@ -7,7 +8,27 @@
     <draggable-window>
         <img slot="icon" src="/image/chat-icon.png" />
         <p slot="title">chat</p>
-        <insta-chat slot="content"></insta-chat>
+        <expandable-menu-item slot="menubaritem" label="options" column>
+        <a slot="menuitem">options</a>
+        <a slot="subitem" label="options" data-task="namechange" hide>change name</a>
+        <a slot="subitem" label="options" data-task="quit" hide>quit</a>
+        </expandable-menu-item>
+        <expandable-menu-item slot="menubaritem" label="chat" column>
+            <a slot="menuitem" data-task="chat">chat</a>
+        </expandable-menu-item>
+        <expandable-menu-item slot="menubaritem" label="about" column>
+            <a slot="menuitem" data-task="about">about</a>
+        </expandable-menu-item>
+        <insta-chat slot="content" class="hide"></insta-chat>
+        <div slot="content" id="submitName">
+            <p>choose a name</p>
+            <input name="name">
+            <button>indeed</button>
+        </div>
+        <div slot="content" id="about" class="hide">
+            <p>About about About about About about About about About about About about About about About about
+                About about About about About about About about About about About aboutAbout about About about</p>
+        </div>
     </draggable-window>
 </template>
 

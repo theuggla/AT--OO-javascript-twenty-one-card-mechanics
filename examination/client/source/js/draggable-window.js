@@ -110,9 +110,15 @@ class DraggableWindow extends HTMLElement {
      * Closes the window. Removes it from the DOM and sets all attributes to false.
      */
     close() {
-        this.open = false;
-        this.minimized = false;
-        this.parentNode.removeChild(this);
+        if (this.open) {
+            this.open = false;
+            this.minimized = false;
+            if (this.parentElement) {
+                this.parentNode.removeChild(this);
+            } else if (this.parentNode.host && this.parentNode.host.parentNode) { //this is part of a shadow dom
+                this.parentNode.host.parentNode.removeChild(this.parentNode.host);
+            }
+        }
     }
 
 }
