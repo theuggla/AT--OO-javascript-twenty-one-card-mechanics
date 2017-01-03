@@ -6,6 +6,7 @@
     <link rel="import" href="/memory-app.html" /> <!--take away later-->
     <link rel="import" href="/insta-chat-app.html" /> <!--take away later-->
     <link rel="import" href="/image-gallery.html" /> <!--take away later-->
+    <link rel="import" href="/image-gallery-app.html" /> <!--take away later-->
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a> <!--move to template import?-->
         <a href="" slot="subitem" label="" data-task="expand" hide>expand all</a> <!--move to template import?-->
@@ -26,24 +27,37 @@
             </p>
         </div>
     </draggable-window>
-    <draggable-window>
+    <!--<draggable-window>
         <image-gallery slot="content">
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
-            <img src="/image/memory-brick-1.png" slot="picture" />
+            <a href="" slot="picture"><img src="./image/angel-bg.jpg" label="angel"/></a>
+            <p for="angel" slot="description">angel description</p>
+            <a href="" slot="picture"><img src="./image/memory-brick-0.png" label="0"/></a>
+            <p for="0" slot="description">memory 0 description</p>
+            <a href="" slot="picture"><img src="./image/memory-brick-1.png" label="1"/></a>
+            <p for="1" slot="description">memory 1 description</p>
+            <a href="" slot="picture"><img src="./image/memory-brick-2.png" label="2"/></a>
+            <p for="2" slot="description">memory 2 description</p>
+            <a href="" slot="picture"><img src="./image/chat-icon.png" label="chat"/></a>
+            <p for="chat">chat description</p>
+            <a href="" slot="picture"><img src="./image/memory-brick-4.png" label="4"/></a>
+            <p for="4" slot="description">memory 4 description</p>
         </image-gallery>
-    </draggable-window>
-    <insta-chat-app></insta-chat-app>
-    <memory-app></memory-app>
-</div>
+    </draggable-window>-->
+    <image-gallery-app>
+        <img src="./image/angel-bg.jpg" label="angel"/>
+        <p for="angel">angel description</p>
+        <img src="./image/memory-brick-0.png" label="0"/><
+        <p for="0">memory 0 description</p>
+        <img src="./image/memory-brick-1.png" label="1"/>
+        <p for="1">memory 1 description</p>
+        <img src="./image/memory-brick-2.png" label="2"/>
+        <p for="2">memory 2 description</p>
+        <img src="./image/chat-icon.png" label="chat"/>
+        <p for="chat">chat description</p>
+        <img src="./image/memory-brick-4.png" label="4"/>
+        <p for="4">memory 4 description</p>
+    </image-gallery-app>
+    </div>
 <nav id="windowSelector">
     <expandable-menu-item data-kind="memory" label="memory" row>
         <img slot="menuitem" src="/image/memory-icon.png" />

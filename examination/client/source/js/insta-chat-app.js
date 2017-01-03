@@ -114,7 +114,6 @@ class InstaChatApp extends HTMLElement {
 
         //scroll down when window has been rendered
         setTimeout(() => {
-            debugger;
             chatspace.shadowRoot.querySelector('#messageWindow').scrollTop = chatspace.shadowRoot.querySelector('#messageWindow').scrollHeight;
         }, 10);
     }

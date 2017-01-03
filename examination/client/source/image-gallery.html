@@ -2,15 +2,17 @@
 
 <template id="galleryTemplate">
     <style> @import 'stylesheet/image-gallery-styles.css';</style>
-    <ul id="localNav">
-        <li disabled aria-disabled="true"><a href="">&lt;</a></li>
-        <li disabled aria-disabled="true"><a href="">&gt;</a></li>
-        <li><a href="">gallery</a></li>
-    </ul>
     <div id="gallery">
-        <slot name="picture"></slot>
+        <slot name ="picture"></slot>
     </div>
-    <div id="imageDisplay">
+    <div id="imageDisplay" class="hide">
+        <ul id="localNav">
+            <li disabled aria-disabled="true"><a href="" data-task="back">&lt;</a></li>
+            <li disabled aria-disabled="true"><a href="" data-task="forward">&gt;</a></li>
+            <li><a href="" data-task="gallery">gallery</a></li>
+        </ul>
+        <a href="" class="displayed"><img src="" class="displayed"/></a>
+        <p id="description"></p>
     </div>
 </template>
 
