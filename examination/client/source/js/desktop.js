@@ -1,5 +1,11 @@
-
-let InstaChatApp = require('./insta-chat-app.js');
+/**
+ * A module for a class desktop.
+ * Initiates a web desktop with a menu
+ * and windows to open.
+ *
+ * @author Molly Arhammar
+ * @version 1.0
+ */
 
 /// /menu items has to be of type expandaböe menu item
 class Desktop {

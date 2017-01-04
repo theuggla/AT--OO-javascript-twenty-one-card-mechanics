@@ -27,9 +27,12 @@ let mainMenu = document.querySelector("#windowSelector");
 let subMenuTemplate = document.querySelector("#subMenu");
 let windowSpace = document.querySelector("#openWindows");
 
+//variables
 let myDesktop;
 let windowManager = Desktop.windowManager(windowSpace);
 
+
+//set up event handler for sub-menu
 let eventHandlerSubMenu = function (event) {
     let type = event.target.getAttribute('data-kind') || event.target.parentNode.getAttribute('data-kind');
 
@@ -64,7 +67,7 @@ let desktopConfig = {
 };
 
 
-
+//initiate desktop
 myDesktop = new Desktop(desktopConfig);
 
 

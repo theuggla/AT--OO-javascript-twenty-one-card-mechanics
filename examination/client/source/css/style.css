@@ -1,15 +1,7 @@
 /*fonts*/
 @font-face {
-    font-family: 'journalregular';
-    src: url("/image/journal-webfont.woff") format('woff');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
     font-family: 'veteran_typewriterregular';
-    src: url("/image/veteran_typewriter-webfont.woff") format('woff');
+    src: url("image/veteran_typewriter-webfont.woff") format('woff');
     font-weight: normal;
     font-style: normal;
 
@@ -52,7 +44,7 @@ img {
 
 /*window space styles*/
 body {
-    background-image: url("../image/desktop-background.jpg");
+    background-image: url("image/desktop-background.jpg");
     min-height: 100%;
     overflow: hidden;
     display: flex;
