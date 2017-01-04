@@ -20,6 +20,52 @@ let imageGallery = require('./image-gallery.js');
 let imageGalleryApp = require('./image-gallery-app.js');
 
 //requires
-let desktop = require("./desktop.js");
+let Desktop = require("./desktop.js");
+
+//nodes
+let mainMenu = document.querySelector("#windowSelector");
+let subMenuTemplate = document.querySelector("#subMenu");
+let windowSpace = document.querySelector("#openWindows");
+
+let myDesktop;
+let windowManager = Desktop.windowManager(windowSpace);
+
+let eventHandlerSubMenu = function (event) {
+    let type = event.target.getAttribute('data-kind') || event.target.parentNode.getAttribute('data-kind');
+
+    switch (event.target.getAttribute('data-task')) {
+        case 'open':
+            windowManager.createWindow(type).focus();
+            break;
+        case 'close':
+            windowManager.close(type);
+            break;
+        case 'minimize':
+            debugger;
+            windowManager.minimize(type);
+            break;
+        case 'expand':
+            windowManager.expand(type);
+            break;
+        default:
+            break;
+    }
+    if (event.type === 'click') {
+        event.preventDefault();
+    }
+};
+
+let desktopConfig = {
+    space: windowSpace,
+    menu: mainMenu,
+    windowManager: windowManager,
+    subTemplate: subMenuTemplate,
+    subHandler: eventHandlerSubMenu
+};
+
+
+
+myDesktop = new Desktop(desktopConfig);
+
 
 

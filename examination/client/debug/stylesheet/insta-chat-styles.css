@@ -12,6 +12,7 @@
 }
 
 #messageWindow {
+    background-color: antiquewhite;
     text-align: left;
     max-height: 80%;
     min-height: 80%;
@@ -19,7 +20,6 @@
     border-radius: 1em 1em 0 0;
     flex: 1;
     font-size: 0.6em;
-    background-color: antiquewhite;
     overflow: auto;
 }
 /*end display messages styles*/

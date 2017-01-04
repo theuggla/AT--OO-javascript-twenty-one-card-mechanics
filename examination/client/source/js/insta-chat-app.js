@@ -7,14 +7,13 @@
  *
  */
 
-let chatWindowTemplate = document.querySelector('link[href="/insta-chat-app.html"]').import.querySelector("#chatWindowTemplate"); //shadow DOM import
-
 class InstaChatApp extends HTMLElement {
     /**
      * Initiates a chat-window, sets up shadow DOM.
      */
     constructor() {
         super();
+        let chatWindowTemplate = document.querySelector('link[href="/insta-chat-app.html"]').import.querySelector("#chatWindowTemplate"); //shadow DOM import
 
         let shadowRoot = this.attachShadow({mode: "open"});
         let instance = chatWindowTemplate.content.cloneNode(true);
@@ -28,8 +27,14 @@ class InstaChatApp extends HTMLElement {
      * saved in local storage if any.
      */
     connectedCallback() {
+        //initiate the chat
+        let chatspace = document.createElement('insta-chat');
+        chatspace.setAttribute('slot', 'content');
+        chatspace.classList.add('hide');
+        this.shadowRoot.querySelector('draggable-window').appendChild(chatspace);
+
+
         let namespace = this.shadowRoot.querySelector('#submitName');
-        let chatspace = this.shadowRoot.querySelector('insta-chat');
         let aboutspace = this.shadowRoot.querySelector('#about');
 
         let chatoption = this.shadowRoot.querySelector('[label="chat"]');
@@ -126,6 +131,23 @@ class InstaChatApp extends HTMLElement {
         this.close();
     }
 
+    get open() {
+        return this.shadowRoot.querySelector('draggable-window').open;
+    }
+
+    get minimized() {
+        return this.shadowRoot.querySelector('draggable-window').minimized;
+    }
+
+    set minimized(minimize) {
+        if (minimize) {
+            this.shadowRoot.querySelector('draggable-window').minimized = true;
+        } else {
+            this.shadowRoot.querySelector('draggable-window').minimized = false;
+        }
+
+    }
+
     /**
      * Closes the window and the web socket.
      */
@@ -137,3 +159,6 @@ class InstaChatApp extends HTMLElement {
 
 //defines the element
 customElements.define('insta-chat-app', InstaChatApp);
+
+
+module.exports = InstaChatApp;

@@ -7,19 +7,20 @@
  *
  */
 
-let galleryWindowTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector("#galleryWindowTemplate"); //shadow DOM import
-let imgTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector("#imgTemplate"); //shadow DOM import
-
 class ImageGalleryApp extends HTMLElement {
     /**
      * Initiates a gallery-window, sets up shadow DOM.
      */
     constructor() {
         super();
+        let galleryWindowTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector("#galleryWindowTemplate"); //shadow DOM import
+
 
         let shadowRoot = this.attachShadow({mode: "open"});
         let instance = galleryWindowTemplate.content.cloneNode(true);
         shadowRoot.appendChild(instance);
+
+        this.images = [];
     }
 
     /**
@@ -59,6 +60,7 @@ class ImageGalleryApp extends HTMLElement {
                     case 'gallery':
                         aboutspace.classList.add('hide');
                         imageGallery.classList.remove('hide');
+                        imageGallery.showThumbnails();
                         break;
                 }
             }
@@ -88,12 +90,13 @@ class ImageGalleryApp extends HTMLElement {
     }
 
     updateImages() {
+        let imgTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector("#imgTemplate"); //shadow DOM import
         let imageGallery = this.shadowRoot.querySelector('image-gallery');
 
-        this.images = this.getImages();
+        this.images = this.images.concat(Array.prototype.slice.call(this.getImages()));
         this.descriptions = this.getDescriptions();
 
-        Array.prototype.forEach.call(this.images, (image) => {
+        this.images.forEach((image) => {
             let container = imgTemplate.content.cloneNode(true);
             container.firstElementChild.replaceChild(image, container.firstElementChild.querySelector('img'));
             container.removeChild(container.querySelector('p'));
@@ -103,6 +106,23 @@ class ImageGalleryApp extends HTMLElement {
         Array.prototype.forEach.call(this.descriptions, (description) => {
             imageGallery.appendChild(description);
         });
+    }
+
+    get open() {
+        return this.shadowRoot.querySelector('draggable-window').open;
+    }
+
+    get minimized() {
+        return this.shadowRoot.querySelector('draggable-window').minimized;
+    }
+
+    set minimized(minimize) {
+        if (minimize) {
+            this.shadowRoot.querySelector('draggable-window').minimized = true;
+        } else {
+            this.shadowRoot.querySelector('draggable-window').minimized = false;
+        }
+
     }
 
     close() {

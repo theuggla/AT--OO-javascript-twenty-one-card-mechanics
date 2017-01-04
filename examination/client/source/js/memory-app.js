@@ -7,16 +7,13 @@
  *
  */
 
-
-let memoryWindowTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#memoryWindowTemplate");
-let highscoresTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#highscoresTemplate");
-
 class MemoryApp extends HTMLElement {
     /**
      * Initiates a memory-window, sets up shadow DOM.
      */
     constructor() {
         super();
+        let memoryWindowTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#memoryWindowTemplate");
 
         let shadowRoot = this.attachShadow({mode: "open"});
         let instance = memoryWindowTemplate.content.cloneNode(true);
@@ -139,6 +136,8 @@ class MemoryApp extends HTMLElement {
      * @param result
      */
     updateHighscores(result) {
+        let highscoresTemplate = document.querySelector('link[href="/memory-app.html"]').import.querySelector("#highscoresTemplate");
+
         let highscores = {
             storage: localStorage,
             scores: undefined,
@@ -212,6 +211,18 @@ class MemoryApp extends HTMLElement {
         } else {
             highscoreDisplay.replaceChild(list, oldList);
         }
+    }
+
+    get open() {
+        return this.shadowRoot.querySelector('draggable-window').open;
+    }
+
+    get minimized() {
+        return this.shadowRoot.querySelector('draggable-window').minimized;
+    }
+
+    set minimized(minimize) {
+        this.shadowRoot.querySelector('draggable-window').minimized = minimize;
     }
 
     /**

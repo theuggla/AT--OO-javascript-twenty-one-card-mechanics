@@ -6,18 +6,16 @@
  *
  */
 
-let menuTemplate = document.querySelector('link[href="/expandable-menu-item.html"]').import.querySelector("#menuItemTemplate"); //shadow DOM import
-
-
 class ExpandableMenuItem extends HTMLElement {
     /**
      * Initiates a draggable-window, sets up shadow DOM.
      */
     constructor() {
         super();
+        let menuTemplate = document.querySelector('link[href="/expandable-menu-item.html"]').import.querySelector("#menuItemTemplate"); //shadow DOM import
 
         //set up shadow dom styles
-        let shadowRoot = this.attachShadow({mode: "open", delegatesFocus: "true"});
+        let shadowRoot = this.attachShadow({mode: "open"});
         let instance = menuTemplate.content.cloneNode(true);
         shadowRoot.appendChild(instance);
 

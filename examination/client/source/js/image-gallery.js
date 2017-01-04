@@ -5,13 +5,14 @@
  * @version 1.0.0
  *
  */
-let galleryTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector('link[href="/image-gallery.html"]').import.querySelector("#galleryTemplate"); //shadow DOM import
+
 class ImageGallery extends HTMLElement {
     /**
      * Initiates a gallery, sets up shadow DOM.
      */
     constructor() {
         super();
+        let galleryTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector('link[href="/image-gallery.html"]').import.querySelector("#galleryTemplate"); //shadow DOM import
 
         //setup shadow dom styles
         let shadowRoot = this.attachShadow({mode: "open"});
@@ -30,11 +31,12 @@ class ImageGallery extends HTMLElement {
         let imageDisplay = this.shadowRoot.querySelector('#imageDisplay');
         let localNav = this.shadowRoot.querySelector('#localNav');
 
-        this.pictureSources = Array.prototype.map.call(this.querySelectorAll('[slot ="picture"'), (a) => {
-            if (a.hasAttribute('src')) {
-                return a.getAttribute('src')
-            } else if (a.firstElementChild && a.firstElementChild.hasAttribute('src')) {
-                return a.firstElementChild.getAttribute('src');
+        this.pictureSources = [];
+        Array.prototype.forEach.call(this.querySelectorAll('[slot ="picture"'), (a) => {
+            if (a.hasAttribute('src') && this.pictureSources.indexOf(a.getAttribute('src')) === -1) {
+                this.pictureSources.push(a.getAttribute('src'));
+            } else if (a.firstElementChild && a.firstElementChild.hasAttribute('src') && this.pictureSources.indexOf(a.firstElementChild.getAttribute('src')) === -1) {
+                this.pictureSources.push(a.firstElementChild.getAttribute('src'));
             }
         });
 
@@ -55,9 +57,11 @@ class ImageGallery extends HTMLElement {
                 let nextPictureSrc;
 
                if (this.querySelectorAll('[slot ="picture"').length !== this.pictureSources.length) { //check if more picture has been added
-                   console.log(this.querySelectorAll('[slot ="picture"'));
-                    this.pictureSources = Array.prototype.map.call(this.querySelectorAll('[slot ="picture"'), (a) => { //in that case update sourcelist
-                        return a.getAttribute('src') || a.firstElementChild.getAttribute('src');
+                    Array.prototype.forEach.call(this.querySelectorAll('[slot ="picture"'), (a) => { //in that case update sourcelist
+                        let src = a.getAttribute('src') || a.firstElementChild.getAttribute('src');
+                        if (this.pictureSources.indexOf(src) === -1) {
+                            this.pictureSources.push(src);
+                        }
                     });
                 }
 
@@ -79,8 +83,7 @@ class ImageGallery extends HTMLElement {
                         this.displayPicture(nextPictureSrc, imageDisplay);
                         break;
                     case 'gallery':
-                        gallery.classList.remove('hide');
-                        imageDisplay.classList.add('hide');
+                       this.showThumbnails();
                         break;
                 }
         });
@@ -112,6 +115,15 @@ class ImageGallery extends HTMLElement {
         img.src = src;
         a.href = src;
         p.textContent = description;
+    }
+
+    showThumbnails() {
+        let gallery = this.shadowRoot.querySelector('#gallery');
+        let imageDisplay = this.shadowRoot.querySelector('#imageDisplay');
+
+        gallery.classList.remove('hide');
+        imageDisplay.classList.add('hide');
+
     }
 }
 

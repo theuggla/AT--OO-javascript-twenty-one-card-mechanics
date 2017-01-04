@@ -6,15 +6,13 @@
 *
 */
 
-
-let windowTemplate = document.querySelector('link[href="/draggable-window.html"]').import.querySelector("#windowTemplate"); //shadow DOM import
-
 class DraggableWindow extends HTMLElement {
     /**
      * Initiates a draggable-window, sets up shadow DOM.
      */
     constructor() {
         super();
+        let windowTemplate = document.querySelector('link[href="/draggable-window.html"]').import.querySelector("#windowTemplate"); //shadow DOM import
 
         //setup shadow dom styles
         let shadowRoot = this.attachShadow({mode: "open", delegatesFocus: true});
