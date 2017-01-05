@@ -24,10 +24,10 @@ class InstaChat extends HTMLElement {
 
         //set config object as this.config
         this.config = {
-            url: config.url || 'ws:vhost3.lnu.se:20080/socket/',
+            url: config.url || '',
             name: config.name || 'severus snape',
             channel: config.channel || '',
-            key: config.key || 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+            key: config.key || ''
         };
         this.messages = startMessages || [];
         this.socket = null;
@@ -80,13 +80,12 @@ class InstaChat extends HTMLElement {
             let socket = this.socket;
 
             //check for established connection
-            if (socket && socket.readyState) {
+            if (socket && socket.readyState && socket.url === this.config.url) {
                 resolve(socket);
             } else {
                 socket = new WebSocket(this.config.url);
 
                 socket.addEventListener('open', () => {
-                    this.resetOnlineChecker();
                     resolve(socket);
                 });
 
@@ -96,13 +95,10 @@ class InstaChat extends HTMLElement {
 
                 socket.addEventListener('message', (event) => {
                     let response = JSON.parse(event.data);
-                    console.log(response);
                     if (response.type === 'message') {
                         this.print(response);
                         this.messageManager.setChatLog(response); //save message in local storage
                     } else if (response.type === 'heartbeat') {
-                        console.log('heartbeat');
-                        this.resetOnlineChecker(); //reset for every heartbeat
                         this.messageManager.getUnsent().forEach((message) => {
                             this.send(message);
                         });
@@ -160,18 +156,6 @@ class InstaChat extends HTMLElement {
 
         chatWindow.appendChild(messageDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    /**
-     * Clears and sets a new timeout to make sure server is still connected.
-     * If connection is lost and then regained, prints all unsent messages.
-     */
-    resetOnlineChecker() {
-        clearTimeout(this.onlineChecker);
-
-        this.onlineChecker = setTimeout(() => {
-            //TODO: something here
-        }, 60000);
     }
 
     /**
@@ -268,3 +252,5 @@ class InstaChat extends HTMLElement {
 
 //defines the element
 customElements.define('insta-chat', InstaChat);
+
+module.exports = InstaChat;

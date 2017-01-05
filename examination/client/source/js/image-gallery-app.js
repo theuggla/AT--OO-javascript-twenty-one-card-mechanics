@@ -13,8 +13,7 @@ class ImageGalleryApp extends HTMLElement {
      */
     constructor() {
         super();
-        let galleryWindowTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector("#galleryWindowTemplate"); //shadow DOM import
-
+        let galleryWindowTemplate = document.querySelector('link[href="/image-gallery-app.html"]').import.querySelector('#galleryWindowTemplate');
 
         let shadowRoot = this.attachShadow({mode: "open"});
         let instance = galleryWindowTemplate.content.cloneNode(true);

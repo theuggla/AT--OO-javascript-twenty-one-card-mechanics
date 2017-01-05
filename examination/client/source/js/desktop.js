@@ -67,7 +67,6 @@ class Desktop {
     }
 
     /**
-     *
      * @param item {HTMLElement} the expandable-menu-item to add the sub-menu to
      * @param subMenu {HTMLElement} a template of the sub-menu
      * @param eventHandler {function} the event handler to be applied to the sub menu
@@ -105,15 +104,15 @@ class Desktop {
              * @returns {HTMLElement} the newly created window
              */
             createWindow: function (type) {
-                /*if (!wm[type]) {
+                let aWindow;
+                if (!wm[type]) {
                     let linkTemplate = document.querySelector("#linkTemplate");
                     let link = document.importNode(linkTemplate.content.firstElementChild, true);
                     link.href = "/" + type + ".html";
                     document.head.appendChild(link);
-                }*/
+                }
 
-
-                let aWindow = document.createElement(type);
+                aWindow = document.createElement(type);
 
                 //import pictures for the image gallery
                 if (type === 'image-gallery-app') {
