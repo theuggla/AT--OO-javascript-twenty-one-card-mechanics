@@ -132,7 +132,8 @@ function makeExpandable(item) {
     events();
 }
 
-//helper function
+//helper functions
+
 //adds multiple event listeners with identical handlers
 function addEventListeners(element, events, handler) {
     events.split(' ').forEach(event => element.addEventListener(event, handler));

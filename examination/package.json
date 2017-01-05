@@ -47,6 +47,7 @@
     "prod:css": "cp -R ./client/source/css/*.css ./client/dist/stylesheet/",
     "prod:img": "cp -R ./client/source/image ./client/dist/",
     "prod:js": "browserify ./client/source/js/app.js -o ./client/dist/javascript/build.js",
+    "prod:sw": "browserify ./client/source/js/serviceWorker.js -o ./client/dist/javascript/serviceWorker.js",
     "build:html": "cp -R ./client/source/*.html ./client/debug/",
     "build:css": "cp -R ./client/source/css/*.css ./client/debug/stylesheet/",
     "build:img": "cp -R ./client/source/image ./client/debug/",

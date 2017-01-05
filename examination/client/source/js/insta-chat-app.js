@@ -63,7 +63,7 @@ class InstaChatApp extends HTMLElement {
             chatspace.classList.remove('hide');
         });
 
-        //event listeners for menu
+        //event listeners for menu, add separate ones for accessibility reasons
         optionoption.addEventListener('click', (event) => {
             let target = event.target.focused || event.target.querySelector('[data-task]') || event.target;
             let task = target.getAttribute('data-task');
@@ -81,6 +81,7 @@ class InstaChatApp extends HTMLElement {
             }
         });
 
+        //avent listener for menu
         aboutoption.addEventListener('click', (event) => {
             let target = event.target.focused || event.target.querySelector('[data-task]') || event.target;
             let task = target.getAttribute('data-task');
@@ -95,6 +96,7 @@ class InstaChatApp extends HTMLElement {
             }
         });
 
+        //event listener for menu
         chatoption.addEventListener('click', (event) => {
             let target = event.target.focused || event.target.querySelector('[data-task]') || event.target;
             let task = target.getAttribute('data-task');
@@ -131,14 +133,24 @@ class InstaChatApp extends HTMLElement {
         this.close();
     }
 
+    /**
+     * @returns true if the window containing the app is open.
+     */
     get open() {
         return this.shadowRoot.querySelector('draggable-window').open;
     }
 
+    /**
+     * @returns true if the window containing the app is minimized.
+     */
     get minimized() {
         return this.shadowRoot.querySelector('draggable-window').minimized;
     }
 
+    /**
+     * Sets the minimized property of the window containing the app.
+     * @param minimize {boolean} whether to minimize
+     */
     set minimized(minimize) {
         if (minimize) {
             this.shadowRoot.querySelector('draggable-window').minimized = true;

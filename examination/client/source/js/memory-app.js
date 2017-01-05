@@ -35,7 +35,7 @@ class MemoryApp extends HTMLElement {
         let highscoresOption = this.shadowRoot.querySelector('[label="highscore"]');
         let aboutOption = this.shadowRoot.querySelector('[label="about"]');
 
-        //menu event listeners
+        //menu event listeners, add separate ones for accessibility reasons
         gameOptions.addEventListener('click', (event) => {
             let target = event.target.focused || event.target.querySelector('[data-task]') || event.target; //shadow DOM accessibility issues
             let task = target.getAttribute('data-task');
@@ -213,14 +213,24 @@ class MemoryApp extends HTMLElement {
         }
     }
 
+    /**
+     * @returns true if the window containing the app is open.
+     */
     get open() {
         return this.shadowRoot.querySelector('draggable-window').open;
     }
 
+    /**
+     * @returns true if the window containing the app is minimized.
+     */
     get minimized() {
         return this.shadowRoot.querySelector('draggable-window').minimized;
     }
 
+    /**
+     * Sets the minimized property of the window containing the app.
+     * @param minimize {boolean} whether to minimize
+     */
     set minimized(minimize) {
         this.shadowRoot.querySelector('draggable-window').minimized = minimize;
     }

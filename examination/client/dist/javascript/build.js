@@ -71,6 +71,18 @@ let desktopConfig = {
 myDesktop = new Desktop(desktopConfig);
 
 
+//initiate serviceWorker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./javascript/serviceWorker.js', {
+        scope: '/'
+    }).then(function(reg) {
+        console.log('◕‿◕', reg);
+    }, function(err) {
+        console.log('ಠ_ಠ', err);
+    });
+}
+
+
 
 
 },{"./desktop.js":2,"./draggable-window.js":3,"./expandable-menu-item.js":4,"./image-gallery-app.js":5,"./image-gallery.js":6,"./insta-chat-app.js":7,"./insta-chat.js":8,"./memory-app.js":9,"./memory-game.js":10}],2:[function(require,module,exports){
@@ -475,28 +487,37 @@ function makeDraggable(el) {
     };
 
     function touchHandler(event) {
-        let touches = event.changedTouches;
-        let first = touches[0];
-        let type = "";
+        if (event.target.assignedSlot && event.target.assignedSlot.name === 'title') {
+            let touches = event.changedTouches;
+            let first = touches[0];
+            let type = "";
 
-        switch(event.type) {
-            case "touchstart": type = "mousedown"; break;
-            case "touchmove":  type="mousemove"; break;
-            case "touchend":   type="mouseup"; break;
-            default: return;
+            switch (event.type) {
+                case "touchstart":
+                    type = "mousedown";
+                    break;
+                case "touchmove":
+                    type = "mousemove";
+                    break;
+                case "touchend":
+                    type = "mouseup";
+                    break;
+                default:
+                    return;
+            }
+
+            let simulatedEvent = new MouseEvent(type, {
+                screenX: first.screenX,
+                screenY: first.screenY,
+                clientX: first.clientX,
+                clientY: first.clientY,
+                button: 1,
+                bubbles: true
+
+            });
+
+            el.dispatchEvent(simulatedEvent);
         }
-
-        let simulatedEvent = new MouseEvent(type, {
-            screenX: first.screenX,
-            screenY: first.screenY,
-            clientX: first.clientX,
-            clientY: first.clientY,
-            button: 1,
-            bubbles: true
-
-        });
-
-        el.dispatchEvent(simulatedEvent);
     }
 
     function init() {
