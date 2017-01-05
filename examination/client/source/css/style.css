@@ -63,7 +63,6 @@ image-gallery-app, memory-app, insta-chat-app {
 
 #aboutWindow {
     text-align: justify;
-    font-size: 0.7em;
     left: 300px;
 }
 
@@ -104,10 +103,19 @@ image-gallery-app, memory-app, insta-chat-app {
 /*end menu styles*/
 
 /*media queries*/
+@media screen and (max-width: 1700px) {
+
+    #aboutWindow {
+        font-size: 0.7em;
+    }
+
+}
+
+
 @media screen and (max-width: 400px) {
 
     #windowSelector {
-        font-size: 0.5em;
+        font-size: 0.7em;
         overflow: scroll;
         justify-content: space-between;
     }
@@ -119,11 +127,12 @@ image-gallery-app, memory-app, insta-chat-app {
     }
 
     #aboutWindow {
-        left: 1500px;
+        left: 150px;
+        font-size: 0.5em;
     }
 
     #aboutWindow p[slot='title'] {
-        font-size: 2.7em;
+        font-size: 2em;
     }
 }
 /*end media queries*/

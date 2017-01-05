@@ -185,28 +185,37 @@ function makeDraggable(el) {
     };
 
     function touchHandler(event) {
-        let touches = event.changedTouches;
-        let first = touches[0];
-        let type = "";
+        if (event.target.assignedSlot && event.target.assignedSlot.name === 'title') {
+            let touches = event.changedTouches;
+            let first = touches[0];
+            let type = "";
 
-        switch(event.type) {
-            case "touchstart": type = "mousedown"; break;
-            case "touchmove":  type="mousemove"; break;
-            case "touchend":   type="mouseup"; break;
-            default: return;
+            switch (event.type) {
+                case "touchstart":
+                    type = "mousedown";
+                    break;
+                case "touchmove":
+                    type = "mousemove";
+                    break;
+                case "touchend":
+                    type = "mouseup";
+                    break;
+                default:
+                    return;
+            }
+
+            let simulatedEvent = new MouseEvent(type, {
+                screenX: first.screenX,
+                screenY: first.screenY,
+                clientX: first.clientX,
+                clientY: first.clientY,
+                button: 1,
+                bubbles: true
+
+            });
+
+            el.dispatchEvent(simulatedEvent);
         }
-
-        let simulatedEvent = new MouseEvent(type, {
-            screenX: first.screenX,
-            screenY: first.screenY,
-            clientX: first.clientX,
-            clientY: first.clientY,
-            button: 1,
-            bubbles: true
-
-        });
-
-        el.dispatchEvent(simulatedEvent);
     }
 
     function init() {
