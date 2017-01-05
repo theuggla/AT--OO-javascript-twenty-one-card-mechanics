@@ -69,5 +69,7 @@ let desktopConfig = {
 //initiate desktop
 myDesktop = new Desktop(desktopConfig);
 
-
-
+//initiate serviceworker
+navigator.serviceWorker.register('./sw-build.js', {
+    scope: '/'
+});

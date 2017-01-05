@@ -1,12 +1,13 @@
 <!doctype html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="/stylesheet/style.css" />
     <link rel="import" href="/expandable-menu-item.html" />
     <link rel="import" href="/draggable-window.html" />
-    <!-- <link rel="import" href="/memory-app.html" />
+    <link rel="import" href="/memory-app.html" />
     <link rel="import" href="/insta-chat-app.html" />
-    <link rel="import" href="/image-gallery-app.html" /> -->
+    <link rel="import" href="/image-gallery-app.html" />
     <!--templates-->
     <template id="subMenu">
         <a href="" slot="subitem" label="" data-task="open" hide>open new</a>
@@ -37,8 +38,8 @@
             <p>it's built as a single page application and
                 is a testing ground for
                 new stuff, both in the desktop functionality itself and in each of the
-                apps. at the moment the techniques I'm trying out are web components and service workers
-                (try it on mobile! try it offline!) with some web sockets and my dabbings in illustrator
+                apps. at the moment the techniques I'm trying out are web components and service workers (thatks to Lyza Garden
+                for the code base on those!) (also: try the site on mobile! try it offline!) with some web sockets and my dabbings in illustrator
                 thrown in. credit for the icons goes to david purnell of the noun project, and the memory
                 bricks are courtesy of moa alfredsson. the site will store cookies and the likes in your
                 browser (to 'enhance your experience', as they so convincingly say), so if you don't want

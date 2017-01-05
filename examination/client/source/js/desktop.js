@@ -105,12 +105,14 @@ class Desktop {
              */
             createWindow: function (type) {
                 let aWindow;
-                if (!wm[type]) {
+                //because of a fight I have with browserify these do not load dynamically here, but if you look at
+                //theuggla.github.io/desktop/source they do :-)
+                /*if (!wm[type]) {
                     let linkTemplate = document.querySelector("#linkTemplate");
                     let link = document.importNode(linkTemplate.content.firstElementChild, true);
                     link.href = "/" + type + ".html";
                     document.head.appendChild(link);
-                }
+                }*/
 
                 aWindow = document.createElement(type);
 
