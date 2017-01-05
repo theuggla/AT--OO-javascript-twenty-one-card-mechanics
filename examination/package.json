@@ -42,6 +42,11 @@
   "scripts": {
     "watch": "npm-run-all --parallel watch:*",
     "debug": "npm-run-all --parallel server:http watch:*",
+    "build": "npm-run-all --parallel prod:*",
+    "prod:html": "cp -R ./client/source/*.html ./client/dist/",
+    "prod:css": "cp -R ./client/source/css/*.css ./client/dist/stylesheet/",
+    "prod:img": "cp -R ./client/source/image ./client/dist/",
+    "prod:js": "browserify ./client/source/js/app.js -o ./dist/build.js",
     "build:html": "cp -R ./client/source/*.html ./client/debug/",
     "build:css": "cp -R ./client/source/css/*.css ./client/debug/stylesheet/",
     "build:img": "cp -R ./client/source/image ./client/debug/",

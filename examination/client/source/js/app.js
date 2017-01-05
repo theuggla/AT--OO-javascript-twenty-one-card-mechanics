@@ -44,7 +44,6 @@ let eventHandlerSubMenu = function (event) {
             windowManager.close(type);
             break;
         case 'minimize':
-            debugger;
             windowManager.minimize(type);
             break;
         case 'expand':

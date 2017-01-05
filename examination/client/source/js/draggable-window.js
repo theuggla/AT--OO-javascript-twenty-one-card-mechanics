@@ -132,21 +132,16 @@ function makeDraggable(el) {
     };
 
     let events = function() {
-        addEventListeners(el, 'focusin mousedown touchmove', ((event) => {
-            let target;
-            if (event.type === 'touchmove') {
-                target = event.targetTouches[0]; //make work with touch event
-            } else {
-                target = event;
-            }
+        addEventListeners(el, 'focusin mousedown', ((event) => {
+            let target = event;
             arrowDrag = true;
-            if (event.type === 'mousedown' || event.type === 'touchmove') {
+            if (event.type === 'mousedown') {
                 mouseDrag = true;
                 dragoffset.x = target.pageX - el.offsetLeft;
                 dragoffset.y = target.pageY - el.offsetTop;
             }
         }));
-        addEventListeners(el, 'focusout mouseup', (() => {
+        addEventListeners(el, 'focusout mouseup', ((event) => {
             if (event.type === 'mouseup') {
                 if (mouseDrag) {
                     mouseDrag = false;
@@ -155,7 +150,7 @@ function makeDraggable(el) {
                 arrowDrag = false;
             }
         }));
-        addEventListeners(document, 'mousemove keydown touchmove', ((event) => {
+        addEventListeners(document, 'mousemove keydown', ((event) => {
             let destination = {}; //as to not keep polling the DOM
 
             if (mouseDrag) {
@@ -189,7 +184,40 @@ function makeDraggable(el) {
         }));
     };
 
+    function touchHandler(event) {
+        let touches = event.changedTouches;
+        let first = touches[0];
+        let type = "";
+
+        switch(event.type) {
+            case "touchstart": type = "mousedown"; break;
+            case "touchmove":  type="mousemove"; break;
+            case "touchend":   type="mouseup"; break;
+            default: return;
+        }
+
+        let simulatedEvent = new MouseEvent(type, {
+            screenX: first.screenX,
+            screenY: first.screenY,
+            clientX: first.clientX,
+            clientY: first.clientY,
+            button: 1,
+            bubbles: true
+
+        });
+
+        el.dispatchEvent(simulatedEvent);
+    }
+
+    function init() {
+        el.addEventListener("touchstart", touchHandler, true);
+        document.addEventListener("touchmove", touchHandler, true);
+        el.addEventListener("touchend", touchHandler, true);
+        document.addEventListener("touchcancel", touchHandler, true);
+    }
+
     events();
+    init();
 }
 
 //helper function
