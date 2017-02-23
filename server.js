@@ -24,6 +24,7 @@ let port = process.env.port || 8000;
 //Configurations----------------------------------------------------------------------------------------------------
 
 app.set('port', port);
+db.connect();
 
 //View engine.
 app.engine('.hbs', exphbs({
@@ -60,12 +61,20 @@ app.use(csp({
     browserSniff: false
 }));
 
-
+//Check database connection.
+app.use((req, res, next) => {
+    if (!db.isConnected) {
+        next('No database connection!'); //go to 500
+    } else {
+        next();
+    }
+});
 
 //Cookie session.
 app.use(session({
     name:   "mums",
     secret: config.cookiesecret,
+    store: db.sessionStore,
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -75,20 +84,11 @@ app.use(session({
     }
 }));
 
-
 // Flash messages.
 app.use((req, res, next) => {
     if(req.session.flash) {
         res.locals.flash = req.session.flash;
         delete req.session.flash;
-    }
-    next();
-});
-
-// Login styling.
-app.use((req, res, next) => {
-    if(req.user) {
-        res.locals.user = req.user;
     }
     next();
 });
