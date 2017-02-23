@@ -1,0 +1,322 @@
+/*main styles*/
+html {
+    background-image: url('../img/bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+body {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    color: #d6d6d6;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+#content {
+    min-height: 80vh;
+    margin: 5vh;
+    padding: 5vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+a:link, a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/*end main styles*/
+
+/*topbar styles*/
+#topbar {
+    background-color: rgba(0, 0, 0, 0.5);
+    min-height: 3em;
+    max-height: 3em;
+    width: 100%;
+    color: white;
+    font-variant: small-caps;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#topbar a {
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.5em;
+    margin: 0;
+}
+
+#topbar img {
+    max-height: 2em;
+    padding: 0.5em;
+}
+
+#start h1 {
+    font-variant: small-caps;
+}
+/*end topbar styles*/
+
+/*login styles*/
+#login {
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    width: 30%;
+    margin: 5em auto;
+}
+
+#login a {
+    background-color: rgba(28, 57, 28, 0.69);
+    display: inline-block;
+    width: 50%;
+    padding: 1em;
+    margin: 20%;
+    border-radius: 2em;
+    font-size: 2em;
+    font-variant: small-caps;
+}
+/*end login styles*/
+
+/*snippets styles*/
+#snippetsview {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.snippet {
+    background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+    padding: 2em;
+    color: #fef8ff;
+    text-align: justify;
+    display: inline-block;
+    flex-grow: 1;
+    margin: 1em;
+    min-width: 20%;
+    max-width: 50%;
+}
+
+#tags {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    margin-top: 2em;
+    font-size: smaller;
+}
+
+.snippet ul li {
+    background-color: rgb(34, 46, 56);
+    border-radius: 0.2em;
+}
+
+#editbuttons {
+    text-align: center;
+    float: right;
+    margin-top: 2em;
+}
+
+.snippet h2 {
+    font-variant: small-caps;
+    padding: 0;
+    margin: 0;
+}
+
+.snippet #edit {
+    background-color: rgba(71, 113, 66, 0.74);
+    padding: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+
+.snippet #delete {
+    background-color: rgba(113, 14, 30, 0.74);
+    padding: 1em;
+    margin: 1em;
+    margin-right: 0;
+    border-radius: 0.2em;
+}
+
+.snippet p {
+    font-style: italic;
+    font-size: smaller;
+    text-align: right;
+}
+
+/*end snippets styles*/
+
+/*form styles*/
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 2em;
+    width: 30%;
+    margin: 5em auto;
+    background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+}
+
+form input, form textarea {
+    margin: 1em;
+}
+
+input[type=submit] {
+    width: 10%;
+}
+
+input[name=title] {
+    width: 50%;
+}
+
+input[name=tags] {
+    width: 50%;
+}
+
+form textarea {
+    min-height: 15em;
+}
+
+#deleteform form {
+    text-align: center;
+    margin-top: 10%;
+    min-height: 5em;
+}
+
+#deleteform input[type=submit] {
+    width: 50%;
+    margin: 1em auto;
+    text-align: center;
+    color: inherit;
+    padding: 1em;
+    font-weight: bold;
+    background-color: rgba(113, 14, 30, 0.74);
+    border-color: rgba(71, 17, 26, 0.91);;
+}
+
+#deleteform input[type=submit]:hover {
+    font-size: 1.2em;
+}
+
+#snippetform input[type=submit] {
+    width: 20%;
+    text-align: center;
+    color: inherit;
+    padding: 1em;
+    font-weight: bold;
+    background-color: rgba(71, 113, 66, 0.74);
+    border-color: rgba(28, 57, 28, 0.87);
+}
+
+#snippetform input[type=submit]:hover {
+    font-size: 1.1em;
+}
+
+#loginform form {
+    text-align: center;
+}
+
+#loginform form input {
+    margin: 1em auto;
+    width: 50%;
+}
+
+#loginform form #radios {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 40%;
+    margin: 0 auto;
+}
+
+#loginform form #radios input[type=radio], #loginform form #radios label[for=signup], #loginform form #radios label[for=login] {
+    flex: 1;
+    max-width: 25%;
+    padding-top: 0.5em;
+}
+
+#loginform input[type=submit] {
+    width: 20%;
+    text-align: center;
+    color: inherit;
+    padding: 1em;
+    font-weight: bold;
+    background-color: rgba(31, 64, 113, 0.74);
+    border-color: rgba(16, 21, 57, 0.87);
+}
+
+#loginform input[type=submit]:hover {
+    font-size: 1.1em;
+}
+/*end form styles*/
+
+/*error and flash message styles*/
+.error {
+    flex: 1;
+    margin-top: 20%;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.success {
+    background-color: rgba(71, 113, 66, 0.74);
+    padding: 0.2em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+
+.failure {
+    background-color: rgba(113, 14, 30, 0.74);
+    padding: 0.2em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+/*end error message styles*/
+
+/*footer styles*/
+footer {
+    overflow: auto;
+    max-height: 7em;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+footer img {
+    float: right;
+    max-height: 5em;
+}
+
+footer p {
+    margin-top: 2em;
+    display: inline-block;
+}
+/*end footer styles*/

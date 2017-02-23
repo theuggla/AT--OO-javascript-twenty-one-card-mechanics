@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>issuehandler</title>
+</head>
+<body>
+<div id="topbar">
+        {{#if user}}
+            <img src="{{user.avatar}}" />
+            <a href="{{user.profileUrl}}">Hi {{user.username}}</a></li>
+            <a href="/logout">Log Out</a>
+        {{else}}
+            <a href="/">Log In</a>
+        {{/if}}
+</div>
+{{> flash }}
+{{#if confirm}}
+    {{> confirm}}
+{{/if}}
+<div id="content">
+    {{{body}}}
+</div>
+{{>footer}}
+</body>
+</html>
