@@ -11,6 +11,7 @@ let session = require('express-session');
 let helmet = require('helmet');
 let csp = require('helmet-csp');
 let passport = require('passport');
+let flash = require('express-flash');
 let request = require('request-promise-native');
 let home = require('./routes/home');
 let user = require('./routes/user');
@@ -25,6 +26,7 @@ let port = process.env.port || 8000;
 
 app.set('port', port);
 db.connect();
+auth.connect();
 
 //View engine.
 app.engine('.hbs', exphbs({
@@ -73,8 +75,8 @@ app.use((req, res, next) => {
 //Cookie session.
 app.use(session({
     name:   "mums",
+    store: db.sessionStore(),
     secret: config.cookiesecret,
-    store: db.sessionStore,
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -86,14 +88,29 @@ app.use(session({
 
 // Flash messages.
 app.use((req, res, next) => {
-    if(req.session.flash) {
+    if (req.session.flash) {
         res.locals.flash = req.session.flash;
         delete req.session.flash;
     }
     next();
 });
 
+// Initialize Passport and restore authentication state,
+// if any, from the session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Transfer user information.
+app.use((req, res, next) => {
+    if (req.user) {
+        res.locals.user = req.user;
+    }
+    next();
+});
+
 //Routes------------------------------------------------------------------------------------------------------------
+app.use('/', home);
+app.use('/user', user);
 
 //Custom Error Pages-------------------------------------------------------------------------------------------------
 
@@ -102,9 +119,9 @@ app.use((req, res) => {
     res.status(404).render('error', {message: 'really couldn\'t find this page!'});
 });
 
-//500>
+//500
 app.use((err, req, res, next) => {
-    console.log(err);
+    console.error(err);
     res.status(500).render('error', {message: 'my fault. sorry. maybe try again later?'});
 });
 

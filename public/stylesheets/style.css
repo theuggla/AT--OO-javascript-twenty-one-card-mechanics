@@ -98,7 +98,8 @@ ul {
 }
 /*end login styles*/
 
-/*snippets styles*/
+/*
+/*snippets styles
 #snippetsview {
     display: flex;
     flex-direction: row;
@@ -171,7 +172,7 @@ ul {
 
 /*end snippets styles*/
 
-/*form styles*/
+/*form styles
 form {
     display: flex;
     flex-direction: column;
@@ -274,6 +275,33 @@ form textarea {
     font-size: 1.1em;
 }
 /*end form styles*/
+
+/*confirm message styles*/
+#confirmform {
+    background-color: rgba(113, 14, 30, 0.74);
+    padding: 1em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+
+#confirmform input[type=submit]{
+    display: block;
+    font-weight: bold;
+    font-variant: small-caps;
+    background-color: rgba(26, 8, 8, 0.74);
+    border-color: rgba(71, 17, 26, 0.91);
+    margin: 1em auto;
+    padding: 0.5em;
+    color: #898989;
+}
+
+#confirmform input[type=submit]:hover {
+    background-color: rgba(83, 27, 27, 0.74);
+    color: black;
+}
+/*end confirm message styles*/
 
 /*error and flash message styles*/
 .error {
