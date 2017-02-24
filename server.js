@@ -11,8 +11,7 @@ let session = require('express-session');
 let helmet = require('helmet');
 let csp = require('helmet-csp');
 let passport = require('passport');
-let flash = require('express-flash');
-let request = require('request-promise-native');
+let verifyGithubWebhook = require('github-express-webhook-verifying');
 let home = require('./routes/home');
 let user = require('./routes/user');
 let config = require('./config/configs');
@@ -23,6 +22,11 @@ let app = express();
 let port = process.env.port || 8000;
 
 //Configurations----------------------------------------------------------------------------------------------------
+let ngrok = require('ngrok');
+ngrok.connect(port, function (err, url) {
+    config.hookurl = url + '/githook';
+});
+
 
 app.set('port', port);
 db.connect();
@@ -111,6 +115,11 @@ app.use((req, res, next) => {
 //Routes------------------------------------------------------------------------------------------------------------
 app.use('/', home);
 app.use('/user', user);
+app.use('/githook', verifyGithubWebhook(process.env.WEBHK_SECRET), (req, res) => {
+    console.log('got something');
+    console.log(req.body);
+    res.status(200).send();
+});
 
 //Custom Error Pages-------------------------------------------------------------------------------------------------
 

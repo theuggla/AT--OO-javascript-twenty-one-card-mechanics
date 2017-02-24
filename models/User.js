@@ -18,6 +18,7 @@ let userSchema = new Schema({
     username: {type: String, required: [true, 'username needed']},
     profileUrl: {type: String},
     avatar: {type: String},
+    preferedRep: {type: Object}
 });
 
 /**

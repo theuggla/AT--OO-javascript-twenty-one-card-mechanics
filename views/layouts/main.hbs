@@ -7,9 +7,14 @@
 <body>
 <div id="topbar">
         {{#if user}}
-            <img src="{{user.avatar}}" />
-            <a href="{{user.profileUrl}}">Hi {{user.username}}</a></li>
+            <div id="chooserepo">
+                <a href="/user/{{user.username}}/repos">choose repository to follow</a>
+            </div>
+        <div id="manageuser">
+            <a href="{{user.profileUrl}}"><img src="{{user.avatar}}" /></a>
+            <a href="/user/{{user.username}}">{{user.username}}</a>
             <a href="/logout">Log Out</a>
+        </div>
         {{else}}
             <a href="/">Log In</a>
         {{/if}}

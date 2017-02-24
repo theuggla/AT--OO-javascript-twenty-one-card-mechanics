@@ -16,7 +16,7 @@ router.route('/')
     if (!req.user) {
         res.redirect('/login');
     } else {
-        res.redirect('/user/' + (req.user.githubid));
+        res.redirect('/user/' + (req.user.username));
     }
 });
 
@@ -86,7 +86,6 @@ router.route('/login/github/return')
 router.route('/logout')
     .get((req, res) => {
         req.logout();
-        req.session.destroy();
         res.redirect('/login');
     });
 

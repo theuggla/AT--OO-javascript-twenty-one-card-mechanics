@@ -56,24 +56,31 @@ ul {
     margin: 0;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
 
-#topbar a {
+#topbar #manageuser a {
     display: inline-block;
     font-size: 1em;
     padding: 0.5em;
     margin: 0;
 }
 
-#topbar img {
+#topbar #manageuser img {
     max-height: 2em;
     padding: 0.5em;
 }
 
 #start h1 {
     font-variant: small-caps;
+}
+
+#topbar #manageuser {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    align-items: center;
 }
 /*end topbar styles*/
 
@@ -98,9 +105,9 @@ ul {
 }
 /*end login styles*/
 
-/*
-/*snippets styles
-#snippetsview {
+
+/*repos styles*/
+#repos {
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -110,10 +117,10 @@ ul {
     align-items: center;
 }
 
-.snippet {
-    background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+.repo {
+    background-color: rgba(161, 161, 161, 0.73);
     padding: 2em;
-    color: #fef8ff;
+    color: #1c1c1c;
     text-align: justify;
     display: inline-block;
     flex-grow: 1;
@@ -122,6 +129,36 @@ ul {
     max-width: 50%;
 }
 
+.repo:hover, .repo:active {
+    background-color: rgba(214, 214, 214, 0.73);
+}
+
+.repo input[type=submit] {
+    text-align: center;
+    float: right;
+    background-color: rgba(71, 113, 66, 0.74);
+    border-color: rgba(48, 77, 32, 0.75);
+    padding: 1em;
+    margin: 1em;
+    margin-top: 2em;
+    margin-right: 0.5em;
+    width: 6em;
+    height: 6em;
+    border-radius: 3em;
+    font-variant: small-caps;
+}
+
+.repo input[type=submit]:hover {
+    background-color: rgba(128, 189, 120, 0.74);
+}
+
+.repo h2 {
+    font-variant: small-caps;
+    padding: 0;
+    margin: 0;
+}
+
+/*
 #tags {
     display: flex;
     flex-direction: row;

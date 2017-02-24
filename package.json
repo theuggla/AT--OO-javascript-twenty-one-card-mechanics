@@ -33,6 +33,7 @@
     "express": "^4.14.1",
     "express-secure-handlebars": "^2.1.0",
     "express-session": "^1.15.1",
+    "github-express-webhook-verifying": "^1.0.1",
     "helmet": "^3.4.0",
     "helmet-csp": "^2.3.0",
     "mongoose": "^4.8.4",
