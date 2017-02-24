@@ -29,7 +29,7 @@ router.use('/:username', ensureLoggedIn, (req, res, next) => {
 router.route('/:username')
     .get((req, res, next) => {
          if (req.user.preferedRep) {
-            return res.render('user/display');
+            return res.redirect('/user/' + req.params.username + '/issues');
         }
             return res.redirect('/user/' + req.params.username + '/repos');
 

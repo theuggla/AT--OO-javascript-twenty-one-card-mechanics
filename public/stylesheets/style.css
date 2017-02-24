@@ -158,6 +158,52 @@ ul {
     margin: 0;
 }
 
+/*issue styles*/
+#issuepage {
+    display: flex;
+    justify-content: space-between;
+}
+
+#issueview {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+#happenings {
+    width: 40%;
+}
+
+.issue {
+    background-color: rgba(79, 79, 79, 0.62);
+    padding: 1em;
+    margin: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.issue #info {
+    text-align: left;
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.issue #info #timestamps {
+    font-size: smaller;
+}
+
+.issue #info p:last-of-type {
+    font-size: smaller;
+}
+
+.issue #user {
+    max-width: 20%;
+}
+/*end issue styles*/
+
 /*
 #tags {
     display: flex;

@@ -8,29 +8,35 @@ let bodyParser = require('body-parser');
 let exphbs = require('express-secure-handlebars');
 let path = require('path');
 let session = require('express-session');
+let http = require('http');
 let helmet = require('helmet');
 let csp = require('helmet-csp');
 let passport = require('passport');
 let verifyGithubWebhook = require('github-express-webhook-verifying');
 let home = require('./routes/home');
 let user = require('./routes/user');
+let issues = require('./routes/issues');
 let config = require('./config/configs');
 let db = require('./lib/dbresource');
 let auth = require('./lib/authresource');
+let wss = require('./lib/wssresource');
 
 let app = express();
 let port = process.env.port || 8000;
+let server = http.createServer(app);
 
 //Configurations----------------------------------------------------------------------------------------------------
 let ngrok = require('ngrok');
+console.log('setting up ngrok');
 ngrok.connect(port, function (err, url) {
+    console.log('ngrok at ' + url);
     config.hookurl = url + '/githook';
 });
-
 
 app.set('port', port);
 db.connect();
 auth.connect();
+wss.connect(server);
 
 //View engine.
 app.engine('.hbs', exphbs({
@@ -56,7 +62,7 @@ app.use(helmet());
 //Security-CSP
 app.use(csp({
     directives: {
-        defaultSrc: ["'self'", 'github.com', 'githubusercontent.com', 'api.github.com', 'avatars.githubusercontent.com'],
+        defaultSrc: ["'self'", 'ws://localhost:8000', 'github.com', 'githubusercontent.com', 'api.github.com', 'avatars.githubusercontent.com'],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
     },
@@ -115,10 +121,14 @@ app.use((req, res, next) => {
 //Routes------------------------------------------------------------------------------------------------------------
 app.use('/', home);
 app.use('/user', user);
+app.use('/user/:username/issues', issues);
+
+//Receive data from Github------------------------------------------------------------------------------------------
 app.use('/githook', verifyGithubWebhook(process.env.WEBHK_SECRET), (req, res) => {
-    console.log('got something');
-    console.log(req.body);
+    //confirm that message was received
     res.status(200).send();
+    //send to client
+    wss.send(req.body);
 });
 
 //Custom Error Pages-------------------------------------------------------------------------------------------------
@@ -135,6 +145,6 @@ app.use((err, req, res, next) => {
 });
 
 //start the server
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('server up and running, press Ctrl+C to finish');
 });

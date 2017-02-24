@@ -1,0 +1,27 @@
+<h1>Issues for {{user.preferedRep.name}}</h1>
+<div id="issuepage">
+<div id="issueview">
+{{#each issues}}
+<div class="issue">
+    <div id="info">
+        <h2>{{title}}</h2>
+        <div id="timestamps">
+            <p>updated at {{updatedAt}}</p>
+            <p>created at {{createdAt}}</p>
+        </div>
+        <p>{{body}}</p>
+        <p>{{comments}} comments</p>
+    </div>
+    <div id="user">
+        <p>by {{user.username}}</p><img src="{{user.avatar}}" />
+    </div>
+</div>
+{{/each}}
+</div>
+
+<div id="happenings">
+
+</div>
+</div>
+
+<script src="/javascript/app.js"></script>
