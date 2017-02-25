@@ -86,7 +86,7 @@ router.route('/:username/repos')
         } else if (req.user.preferedRep.url !== req.body.url) { //repo preference has changed
 
             //remove old hook
-            gitRequest.removeHook(req.user.preferedRep.url)
+            gitRequest.removeHook(req.user.username, req.user.preferedRep.url)
                 .then(() => {
                 //update preference
                     req.user.preferedRep = {
@@ -127,19 +127,31 @@ router.route('/:username/delete')
 
         //remove old hook
         if (req.user.preferedRep) {
-            return gitRequest.removeHook(req.user.preferedRep.url);
+            gitRequest.removeHook(req.user.username, req.user.preferedRep.url)
+                .then(() => {
+                    //delete user
+                    userdb.delete(req.params.username)
+                        .then(() => {
+                            req.logout();
+                            req.session.flash = {
+                                type: 'success',
+                                message: 'user successfully deleted'
+                            };
+                            res.redirect('/');
+                        });
+                })
+        } else {
+            //delete user
+            userdb.delete(req.params.username)
+                .then(() => {
+                    req.session.flash = {
+                        type: 'success',
+                        message: 'user successfully deleted'
+                    };
+                    req.logout();
+                    res.redirect('/');
+                });
         }
-
-        //delete user
-        userdb.delete(req.params.username)
-            .then(() => {
-                req.logout();
-                req.session.flash = {
-                    type: 'success',
-                    message: 'user successfully deleted'
-                };
-                res.redirect('/');
-            });
     });
 
 //Exports.

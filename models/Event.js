@@ -10,11 +10,11 @@ function Event(data) {
     if (data.comment) {
         event.type = 'comment';
         event.body = data.comment.body;
-        event.title = 'comment on ' + data.issue.title;
+        event.title = 'comment ' + data.action + ' on ' + data.issue.title;
     } else if (data.issue) {
         event.type = 'issue';
         event.body =  data.issue.body;
-        event.title = 'new issue: ' + data.issue.title
+        event.title = 'issue ' + data.action + ': ' + data.issue.title
     } else {
         return {};
     }
