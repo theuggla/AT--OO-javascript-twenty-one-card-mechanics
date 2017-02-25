@@ -5,6 +5,8 @@
 //Requires.
 let router = require('express').Router();
 let passport = require('passport');
+let Socket = require('../lib/wssresource');
+let User = require('../models/User');
 
 //Routes--------------------------------------------------------------------------------------------------------
 /**
@@ -81,10 +83,14 @@ router.route('/login/github/return')
     });
 
 /**
- * Log user out. Destroy the session and redirect to login screen.
+ * Log user out. Redirect to login screen.
  */
 router.route('/logout')
     .get((req, res) => {
+        req.session.flash = {
+            type: 'success',
+            message: 'user ' + req.user.username + ' logged out'
+        };
         req.logout();
         res.redirect('/login');
     });

@@ -12,7 +12,6 @@ let http = require('http');
 let helmet = require('helmet');
 let csp = require('helmet-csp');
 let passport = require('passport');
-let verifyGithubWebhook = require('github-express-webhook-verifying');
 let home = require('./routes/home');
 let user = require('./routes/user');
 let issues = require('./routes/issues');
@@ -20,6 +19,7 @@ let config = require('./config/configs');
 let db = require('./lib/dbresource');
 let auth = require('./lib/authresource');
 let wss = require('./lib/wssresource');
+
 
 let app = express();
 let port = process.env.port || 8000;
@@ -30,7 +30,7 @@ let ngrok = require('ngrok');
 console.log('setting up ngrok');
 ngrok.connect(port, function (err, url) {
     console.log('ngrok at ' + url);
-    config.hookurl = url + '/githook';
+    config.hookurl = url;
 });
 
 app.set('port', port);
@@ -76,7 +76,7 @@ app.use(csp({
 //Check database connection.
 app.use((req, res, next) => {
     if (!db.isConnected) {
-        next('No database connection!'); //go to 500
+        next(new Error('No database connection!')); //go to 500
     } else {
         next();
     }
@@ -122,14 +122,6 @@ app.use((req, res, next) => {
 app.use('/', home);
 app.use('/user', user);
 app.use('/user/:username/issues', issues);
-
-//Receive data from Github------------------------------------------------------------------------------------------
-app.use('/githook', verifyGithubWebhook(process.env.WEBHK_SECRET), (req, res) => {
-    //confirm that message was received
-    res.status(200).send();
-    //send to client
-    wss.send(req.body);
-});
 
 //Custom Error Pages-------------------------------------------------------------------------------------------------
 

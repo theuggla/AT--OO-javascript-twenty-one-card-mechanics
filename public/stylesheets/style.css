@@ -158,7 +158,7 @@ ul {
     margin: 0;
 }
 
-/*issue styles*/
+/*issue and event styles*/
 #issuepage {
     display: flex;
     justify-content: space-between;
@@ -171,10 +171,12 @@ ul {
 }
 
 #happenings {
+    display: flex;
+    flex-direction: column;
     width: 40%;
 }
 
-.issue {
+.issue, .event {
     background-color: rgba(79, 79, 79, 0.62);
     padding: 1em;
     margin: 1em;
@@ -183,7 +185,7 @@ ul {
     justify-content: space-between;
 }
 
-.issue #info {
+.issue #info, .event #info {
     text-align: left;
     max-width: 70%;
     display: flex;
@@ -199,10 +201,24 @@ ul {
     font-size: smaller;
 }
 
-.issue #user {
+.issue #user, .event #userinfo {
     max-width: 20%;
 }
-/*end issue styles*/
+
+.event {
+    font-size: 0.8em;
+}
+
+#happenings .comment {
+    background-color: rgba(29, 11, 119, 0.62);
+}
+
+#happenings .issue {
+    background-color: rgba(119, 119, 29, 0.62);
+}
+
+/*end issue and event styles*/
+
 
 /*
 #tags {

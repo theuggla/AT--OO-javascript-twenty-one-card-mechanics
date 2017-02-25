@@ -2,17 +2,33 @@
  * Router for the user handling pages.
  */
 
-//Requires
+//Requires.
 let router = require('express').Router();
 let ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn('/login');
 let csrf = require('csurf')();
+let verifyGithubWebhook = require('github-express-webhook-verifying');
 let userdb = require('../lib/userresource');
+let wss = require('../lib/wssresource');
 let gitRequest = require('../lib/githubresource');
+let event = require('../models/Event');
 
 //Routes---------------------------------------------------------------------------------------------------------------
 
+//Receive data from Github------------------------------------------------------------------------------------------
+router.route('/:username/githook')
+    .get((req, res, next) => {
+    //can't GET this resource
+        return next();
+    })
+    .post(verifyGithubWebhook(process.env.WEBHK_SECRET), (req, res) => {
+        //confirm that message was received
+        res.status(200).send();
+        //send to client
+        wss.connection(req.params.username).sendUTF(JSON.stringify(event(req.body)));
+    });
+//------------------------------------------------------------------------------------------------------------------
+
 /**
- * Display user-page.
  * Redirect to /login if user is not logged in.
  * Show 403 if user is not authorized.
  */
@@ -36,11 +52,12 @@ router.route('/:username')
     });
 
 /**
- * Display page to choose repository to watch.
+ * Display page where user can choose
+ * what repository to watch.
  */
 router.route('/:username/repos')
     .get(csrf, (req, res, next) => {
-    //fetch the repos
+        //fetch the repos
         gitRequest.getRepos()
             .then((result) => {
                 return res.render('user/repos', {repos: result, csrfToken: req.csrfToken()});
@@ -50,19 +67,25 @@ router.route('/:username/repos')
             });
     })
     .post(csrf, (req, res, next) => {
-
-    //if there is no prefered repo, set to this
+        //if there is no prefered repo, set to selected
         if (!req.user.preferedRep) {
-            req.user.preferedRep = {
-                url: req.body.url,
-                name: req.body.name
-            };
-            req.user.save();
-        }
+                req.user.preferedRep = {
+                    url: req.body.url,
+                    name: req.body.name
+                };
+                req.user.save();
 
-    //if prefered repo has changed, update it
-        if (req.user.preferedRep.url !== req.body.url) {
-            //remove the old hook
+                //set hook on that repo
+                gitRequest.setHook(req.user.username, req.user.preferedRep.url)
+                    .then(() => {
+                        return res.redirect('/user/' + req.user.username + '/issues/');
+                    })
+                    .catch((error) => {
+                        return next(error);
+                    });
+        } else if (req.user.preferedRep.url !== req.body.url) { //repo preference has changed
+
+            //remove old hook
             gitRequest.removeHook(req.user.preferedRep.url)
                 .then(() => {
                 //update preference
@@ -74,9 +97,11 @@ router.route('/:username/repos')
                     req.user.save();
 
                     //set new hook
-                    return gitRequest.setHook(req.user.preferedRep);
+                    return gitRequest.setHook(req.user.username, req.user.preferedRep.url);
                 })
                 .then(() => {
+
+                //redirect to issues
                     return res.redirect('/user/' + req.user.username + '/issues/');
                 })
                 .catch((error) => {
@@ -85,7 +110,7 @@ router.route('/:username/repos')
         } else {
             //if prefered repo hasn't changed, redirect
             return res.redirect('/user/' + req.user.username + '/issues/');
-    }
+        }
     });
 
 /**
@@ -96,9 +121,16 @@ router.route('/:username/delete')
         res.locals.confirm = {
             message: 'are you sure you want to delete the user?'
         };
-        res.render('user/display', {csrfToken: req.csrfToken()});
+        res.render('user/repos', {csrfToken: req.csrfToken()});
     })
     .post(csrf, (req, res) => {
+
+        //remove old hook
+        if (req.user.preferedRep) {
+            return gitRequest.removeHook(req.user.preferedRep.url);
+        }
+
+        //delete user
         userdb.delete(req.params.username)
             .then(() => {
                 req.logout();
