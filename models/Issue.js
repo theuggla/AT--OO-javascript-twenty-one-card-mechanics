@@ -12,7 +12,7 @@ function Issue(data) {
         state: data.state,
             body: data.body,
         comments: data.comments,
-        id: data.id,
+        id: data.number,
         createdAt: data.created_at,
         updatedAt: data.updated_at
     };

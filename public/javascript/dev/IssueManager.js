@@ -12,7 +12,7 @@ class IssueManager {
 
     }
 
-    getIssue(issue) {
+    getIssue({user, issue}) {
         return new Promise((resolve, reject) => {
             ajax.request({url:'/user/'+user+'/issues/'+issue})
                 .then((response) => {
@@ -36,12 +36,28 @@ class IssueManager {
         });
     }
 
-    closeIssue(issue) {
-        console.log('closing issue ' + issue);
+    closeIssue({user, issue}) {
+        return new Promise((resolve, reject) => {
+            ajax.request({url:'/user/'+user+'/issues/'+issue, method: 'PUT'})
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 
-    editIssue(issue) {
-        console.log('editing issue ' + issue);
+    editIssue({user, title, body, issue}) {
+        return new Promise((resolve, reject) => {
+            ajax.request({url:'/user/'+user+'/issues/'+issue, method: 'PATCH', message:JSON.stringify({title: title, body: body})})
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 
     getComments(issue) {

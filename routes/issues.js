@@ -48,13 +48,31 @@ router.route('/')
  **/
 router.route('/:issueID')
     .get((req, res, next) => {
-    //get the issue
+        crud.getIssue(req.user.preferedRep.url, req.params.issueID, req.body)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((error) => {
+                next(error);
+            });
     })
-    .patch(() => {
-        //edit the issue
+    .patch((req, res, next) => {
+        crud.editIssue(req.user.preferedRep.url, req.params.issueID, req.body)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((error) => {
+                next(error);
+            });
     })
-    .put(() => {
-        //lock issue
+    .put((req, res, next) => {
+        crud.lockIssue(req.user.preferedRep.url, req.params.issueID)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((error) => {
+                next(error);
+            });
     })
     .delete(() => {
         //unlock issue

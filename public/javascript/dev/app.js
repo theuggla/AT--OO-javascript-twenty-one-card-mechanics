@@ -31,23 +31,32 @@ ws.connect('ws://localhost:8000/')
 issueView.addEventListener('click', (event) => {
     event.preventDefault();
     let issue;
+    let user = document.querySelector('#topbar').getAttribute('data-username');
     let action = event.target.getAttribute('data-action');
     if (event.path[2].classList.contains('issue')) {
         issue = event.path[2].getAttribute('data-id');
     }
 
-    happenings.classList.add('hide');
-    formView.classList.remove('hide');
 
     switch(action) {
         case 'addissue':
-            formdiv.innerHTML = formTemplate({action: action, issue: issue});
+            formdiv.innerHTML = formTemplate({action: action});
+            happenings.classList.add('hide');
+            formView.classList.remove('hide');
             break;
         case 'editissue':
-            im.getIssue(issue);
+            im.getIssue({user: user, issue: issue})
+                .then((result) => {
+                    result = JSON.parse(result);
+                    result.action = action;
+                    formdiv.innerHTML = formTemplate(result);
+                    happenings.classList.add('hide');
+                    formView.classList.remove('hide');
+                });
             break;
-        case 'closeissue':
-            im.closeIssue(issue);
+        case 'lockissue':
+            im.closeIssue({user: user, issue: issue});
+            break;
             break;
         case 'viewcomments':
             im.getComments(issue);
@@ -59,13 +68,16 @@ issueView.addEventListener('click', (event) => {
 
 formView.addEventListener('click', (event) => {
     event.preventDefault();
+    let title;
+    let content;
+    let issueID;
     let action = event.target.getAttribute('data-action');
     let user = document.querySelector('#topbar').getAttribute('data-username');
 
     switch(action) {
         case 'addissue':
-            let title = event.target.form.querySelector('input[name="title"]').value;
-            let content = event.target.form.querySelector('textarea[name="content"]').value;
+            title = event.target.form.querySelector('input[name="title"]').value;
+            content = event.target.form.querySelector('textarea[name="content"]').value;
             im.addIssue({user:user, title:title, body:content})
                 .then(() => {
                     happenings.classList.remove('hide');
@@ -73,10 +85,14 @@ formView.addEventListener('click', (event) => {
                 });
             break;
         case 'editissue':
-            im.editIssue(issue);
-            break;
-        case 'closeissue':
-            im.closeIssue(issue);
+            title = event.target.form.querySelector('input[name="title"]').value;
+            content = event.target.form.querySelector('textarea[name="content"]').value;
+            issueID = event.target.form.querySelector('input[name="issue"]').value;
+            im.editIssue({user:user, title:title, body:content, issue: issueID})
+                .then(() => {
+                    happenings.classList.remove('hide');
+                    formView.classList.add('hide');
+                });
             break;
         case 'viewcomments':
             im.getComments(issue);
