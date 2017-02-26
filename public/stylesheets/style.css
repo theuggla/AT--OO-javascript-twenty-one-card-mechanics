@@ -271,7 +271,7 @@ ul {
 
 /*end snippets styles*/
 
-/*form styles
+/*form styles*/
 form {
     display: flex;
     flex-direction: column;
@@ -294,14 +294,11 @@ input[name=title] {
     width: 50%;
 }
 
-input[name=tags] {
-    width: 50%;
-}
-
 form textarea {
     min-height: 15em;
 }
 
+/*
 #deleteform form {
     text-align: center;
     margin-top: 10%;
@@ -447,3 +444,7 @@ footer p {
     display: inline-block;
 }
 /*end footer styles*/
+
+.hide {
+    display: none;
+}

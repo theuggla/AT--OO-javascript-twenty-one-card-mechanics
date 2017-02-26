@@ -1,9 +1,9 @@
 <h1>Issues for {{user.preferedRep.name}}</h1>
 <div id="issuepage">
 <div id="issueview">
-    <a href="" is="addissue">add issue</a>
+    <a href="" data-action="addissue">add issue</a>
 {{#each issues}}
-<div class="issue">
+<div class="issue" data-id="{{id}}">
     <div id="info">
         <h2>{{title}}</h2>
         <div id="timestamps">
@@ -11,11 +11,11 @@
             <p>created at {{createdAt}}</p>
         </div>
         <p>{{body}}</p>
-        <a href="" id="viewcomments">{{comments}} comments</a>
+        <a href="" data-action="viewcomments">{{comments}} comments</a>
     </div>
     <div id="user">
-        <a href="" id="closeissue">close</a>
-        <a href="" id="editissue">edit</a>
+        <a href="" data-action="closeissue">close</a>
+        <a href="" data-action="editissue">edit</a>
         <p>by {{user.username}}</p><img src="{{user.avatar}}" />
     </div>
 </div>
@@ -27,4 +27,8 @@
         </div>
     </template>
 </div>
+<div id="forms" class="hide">
+    <form></form>
 </div>
+</div>
+<script src="/javascript/bundle.js"></script>

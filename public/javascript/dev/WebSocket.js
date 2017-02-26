@@ -46,16 +46,7 @@ class Socket {
                 let response = JSON.parse(event.data);
 
                 if (response.type) {
-                    let happenings = document.querySelector('#happenings');
-                    let eventdiv = document.importNode(document.querySelector('#eventTemplate').content.firstElementChild, true);
-                    eventdiv.classList.add(response.type);
-                    eventdiv.innerHTML = eventTemplate(response);
-
-                    if (happenings.firstElementChild) {
-                        happenings.insertBefore(eventdiv, happenings.firstElementChild);
-                    } else {
-                        happenings.appendChild(eventdiv);
-                    }
+                    this.print(response);
                 }
 
             });
@@ -63,6 +54,19 @@ class Socket {
             this.socket = socket;
 
         });
+    }
+
+    print(event) {
+        let happenings = document.querySelector('#happenings');
+        let eventdiv = document.importNode(document.querySelector('#eventTemplate').content.firstElementChild, true);
+        eventdiv.classList.add(event.type);
+        eventdiv.innerHTML = eventTemplate(event);
+
+        if (happenings.firstElementChild) {
+            happenings.insertBefore(eventdiv, happenings.firstElementChild);
+        } else {
+            happenings.appendChild(eventdiv);
+        }
     }
 }
 

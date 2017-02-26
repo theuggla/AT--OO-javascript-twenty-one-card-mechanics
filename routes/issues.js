@@ -32,8 +32,15 @@ router.route('/')
                 }
             });
     })
-    .post(() => {
+    .post((req, res, next) => {
     //create an issue
+        crud.createIssue(req.user.preferedRep.url, req.body)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((error) => {
+                next(error);
+            });
     });
 
 /**
