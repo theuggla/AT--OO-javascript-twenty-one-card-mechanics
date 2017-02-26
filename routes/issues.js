@@ -5,7 +5,6 @@
 //Requires
 let router = require('express').Router();
 let crud = require('../lib/issueresource');
-let csrf = require('csurf')();
 
 //Routes---------------------------------------------------------------------------------------------------------------
 
@@ -47,6 +46,7 @@ router.route('/')
  * Requests against a single issue
  **/
 router.route('/:issueID')
+    //get an issue
     .get((req, res, next) => {
         crud.getIssue(req.user.preferedRep.url, req.params.issueID, req.body)
             .then((response) => {
@@ -56,6 +56,7 @@ router.route('/:issueID')
                 next(error);
             });
     })
+    //edit an issue
     .patch((req, res, next) => {
         crud.editIssue(req.user.preferedRep.url, req.params.issueID, req.body)
             .then((response) => {
@@ -65,17 +66,15 @@ router.route('/:issueID')
                 next(error);
             });
     })
+    //lock conversation on an issue
     .put((req, res, next) => {
         crud.lockIssue(req.user.preferedRep.url, req.params.issueID)
-            .then((response) => {
-                res.send(response);
+            .then(() => {
+                res.send({});
             })
             .catch((error) => {
                 next(error);
             });
-    })
-    .delete(() => {
-        //unlock issue
     });
 
 /**
@@ -83,21 +82,39 @@ router.route('/:issueID')
  **/
 router.route('/:issueID/comments')
     .get((req, res, next) => {
-        //view all comments for the issue
+    //get comments
+         crud.getComments(req.user.preferedRep.url, req.params.issueID)
+             .then((response) => {
+                 res.send({comments: response});
+             })
+             .catch((error) => {
+                 next(error);
+             })
     })
-    .post(() => {
+    .post((req, res, next) => {
         //add a comment
-    })
+        crud.addComment(req.user.preferedRep.url, req.params.issueID, req.body)
+            .then((response) => {
+                res.send({comments: response});
+            })
+            .catch((error) => {
+                next(error);
+            })
+    });
 
 /**
  * Requests against a specific comment
  * */
-router.route('//:issueID/comments/:commentID')
-    .patch(() => {
-        //edit comment
-    })
-    .delete(() => {
+router.route('/:issueID/comments/:commentID')
+    .delete((req, res, next) => {
         //delete comment
+        crud.deleteComment(req.user.preferedRep.url, req.params.commentID)
+            .then(() => {
+                res.send({});
+            })
+            .catch((error) => {
+                next(error);
+            })
     });
 
 //Exports

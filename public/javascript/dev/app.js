@@ -10,11 +10,12 @@ let IssueManager = require("./IssueManager.js");
 let ws = new Socket();
 let im = new IssueManager();
 let formTemplate = require('../../../views/issues/form.handlebars');
-let formdiv = document.querySelector('#forms form');
+let commentTemplate = require('../../../views/issues/comments.handlebars');
 
 //DOM
 let issueView = document.querySelector('#issueview');
 let formView = document.querySelector('#forms');
+let commentsView = document.querySelector('#commentview');
 let happenings = document.querySelector('#happenings');
 
 //connect to the socket
@@ -40,8 +41,8 @@ issueView.addEventListener('click', (event) => {
 
     switch(action) {
         case 'addissue':
-            formdiv.innerHTML = formTemplate({action: action});
-            happenings.classList.add('hide');
+            formView.innerHTML = formTemplate({action: action});
+            commentsView.classList.add('hide');
             formView.classList.remove('hide');
             break;
         case 'editissue':
@@ -49,17 +50,28 @@ issueView.addEventListener('click', (event) => {
                 .then((result) => {
                     result = JSON.parse(result);
                     result.action = action;
-                    formdiv.innerHTML = formTemplate(result);
-                    happenings.classList.add('hide');
+                    formView.innerHTML = formTemplate(result);
+                    commentsView.classList.add('hide');
                     formView.classList.remove('hide');
                 });
             break;
         case 'lockissue':
-            im.closeIssue({user: user, issue: issue});
-            break;
+            im.closeIssue({user: user, issue: issue})
+                .then(() => {
+
+                });
             break;
         case 'viewcomments':
-            im.getComments(issue);
+            im.getComments({user: user, issue: issue})
+                .then((result) => {
+                    result = JSON.parse(result);
+
+                    result.issue = issue;
+
+                    commentsView.innerHTML = commentTemplate(result);
+                    commentsView.classList.remove('hide');
+                    formView.classList.add('hide');
+                });
             break;
     }
 
@@ -80,7 +92,6 @@ formView.addEventListener('click', (event) => {
             content = event.target.form.querySelector('textarea[name="content"]').value;
             im.addIssue({user:user, title:title, body:content})
                 .then(() => {
-                    happenings.classList.remove('hide');
                     formView.classList.add('hide');
                 });
             break;
@@ -90,12 +101,38 @@ formView.addEventListener('click', (event) => {
             issueID = event.target.form.querySelector('input[name="issue"]').value;
             im.editIssue({user:user, title:title, body:content, issue: issueID})
                 .then(() => {
-                    happenings.classList.remove('hide');
                     formView.classList.add('hide');
                 });
             break;
-        case 'viewcomments':
-            im.getComments(issue);
+    }
+});
+
+commentsView.addEventListener('click', (event) => {
+    event.preventDefault();
+    let content;
+    let issueID;
+    let commentID;
+    let action = event.target.getAttribute('data-action');
+    let user = document.querySelector('#topbar').getAttribute('data-username');
+
+    switch(action) {
+        case 'addcomment':
+            debugger;
+            issueID = event.target.form.querySelector('input[name="issue"]').value;
+            content = event.target.form.querySelector('textarea[name="content"]').value;
+            im.addComment({user:user, issue:issueID, body:content})
+                .then(() => {
+                    commentsView.classList.add('hide');
+                });
+            break;
+        case 'deletecomment':
+            debugger;
+            issueID = event.target.parentElement.parentElement.parentElement.getAttribute('data-issue');
+            commentID = event.target.parentElement.parentElement.parentElement.getAttribute('data-id');
+            im.deleteComment({user:user, issue: issueID, comment: commentID})
+                .then(() => {
+                    commentsView.classList.add('hide');
+                });
             break;
     }
 });

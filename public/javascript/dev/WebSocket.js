@@ -62,11 +62,10 @@ class Socket {
         eventdiv.classList.add(event.type);
         eventdiv.innerHTML = eventTemplate(event);
 
-        if (happenings.firstElementChild) {
-            happenings.insertBefore(eventdiv, happenings.firstElementChild);
-        } else {
-            happenings.appendChild(eventdiv);
+        if (happenings.children.length > 4) {
+            happenings.removeChild(happenings.firstElementChild.nextElementSibling);
         }
+        happenings.appendChild(eventdiv);
     }
 }
 

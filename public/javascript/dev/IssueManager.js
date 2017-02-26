@@ -60,20 +60,40 @@ class IssueManager {
         });
     }
 
-    getComments(issue) {
-        console.log('getting comments for ' + issue);
+    getComments({user, issue}) {
+        return new Promise((resolve, reject) => {
+            ajax.request({url:'/user/'+user+'/issues/'+issue + '/comments'})
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 
-    addComment(issue) {
-        console.log('adding comment for' + issue);
+    addComment({user, issue, body=''}) {
+        return new Promise((resolve, reject) => {
+            ajax.request({url:'/user/'+user+'/issues/'+issue+'/comments', method: 'POST', message:JSON.stringify({body: body})})
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 
-    deleteComment(issue, comment) {
-        console.log('delete comment ' + comment +' for ' + issue);
-    }
-
-    editComment(issue, comment) {
-        console.log('editing comment ' + comment +' for ' + issue);
+    deleteComment({user, issue, comment}) {
+        return new Promise((resolve, reject) => {
+            ajax.request({url:'/user/'+user+'/issues/'+issue+'/comments/'+comment, method: 'DELETE'})
+                .then(() => {
+                    resolve();
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
     }
 }
 

@@ -1,3 +1,9 @@
+<div id="happenings">
+    <template id="eventTemplate">
+        <div class="event">
+        </div>
+    </template>
+</div>
 <h1>Issues for {{user.preferedRep.name}}</h1>
 <div id="issuepage">
 <div id="issueview">
@@ -14,21 +20,18 @@
         <a href="" data-action="viewcomments">{{comments}} comments</a>
     </div>
     <div id="user">
+        <p>by {{user.username}}</p><img src="{{user.avatar}}" />
+    </div>
+    <div id="buttons">
         <a href="" data-action="lockissue">lock conversation</a>
         <a href="" data-action="editissue">edit</a>
-        <p>by {{user.username}}</p><img src="{{user.avatar}}" />
     </div>
 </div>
 {{/each}}
 </div>
-<div id="happenings">
-    <template id="eventTemplate">
-        <div class="event">
-        </div>
-    </template>
-</div>
 <div id="forms" class="hide">
-    <form></form>
+</div>
+<div id="commentview" class="hide">
 </div>
 </div>
 <script src="/javascript/bundle.js"></script>

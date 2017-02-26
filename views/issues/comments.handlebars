@@ -1,0 +1,30 @@
+<div id="form">
+    <form>
+        <p>add comment: </p>
+        <textarea title="content" name="content"></textarea>
+        <input type="hidden" name="issue" value="{{issue}}">
+        <input type="submit" value="save" data-action="addcomment">
+    </form>
+</div>
+
+<div id="comments">
+    {{#each comments}}
+            <div class="comment" data-id="{{id}}" data-issue="{{issue}}">
+                <div id="info">
+                    <div id="actions">
+                        <a href="" data-action="deletecomment">delete</a>
+                    </div>
+                    <p>{{body}}</p>
+                </div>
+                <div id="user">
+                    <p>by {{user.username}}</p><img src="{{user.avatar}}" />
+                </div>
+            </div>
+    {{else}}
+        <div class="comment">
+            <div id="info">
+                <p>there are no comments</p>
+            </div>
+        </div>
+    {{/each}}
+</div>

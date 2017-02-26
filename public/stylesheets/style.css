@@ -158,6 +158,7 @@ ul {
     margin: 0;
 }
 
+
 /*issue and event styles*/
 #issuepage {
     display: flex;
@@ -167,16 +168,37 @@ ul {
 #issueview {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 60%;
 }
+
+#forms, #commentview {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+#commentview {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+}
+
 
 #happenings {
     display: flex;
-    flex-direction: column;
-    width: 40%;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: 20%;
 }
 
-.issue, .event {
+.event {
+    max-width: 20%;
+}
+
+.issue {
+    flex: 1;
+}
+
+.issue, .event, #commentview .comment {
     background-color: rgba(79, 79, 79, 0.62);
     padding: 1em;
     margin: 1em;
@@ -187,7 +209,15 @@ ul {
 
 .issue #info, .event #info {
     text-align: left;
-    max-width: 70%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#commentview .comment #info {
+    text-align: left;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -201,11 +231,11 @@ ul {
     font-size: smaller;
 }
 
-.issue #user, .event #userinfo {
+.issue #user, .event #userinfo, #commentview .comment #user{
     max-width: 20%;
 }
 
-.event {
+.event, .comment {
     font-size: 0.8em;
 }
 
@@ -215,6 +245,42 @@ ul {
 
 #happenings .issue {
     background-color: rgba(119, 119, 29, 0.62);
+}
+
+#commentview .comment {
+    display: flex;
+    justify-content: space-between;
+}
+
+#buttons, #actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    text-align: center;
+    margin: 1em;
+}
+
+#buttons a, #actions a {
+    display: block;
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: rgba(119, 119, 29, 0.62);
+}
+
+#actions {
+    margin: 0;
+    max-width: 30%;
+}
+
+#actions a {
+    background-color: rgba(119, 25, 35, 0.62);
+}
+
+a[data-action=addissue] {
+    background-color: rgba(62, 119, 51, 0.62);
+    width: 50%;
+    padding: 1em;
+    margin: 0 auto;
 }
 
 /*end issue and event styles*/
@@ -233,12 +299,6 @@ ul {
 .snippet ul li {
     background-color: rgb(34, 46, 56);
     border-radius: 0.2em;
-}
-
-#editbuttons {
-    text-align: center;
-    float: right;
-    margin-top: 2em;
 }
 
 .snippet h2 {
@@ -272,31 +332,36 @@ ul {
 /*end snippets styles*/
 
 /*form styles*/
-form {
+#forms form, #commentview form {
     display: flex;
     flex-direction: column;
     text-align: left;
     padding: 2em;
-    width: 30%;
     margin: 5em auto;
-    background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0));
+    max-width: 80%;
+    background: rgba(170, 55, 115, 0.58);
 }
 
-form input, form textarea {
+#commentview form {
+    text-align: center;
+}
+
+#forms form input, #forms form textarea, #commentview form input, #commentview form textarea {
     margin: 1em;
 }
 
-input[type=submit] {
-    width: 10%;
+#forms input[type=submit], #commentview input[type=submit]  {
+    max-width: 100%;
 }
 
-input[name=title] {
-    width: 50%;
+#forms input[name=title] {
+    max-width: 50%;
 }
 
-form textarea {
+#forms form textarea, #commentview form textarea {
     min-height: 15em;
 }
+
 
 /*
 #deleteform form {
@@ -446,5 +511,5 @@ footer p {
 /*end footer styles*/
 
 .hide {
-    display: none;
+    display: none!important;
 }
