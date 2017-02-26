@@ -11,6 +11,10 @@ class IssueManager {
 
     }
 
+    getIssues() {
+
+    }
+
     addIssue() {
 
     }
@@ -40,4 +44,5 @@ class IssueManager {
     }
 }
 
-
+//Exports.
+module.exports = IssueManager;

@@ -5,14 +5,15 @@
  */
 
 //Requires.
-let Websocket = require('./WebSocket');
+let Socket = require('./WebSocket');
 let IssueManager = require("./IssueManager.js");
+let ws = new Socket();
 
 //DOM
 
 
 //connect to the socket
-Websocket.connect('ws://localhost:8000/')
+ws.connect('ws://localhost:8000/')
     .then((result) => {
         console.log('connected');
     })
