@@ -67,8 +67,11 @@ router.route('/:username/repos')
             });
     })
     .post(csrf, (req, res, next) => {
+        console.log('setting hook');
+        console.log(req.user);
         //if there is no prefered repo, set to selected
         if (!req.user.preferedRep) {
+            console.log('no prefered repository');
                 req.user.preferedRep = {
                     url: req.body.url,
                     name: req.body.name
@@ -76,14 +79,17 @@ router.route('/:username/repos')
                 req.user.save();
 
                 //set hook on that repo
+            console.log('setting hook then');
                 gitRequest.setHook(req.user.username, req.user.preferedRep.url)
                     .then(() => {
+                    console.log('hook sat');
                         return res.redirect('/user/' + req.user.username + '/issues/');
                     })
                     .catch((error) => {
                         return next(error);
                     });
         } else if (req.user.preferedRep.url !== req.body.url) { //repo preference has changed
+            console.log('pref has changed');
 
             //remove old hook
             gitRequest.removeHook(req.user.username, req.user.preferedRep.url)
@@ -97,11 +103,13 @@ router.route('/:username/repos')
                     req.user.save();
 
                     //set new hook
+                    console.log('changing hook');
                     return gitRequest.setHook(req.user.username, req.user.preferedRep.url);
                 })
                 .then(() => {
 
                 //redirect to issues
+                    console.log('hook is changed');
                     return res.redirect('/user/' + req.user.username + '/issues/');
                 })
                 .catch((error) => {

@@ -1,6 +1,7 @@
 <h1>Issues for {{user.preferedRep.name}}</h1>
 <div id="issuepage">
 <div id="issueview">
+    <a href="" is="addissue">add issue</a>
 {{#each issues}}
 <div class="issue">
     <div id="info">
@@ -10,26 +11,20 @@
             <p>created at {{createdAt}}</p>
         </div>
         <p>{{body}}</p>
-        <p>{{comments}} comments</p>
+        <a href="" id="viewcomments">{{comments}} comments</a>
     </div>
     <div id="user">
+        <a href="" id="closeissue">close</a>
+        <a href="" id="editissue">edit</a>
         <p>by {{user.username}}</p><img src="{{user.avatar}}" />
     </div>
 </div>
 {{/each}}
 </div>
-
 <div id="happenings">
-<template id="eventTemplate">
-    <div class="event">
-        <div id="info">
-            <h2></h2>
-            <p id="eventdata"></p>
+    <template id="eventTemplate">
+        <div class="event">
         </div>
-        <div id="userinfo">
-            <p></p><img src="" />
-        </div>
-    </div>
-</template>
+    </template>
 </div>
 </div>
