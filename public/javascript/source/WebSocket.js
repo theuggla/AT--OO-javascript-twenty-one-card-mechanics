@@ -5,7 +5,7 @@
  */
 
 //Requires.
-let eventTemplate = require('../../../views/partials/event.handlebars');
+let eventTemplate = require('../../../views/templates/event.handlebars');
 
 
 class Socket {
@@ -56,12 +56,17 @@ class Socket {
         });
     }
 
+    /**
+     * Prints the events through a handlebars template, inserts in the DOM
+     * @param event {Object} the event to print
+     */
     print(event) {
         let happenings = document.querySelector('#happenings');
         let eventdiv = document.importNode(document.querySelector('#eventTemplate').content.firstElementChild, true);
         eventdiv.classList.add(event.type);
         eventdiv.innerHTML = eventTemplate(event);
 
+        //only show 4 events at the time
         if (happenings.children.length > 4) {
             happenings.removeChild(happenings.firstElementChild.nextElementSibling);
         }
@@ -69,4 +74,5 @@ class Socket {
     }
 }
 
+//Exports.
 module.exports = Socket;

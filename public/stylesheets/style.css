@@ -42,7 +42,6 @@ ul {
     padding: 0;
     margin: 0;
 }
-
 /*end main styles*/
 
 /*topbar styles*/
@@ -73,10 +72,6 @@ ul {
     padding: 0.5em;
 }
 
-#start h1 {
-    font-variant: small-caps;
-}
-
 #topbar #manageuser {
     display: flex;
     justify-content: flex-end;
@@ -86,6 +81,10 @@ ul {
 /*end topbar styles*/
 
 /*login styles*/
+#start h1 {
+    font-variant: small-caps;
+}
+
 #login {
     display: flex;
     flex-direction: column;
@@ -107,8 +106,7 @@ ul {
 /*end login styles*/
 
 
-/*repos styles*/
-
+/*repo styles*/
 #repos {
     flex: 1;
     width: 100%;
@@ -153,9 +151,9 @@ ul {
     padding: 0;
     margin: 0;
 }
+/*end repo styles*/
 
-
-/*issue and event styles*/
+/*issue styles*/
 #issuepage {
     display: flex;
     justify-content: space-between;
@@ -167,18 +165,64 @@ ul {
     width: 60%;
 }
 
+.issue {
+    flex: 1;
+}
+
+.issue #info #timestamps {
+    font-size: smaller;
+}
+
+.issue #info p:last-of-type {
+    font-size: smaller;
+}
+
+.issue #user {
+    max-width: 20%;
+}
+/*end issue styles*/
+
+/*comment styles*/
+#commentview {
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
 #forms, #commentview {
     display: flex;
     flex-direction: column;
     width: 30%;
 }
 
-#commentview {
+#commentview .comment #info {
+    text-align: left;
+    flex: 1;
+    display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
+}
+
+#commentview .comment {
+    display: flex;
+    justify-content: space-between;
+}
+
+#comments {
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 
+#actions {
+    margin: 0;
+}
+
+#actions a {
+    background-color: rgba(119, 25, 35, 0.62);
+}
+/*end comment styles*/
+
+/*event styles*/
 #happenings {
     display: flex;
     flex-direction: row;
@@ -190,10 +234,16 @@ ul {
     max-width: 22%;
 }
 
-.issue {
-    flex: 1;
+#happenings .comment {
+    background-color: rgba(29, 11, 119, 0.62);
 }
 
+#happenings .issue {
+    background-color: rgba(119, 119, 29, 0.62);
+}
+/*end event styles*/
+
+/*assorted happenings*/
 .issue, .event, #commentview .comment {
     background-color: rgba(79, 79, 79, 0.62);
     padding: 1em;
@@ -211,26 +261,6 @@ ul {
     justify-content: space-between;
 }
 
-#commentview .comment #info {
-    text-align: left;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.issue #info #timestamps {
-    font-size: smaller;
-}
-
-.issue #info p:last-of-type {
-    font-size: smaller;
-}
-
-.issue #user {
-    max-width: 20%;
-}
-
 #commentview .comment #user, .event #userinfo {
     max-width: 40%;
 }
@@ -239,24 +269,6 @@ ul {
     font-size: 0.8em;
     max-height: 15em;
     overflow: auto;
-}
-
-#happenings .comment {
-    background-color: rgba(29, 11, 119, 0.62);
-}
-
-#happenings .issue {
-    background-color: rgba(119, 119, 29, 0.62);
-}
-
-#commentview .comment {
-    display: flex;
-    justify-content: space-between;
-}
-
-#comments {
-    display: flex;
-    flex-direction: column-reverse;
 }
 
 #user a, #actions a {
@@ -272,14 +284,6 @@ ul {
     margin: 0.5em;
     padding: 0.5em;
     background-color: rgba(119, 119, 29, 0.62);
-}
-
-#actions {
-    margin: 0;
-}
-
-#actions a {
-    background-color: rgba(119, 25, 35, 0.62);
 }
 
 a[data-action=addissue] {
@@ -398,6 +402,7 @@ footer p {
     display: none!important;
 }
 
+/*media queries*/
 @media screen and (min-width: 1000px) {
     #login {
         width: 30%;
@@ -429,3 +434,4 @@ footer p {
         max-width: 50%;
     }
 }
+/*end media queries*/

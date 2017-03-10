@@ -17,7 +17,7 @@ function request({url = "", method = "GET", type = "application/json", message})
     return new Promise(function(resolve, reject) {
         let req = new XMLHttpRequest();
 
-        req.addEventListener("load", function() {
+        req.addEventListener("load", () => {
             if (req.status >= 400) {
                 reject(req.status);
             } else {
@@ -42,7 +42,7 @@ function post(config) {
 }
 
 
-
+//Exports.
 module.exports.request = request;
 module.exports.get = get;
 module.exports.post = post;

@@ -107,5 +107,5 @@ router.route('/:issueID/comments/:commentID')
             })
     });
 
-//Exports
+//Exports.
 module.exports = router;

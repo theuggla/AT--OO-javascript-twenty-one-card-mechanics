@@ -5,7 +5,6 @@
 //Requires.
 let router = require('express').Router();
 let passport = require('passport');
-let Socket = require('../lib/wssresource');
 let User = require('../models/User');
 
 //Routes--------------------------------------------------------------------------------------------------------

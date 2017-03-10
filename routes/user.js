@@ -24,7 +24,7 @@ router.route('/:username/githook')
         //confirm that message was received
         res.status(200).send();
         //send to client
-        if (wss.connection(req.params.username)) {
+        if (wss.connection(req.params.username)) { //there is a socket sonnection
             wss.connection(req.params.username).sendUTF(JSON.stringify(event(req.body)));
         }
     });
@@ -45,7 +45,7 @@ router.use('/:username', ensureLoggedIn, (req, res, next) => {
  * Display user-page.
  */
 router.route('/:username')
-    .get((req, res, next) => {
+    .get((req, res) => {
          if (req.user.preferedRep) {
             return res.redirect('/user/' + req.params.username + '/issues');
         }
@@ -101,7 +101,6 @@ router.route('/:username/repos')
                     return gitRequest.setHook(req.user);
                 })
                 .then(() => {
-
                 //redirect to issues
                     return res.redirect('/user/' + req.user.username + '/issues/');
                 })

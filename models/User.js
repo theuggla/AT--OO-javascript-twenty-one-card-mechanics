@@ -12,6 +12,8 @@ let Schema = mongoose.Schema;
  * @param username {String} the username
  * @param profileUrl {String} a link to the github profile
  * @param avatar {String} a link to the avatar
+ * @param preferedRep {String} an url to the repo to be watched
+ * @param accessToken {String} the token returned from github
  */
 let userSchema = new Schema({
     githubid: {type: String, required: [true, 'githubid needed'], unique: true},

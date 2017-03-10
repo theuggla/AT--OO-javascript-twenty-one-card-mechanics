@@ -9,8 +9,8 @@ let Socket = require('./WebSocket');
 let IssueManager = require("./IssueManager.js");
 let ws = new Socket();
 let im = new IssueManager();
-let formTemplate = require('../../../views/issues/form.handlebars');
-let commentTemplate = require('../../../views/issues/comments.handlebars');
+let formTemplate = require('../../../views/templates/form.handlebars');
+let commentTemplate = require('../../../views/templates/comments.handlebars');
 
 //DOM
 let issueView = document.querySelector('#issueview');
@@ -65,9 +65,7 @@ issueView.addEventListener('click', (event) => {
             im.getComments({user: user, issue: issue})
                 .then((result) => {
                     result = JSON.parse(result);
-
                     result.issue = issue;
-
                     commentsView.innerHTML = commentTemplate(result);
                     commentsView.classList.remove('hide');
                     formView.classList.add('hide');
