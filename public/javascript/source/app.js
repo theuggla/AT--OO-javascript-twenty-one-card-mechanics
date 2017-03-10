@@ -20,7 +20,7 @@ let happenings = document.querySelector('#happenings');
 
 //connect to the socket
 ws.connect('ws://localhost:8000/')
-    .then((result) => {
+    .then(() => {
         console.log('connected');
     })
     .catch((error) => {
@@ -32,9 +32,13 @@ ws.connect('ws://localhost:8000/')
 //issue-related events
 issueView.addEventListener('click', (event) => {
     event.preventDefault();
-    let issue = event.path ? event.path[3] : event.target.parentNode.parentNode.parentNode;
+
+    //get user end action
     let user = document.querySelector('#topbar').getAttribute('data-username');
     let action = event.target.getAttribute('data-action');
+
+    //get issue id
+    let issue = event.path ? event.path[2] : event.target.parentNode.parentNode;
     if (issue.classList.contains('issue')) {
         issue = issue.getAttribute('data-id');
     }
@@ -54,6 +58,7 @@ issueView.addEventListener('click', (event) => {
                     formView.innerHTML = formTemplate(result);
                     commentsView.classList.add('hide');
                     formView.classList.remove('hide');
+                    window.scrollTo(0, 0);
                 });
             break;
         case 'viewcomments':
@@ -66,6 +71,7 @@ issueView.addEventListener('click', (event) => {
                     commentsView.innerHTML = commentTemplate(result);
                     commentsView.classList.remove('hide');
                     formView.classList.add('hide');
+                    window.scrollTo(0, 0);
                 });
             break;
     }
@@ -113,21 +119,31 @@ commentsView.addEventListener('click', (event) => {
 
     switch(action) {
         case 'addcomment':
-            debugger;
             issueID = event.target.form.querySelector('input[name="issue"]').value;
             content = event.target.form.querySelector('textarea[name="content"]').value;
             im.addComment({user:user, issue:issueID, body:content})
                 .then(() => {
-                    commentsView.classList.add('hide');
+                    return im.getComments({user: user, issue: issueID})
+                })
+                .then((result) => {
+                    result = JSON.parse(result);
+                    result.issue = issueID;
+                    commentsView.innerHTML = commentTemplate(result);
                 });
             break;
         case 'deletecomment':
-            debugger;
             issueID = event.target.parentElement.parentElement.parentElement.getAttribute('data-issue');
             commentID = event.target.parentElement.parentElement.parentElement.getAttribute('data-id');
             im.deleteComment({user:user, issue: issueID, comment: commentID})
                 .then(() => {
-                    commentsView.classList.add('hide');
+                    return im.getComments({user: user, issue: issueID})
+
+                })
+                .then((result) => {
+                    result = JSON.parse(result);
+                    result.issue = issueID;
+                    commentsView.innerHTML = commentTemplate(result);
+                    commentsView.classList.remove('hide');
                 });
             break;
     }

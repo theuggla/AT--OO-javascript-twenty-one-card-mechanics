@@ -62,7 +62,7 @@ class IssueManager {
 
     getComments({user, issue}) {
         return new Promise((resolve, reject) => {
-            ajax.request({url:'/user/'+user+'/issues/'+issue + '/comments'})
+            ajax.request({url:'/user/'+user+'/issues/'+issue+'/comments'})
                 .then((response) => {
                     resolve(response);
                 })

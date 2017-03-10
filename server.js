@@ -31,6 +31,7 @@ console.log('setting up ngrok');
 ngrok.connect(port, function (err, url) {
     console.log('ngrok at ' + url);
     config.hookurl = url;
+    config.siteurl = url;
 });
 
 app.set('port', port);

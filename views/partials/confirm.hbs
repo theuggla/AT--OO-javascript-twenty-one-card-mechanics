@@ -1,9 +1,0 @@
-{{#if confirm}}
-<div id="confirmform">
-    <form method="POST">
-        <label for="confirm">{{confirm.message}} </label>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <input type="submit" name="confirm" value="confirm">
-    </form>
-</div>
-{{/if}}

@@ -17,13 +17,11 @@
                 <p>created at {{createdAt}}</p>
             </div>
             <p>{{body}}</p>
-            <a href="" data-action="viewcomments">{{comments}} comments</a>
+                <a href="" data-action="viewcomments">{{comments}} comments</a>
             </div>
         <div id="user">
             <p>by {{user.username}}</p><img src="{{user.avatar}}" />
-            <div id="buttons">
-                <a href="" data-action="editissue">edit issue</a>
-            </div>
+            <a href="" data-action="editissue">edit issue</a>
         </div>
         </div>
         {{/each}}

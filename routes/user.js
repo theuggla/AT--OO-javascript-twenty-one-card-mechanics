@@ -24,7 +24,9 @@ router.route('/:username/githook')
         //confirm that message was received
         res.status(200).send();
         //send to client
-        wss.connection(req.params.username).sendUTF(JSON.stringify(event(req.body)));
+        if (wss.connection(req.params.username)) {
+            wss.connection(req.params.username).sendUTF(JSON.stringify(event(req.body)));
+        }
     });
 //------------------------------------------------------------------------------------------------------------------
 
@@ -117,13 +119,12 @@ router.route('/:username/repos')
  */
 router.route('/:username/delete')
     .get(csrf, (req, res) => {
-        res.locals.confirm = {
-            message: 'are you sure you want to delete the user?'
+        req.session.flash = {
+            confirm: {message: 'are you sure you want to delete the user?', url: '/user/' + req.params.username + '/delete', csrfToken: req.csrfToken()}
         };
-        res.render('user/repos', {csrfToken: req.csrfToken()});
+        res.redirect('back');
     })
     .post(csrf, (req, res) => {
-
         //remove old hook
         if (req.user.preferedRep) {
             gitRequest.removeHook(req.user)

@@ -13,6 +13,7 @@
         <div id="manageuser">
             <a href="{{user.profileUrl}}"><img src="{{user.avatar}}" /></a>
             <a href="/user/{{user.username}}">{{user.username}}</a>
+            <a href="/user/{{user.username}}/delete">delete user</a>
             <a href="/logout">Log Out</a>
         </div>
         {{else}}
@@ -20,7 +21,6 @@
         {{/if}}
 </div>
 {{> flash }}
-{{> confirm}}
 <div id="content">
     {{{body}}}
 </div>

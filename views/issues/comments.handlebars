@@ -11,13 +11,13 @@
     {{#each comments}}
             <div class="comment" data-id="{{id}}" data-issue="{{issue}}">
                 <div id="info">
-                    <div id="actions">
-                        <a href="" data-action="deletecomment">delete</a>
-                    </div>
                     <p>{{body}}</p>
                 </div>
                 <div id="user">
                     <p>by {{user.username}}</p><img src="{{user.avatar}}" />
+                    <div id="actions">
+                        <a href="" data-action="deletecomment">delete</a>
+                    </div>
                 </div>
             </div>
     {{else}}

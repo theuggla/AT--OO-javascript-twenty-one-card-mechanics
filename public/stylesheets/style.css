@@ -54,6 +54,7 @@ ul {
     color: white;
     font-variant: small-caps;
     margin: 0;
+    padding-left: 0.5em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -89,7 +90,7 @@ ul {
     display: flex;
     flex-direction: column;
     padding: 2em;
-    width: 30%;
+    width: 60%;
     margin: 5em auto;
 }
 
@@ -98,7 +99,7 @@ ul {
     display: inline-block;
     width: 50%;
     padding: 1em;
-    margin: 20%;
+    margin: 0 auto;
     border-radius: 2em;
     font-size: 2em;
     font-variant: small-caps;
@@ -107,14 +108,10 @@ ul {
 
 
 /*repos styles*/
+
 #repos {
-    display: flex;
-    flex-direction: row;
     flex: 1;
-    flex-wrap: wrap;
     width: 100%;
-    justify-content: flex-end;
-    align-items: center;
 }
 
 .repo {
@@ -122,11 +119,10 @@ ul {
     padding: 2em;
     color: #1c1c1c;
     text-align: justify;
-    display: inline-block;
-    flex-grow: 1;
-    margin: 1em;
+    display: block;
+    margin: 3em;
     min-width: 20%;
-    max-width: 50%;
+    max-width: 70%;
 }
 
 .repo:hover, .repo:active {
@@ -178,8 +174,8 @@ ul {
 }
 
 #commentview {
-    flex-direction: column-reverse;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 
@@ -187,11 +183,11 @@ ul {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    height: 20%;
+    max-height: 20%;
 }
 
 .event {
-    max-width: 20%;
+    max-width: 22%;
 }
 
 .issue {
@@ -231,12 +227,18 @@ ul {
     font-size: smaller;
 }
 
-.issue #user, .event #userinfo, #commentview .comment #user{
+.issue #user {
     max-width: 20%;
+}
+
+#commentview .comment #user, .event #userinfo {
+    max-width: 40%;
 }
 
 .event, .comment {
     font-size: 0.8em;
+    max-height: 15em;
+    overflow: auto;
 }
 
 #happenings .comment {
@@ -252,7 +254,12 @@ ul {
     justify-content: space-between;
 }
 
-#buttons, #actions {
+#comments {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#user a, #actions a {
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
@@ -260,7 +267,7 @@ ul {
     margin: 1em;
 }
 
-#buttons a, #actions a {
+#user a, #actions a {
     display: block;
     margin: 0.5em;
     padding: 0.5em;
@@ -269,7 +276,6 @@ ul {
 
 #actions {
     margin: 0;
-    max-width: 30%;
 }
 
 #actions a {
@@ -282,54 +288,7 @@ a[data-action=addissue] {
     padding: 1em;
     margin: 0 auto;
 }
-
 /*end issue and event styles*/
-
-
-/*
-#tags {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-    margin-top: 2em;
-    font-size: smaller;
-}
-
-.snippet ul li {
-    background-color: rgb(34, 46, 56);
-    border-radius: 0.2em;
-}
-
-.snippet h2 {
-    font-variant: small-caps;
-    padding: 0;
-    margin: 0;
-}
-
-.snippet #edit {
-    background-color: rgba(71, 113, 66, 0.74);
-    padding: 1em;
-    margin: 1em;
-    margin-right: 0.5em;
-    border-radius: 0.2em;
-}
-
-.snippet #delete {
-    background-color: rgba(113, 14, 30, 0.74);
-    padding: 1em;
-    margin: 1em;
-    margin-right: 0;
-    border-radius: 0.2em;
-}
-
-.snippet p {
-    font-style: italic;
-    font-size: smaller;
-    text-align: right;
-}
-
-/*end snippets styles*/
 
 /*form styles*/
 #forms form, #commentview form {
@@ -339,7 +298,7 @@ a[data-action=addissue] {
     padding: 2em;
     margin: 5em auto;
     max-width: 80%;
-    background: rgba(170, 55, 115, 0.58);
+    background-color: rgba(79, 79, 79, 0.62);
 }
 
 #commentview form {
@@ -361,81 +320,6 @@ a[data-action=addissue] {
 #forms form textarea, #commentview form textarea {
     min-height: 15em;
 }
-
-
-/*
-#deleteform form {
-    text-align: center;
-    margin-top: 10%;
-    min-height: 5em;
-}
-
-#deleteform input[type=submit] {
-    width: 50%;
-    margin: 1em auto;
-    text-align: center;
-    color: inherit;
-    padding: 1em;
-    font-weight: bold;
-    background-color: rgba(113, 14, 30, 0.74);
-    border-color: rgba(71, 17, 26, 0.91);;
-}
-
-#deleteform input[type=submit]:hover {
-    font-size: 1.2em;
-}
-
-#snippetform input[type=submit] {
-    width: 20%;
-    text-align: center;
-    color: inherit;
-    padding: 1em;
-    font-weight: bold;
-    background-color: rgba(71, 113, 66, 0.74);
-    border-color: rgba(28, 57, 28, 0.87);
-}
-
-#snippetform input[type=submit]:hover {
-    font-size: 1.1em;
-}
-
-#loginform form {
-    text-align: center;
-}
-
-#loginform form input {
-    margin: 1em auto;
-    width: 50%;
-}
-
-#loginform form #radios {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 40%;
-    margin: 0 auto;
-}
-
-#loginform form #radios input[type=radio], #loginform form #radios label[for=signup], #loginform form #radios label[for=login] {
-    flex: 1;
-    max-width: 25%;
-    padding-top: 0.5em;
-}
-
-#loginform input[type=submit] {
-    width: 20%;
-    text-align: center;
-    color: inherit;
-    padding: 1em;
-    font-weight: bold;
-    background-color: rgba(31, 64, 113, 0.74);
-    border-color: rgba(16, 21, 57, 0.87);
-}
-
-#loginform input[type=submit]:hover {
-    font-size: 1.1em;
-}
-/*end form styles*/
 
 /*confirm message styles*/
 #confirmform {
@@ -512,4 +396,36 @@ footer p {
 
 .hide {
     display: none!important;
+}
+
+@media screen and (min-width: 1000px) {
+    #login {
+        width: 30%;
+    }
+}
+
+@media only screen and (min-width: 500px) {
+
+    #repos {
+        border-style: none;
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .repo {
+        background-color: rgba(161, 161, 161, 0.73);
+        padding: 2em;
+        color: #1c1c1c;
+        text-align: justify;
+        display: inline-block;
+        flex-grow: 1;
+        margin: 1em;
+        min-width: 20%;
+        max-width: 50%;
+    }
 }
