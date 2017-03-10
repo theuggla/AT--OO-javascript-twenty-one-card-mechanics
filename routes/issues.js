@@ -4,7 +4,7 @@
 
 //Requires
 let router = require('express').Router();
-let crud = require('../lib/issueresource');
+let issues = require('../lib/issueresource');
 
 //Routes---------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ let crud = require('../lib/issueresource');
  * */
 router.route('/')
     .get((req, res, next) => {
-        crud.getAll(req.user.preferedRep.url)
+        issues.getAll(req.user)
             .then((response) => {
             if (response.length === 0) {
                 res.locals.flash = {
@@ -33,7 +33,7 @@ router.route('/')
     })
     .post((req, res, next) => {
     //create an issue
-        crud.createIssue(req.user.preferedRep.url, req.body)
+        issues.createIssue(req.user, req.body)
             .then((response) => {
                 res.send(response);
             })
@@ -48,7 +48,7 @@ router.route('/')
 router.route('/:issueID')
     //get an issue
     .get((req, res, next) => {
-        crud.getIssue(req.user.preferedRep.url, req.params.issueID, req.body)
+        issues.getIssue(req.user, req.params.issueID)
             .then((response) => {
                 res.send(response);
             })
@@ -58,7 +58,7 @@ router.route('/:issueID')
     })
     //edit an issue
     .patch((req, res, next) => {
-        crud.editIssue(req.user.preferedRep.url, req.params.issueID, req.body)
+        issues.editIssue(req.user, req.params.issueID, req.body)
             .then((response) => {
                 res.send(response);
             })
@@ -68,7 +68,7 @@ router.route('/:issueID')
     })
     //lock conversation on an issue
     .put((req, res, next) => {
-        crud.lockIssue(req.user.preferedRep.url, req.params.issueID)
+        issues.lockIssue(req.user, req.params.issueID)
             .then(() => {
                 res.send({});
             })
@@ -83,7 +83,7 @@ router.route('/:issueID')
 router.route('/:issueID/comments')
     .get((req, res, next) => {
     //get comments
-         crud.getComments(req.user.preferedRep.url, req.params.issueID)
+         issues.getComments(req.user, req.params.issueID)
              .then((response) => {
                  res.send({comments: response});
              })
@@ -93,7 +93,7 @@ router.route('/:issueID/comments')
     })
     .post((req, res, next) => {
         //add a comment
-        crud.addComment(req.user.preferedRep.url, req.params.issueID, req.body)
+        issues.addComment(req.user, req.params.issueID, req.body)
             .then((response) => {
                 res.send({comments: response});
             })
@@ -108,7 +108,7 @@ router.route('/:issueID/comments')
 router.route('/:issueID/comments/:commentID')
     .delete((req, res, next) => {
         //delete comment
-        crud.deleteComment(req.user.preferedRep.url, req.params.commentID)
+        issues.deleteComment(req.user, req.params.commentID)
             .then(() => {
                 res.send({});
             })

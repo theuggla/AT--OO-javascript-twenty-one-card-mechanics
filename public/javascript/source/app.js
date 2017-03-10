@@ -28,14 +28,13 @@ ws.connect('ws://localhost:8000/')
     });
 
 //set up event listeners
-
 issueView.addEventListener('click', (event) => {
     event.preventDefault();
-    let issue;
+    let issue = event.path ? event.path[2] : event.target.parentNode.parentNode;
     let user = document.querySelector('#topbar').getAttribute('data-username');
     let action = event.target.getAttribute('data-action');
-    if (event.path[2].classList.contains('issue')) {
-        issue = event.path[2].getAttribute('data-id');
+    if (issue.classList.contains('issue')) {
+        issue = issue.getAttribute('data-id');
     }
 
 

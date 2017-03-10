@@ -58,7 +58,7 @@ router.route('/:username')
 router.route('/:username/repos')
     .get(csrf, (req, res, next) => {
         //fetch the repos
-        gitRequest.getRepos()
+        gitRequest.getRepos(req.user)
             .then((result) => {
                 return res.render('user/repos', {repos: result, csrfToken: req.csrfToken()});
             })
@@ -67,11 +67,8 @@ router.route('/:username/repos')
             });
     })
     .post(csrf, (req, res, next) => {
-        console.log('setting hook');
-        console.log(req.user);
-        //if there is no prefered repo, set to selected
+        //if there is no preferred repo, set to selected
         if (!req.user.preferedRep) {
-            console.log('no prefered repository');
                 req.user.preferedRep = {
                     url: req.body.url,
                     name: req.body.name
@@ -79,20 +76,16 @@ router.route('/:username/repos')
                 req.user.save();
 
                 //set hook on that repo
-            console.log('setting hook then');
-                gitRequest.setHook(req.user.username, req.user.preferedRep.url)
+                gitRequest.setHook(req.user)
                     .then(() => {
-                    console.log('hook sat');
                         return res.redirect('/user/' + req.user.username + '/issues/');
                     })
                     .catch((error) => {
                         return next(error);
                     });
         } else if (req.user.preferedRep.url !== req.body.url) { //repo preference has changed
-            console.log('pref has changed');
-
             //remove old hook
-            gitRequest.removeHook(req.user.username, req.user.preferedRep.url)
+            gitRequest.removeHook(req.user)
                 .then(() => {
                 //update preference
                     req.user.preferedRep = {
@@ -103,13 +96,11 @@ router.route('/:username/repos')
                     req.user.save();
 
                     //set new hook
-                    console.log('changing hook');
-                    return gitRequest.setHook(req.user.username, req.user.preferedRep.url);
+                    return gitRequest.setHook(req.user);
                 })
                 .then(() => {
 
                 //redirect to issues
-                    console.log('hook is changed');
                     return res.redirect('/user/' + req.user.username + '/issues/');
                 })
                 .catch((error) => {
@@ -135,7 +126,7 @@ router.route('/:username/delete')
 
         //remove old hook
         if (req.user.preferedRep) {
-            gitRequest.removeHook(req.user.username, req.user.preferedRep.url)
+            gitRequest.removeHook(req.user)
                 .then(() => {
                     //delete user
                     userdb.delete(req.params.username)

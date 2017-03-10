@@ -62,7 +62,7 @@ app.use(helmet());
 //Security-CSP
 app.use(csp({
     directives: {
-        defaultSrc: ["'self'", 'ws://localhost:8000', 'github.com', 'githubusercontent.com', 'api.github.com', 'avatars.githubusercontent.com'],
+        defaultSrc: ["'self'", 'ws://localhost:8000', 'github.com', '*.githubusercontent.com', 'api.github.com'],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
     },

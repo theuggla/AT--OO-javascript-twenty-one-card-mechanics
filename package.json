@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npm-run-all --parallel watch:*",
-    "build": "browserify -t browserify-handlebars public/javascript/dev/app.js -o public/javascript/bundle.js",
+    "build": "browserify -t browserify-handlebars public/javascript/source/app.js -o public/javascript/bundle.js",
     "start": "node server.js",
-    "watch:client": "watchify -t browserify-handlebars public/javascript/dev/app.js -o public/javascript/bundle.js --debug --verbose",
+    "watch:client": "watchify -t browserify-handlebars public/javascript/source/app.js -o public/javascript/bundle.js --debug --verbose",
     "watch:server": "nodemon -L server.js"
   },
   "repository": {

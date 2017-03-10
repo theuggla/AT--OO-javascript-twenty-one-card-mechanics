@@ -19,6 +19,7 @@ let userSchema = new Schema({
     profileUrl: {type: String},
     avatar: {type: String},
     preferedRep: {type: Object},
+    accessToken: {type: String}
 });
 
 /**
