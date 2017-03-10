@@ -27,10 +27,12 @@ ws.connect('ws://localhost:8000/')
         console.log(error);
     });
 
-//set up event listeners
+//set up event listeners-----------------------------------------------------------------------------------------------
+
+//issue-related events
 issueView.addEventListener('click', (event) => {
     event.preventDefault();
-    let issue = event.path ? event.path[2] : event.target.parentNode.parentNode;
+    let issue = event.path ? event.path[3] : event.target.parentNode.parentNode.parentNode;
     let user = document.querySelector('#topbar').getAttribute('data-username');
     let action = event.target.getAttribute('data-action');
     if (issue.classList.contains('issue')) {
@@ -54,12 +56,6 @@ issueView.addEventListener('click', (event) => {
                     formView.classList.remove('hide');
                 });
             break;
-        case 'lockissue':
-            im.closeIssue({user: user, issue: issue})
-                .then(() => {
-
-                });
-            break;
         case 'viewcomments':
             im.getComments({user: user, issue: issue})
                 .then((result) => {
@@ -76,7 +72,7 @@ issueView.addEventListener('click', (event) => {
 
 });
 
-
+//form-related events
 formView.addEventListener('click', (event) => {
     event.preventDefault();
     let title;
@@ -106,6 +102,7 @@ formView.addEventListener('click', (event) => {
     }
 });
 
+//comment-related events
 commentsView.addEventListener('click', (event) => {
     event.preventDefault();
     let content;

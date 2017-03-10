@@ -65,16 +65,6 @@ router.route('/:issueID')
             .catch((error) => {
                 next(error);
             });
-    })
-    //lock conversation on an issue
-    .put((req, res, next) => {
-        issues.lockIssue(req.user, req.params.issueID)
-            .then(() => {
-                res.send({});
-            })
-            .catch((error) => {
-                next(error);
-            });
     });
 
 /**
