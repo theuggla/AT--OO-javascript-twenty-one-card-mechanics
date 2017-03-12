@@ -48,6 +48,7 @@ Install on the server:
 
 #Client setup
 * browserify the client-side Javascript-files to the static folder
+
 #Proxy setup
 ##Nginx
 Setup a reverse proxy to handle the static files and the https against the client.
