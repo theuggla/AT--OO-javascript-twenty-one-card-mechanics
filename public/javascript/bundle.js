@@ -403,7 +403,7 @@ commentsView.addEventListener('click', (event) => {
 });
 
 //initiate serviceworker
-navigator.serviceWorker.register('/public/javascript/serviceWorker.js', {
+navigator.serviceWorker.register('/javascript/serviceWorker.js', {
     scope: '/'
 });
 },{"../../../views/templates/comments.handlebars":24,"../../../views/templates/form.handlebars":26,"./IssueManager.js":1,"./WebSocket":2}],5:[function(require,module,exports){
