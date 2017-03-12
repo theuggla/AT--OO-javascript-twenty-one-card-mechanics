@@ -145,6 +145,6 @@ commentsView.addEventListener('click', (event) => {
 });
 
 //initiate serviceworker
-navigator.serviceWorker.register('/public/javascript/serviceWorker.js', {
+navigator.serviceWorker.register('/javascript/serviceWorker.js', {
     scope: '/'
 });
