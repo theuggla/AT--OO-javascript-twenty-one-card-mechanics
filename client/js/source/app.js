@@ -19,7 +19,7 @@ let commentsView = document.querySelector('#commentview');
 let happenings = document.querySelector('#happenings');
 
 //connect to the socket
-ws.connect('ws://' + location.host)
+ws.connect('wss://' + location.host)
     .catch((error) => {
         console.log(error);
     });
