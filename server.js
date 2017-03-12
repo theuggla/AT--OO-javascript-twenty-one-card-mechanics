@@ -18,6 +18,7 @@ let issues = require('./routes/issues');
 let db = require('./lib/dbresource');
 let auth = require('./lib/authresource');
 let wss = require('./lib/wssresource');
+let lo = require('log-to-file');
 
 
 let app = express();
@@ -156,6 +157,8 @@ app.use((req, res) => {
 
 //500
 app.use((err, req, res, next) => {
+    log('500:');
+    log(err);
     res.status(500).render('error', {message: 'my fault. sorry. maybe try again later?'});
 });
 

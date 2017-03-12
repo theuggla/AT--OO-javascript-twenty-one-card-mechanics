@@ -6,6 +6,7 @@
 let router = require('express').Router();
 let passport = require('passport');
 let User = require('../models/User');
+let log = require('log-to-file');
 
 //Routes--------------------------------------------------------------------------------------------------------
 /**
@@ -48,6 +49,7 @@ router.route('/login/github/return')
         passport.authenticate('github', (err, user) => {
            //something went wrong
             if (err) {
+                log(err);
                 req.session.flash = {
                     type: 'failure',
                     message: 'something on my end went wrong while logging in. try again!'
