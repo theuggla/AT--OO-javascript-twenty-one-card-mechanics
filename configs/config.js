@@ -5,11 +5,11 @@
 
 'use strict';
 
+//Requires.
 let path = require('path');
 let _ = require('lodash');
 
-// All configurations will extend these options
-// ============================================
+//General config options----------------------------------------------------------------------------------------------
 let all = {
     // Environment
     env: process.env.NODE_ENV,
@@ -21,12 +21,11 @@ let all = {
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     hookSecret:  process.env.WEBHK_SECRET,
-    username: 'theuggla'
+    username: process.env.ADMIN_USERNAME
 
 };
 
-// Export the config object based on the environment given
-// ==============================================
+// Export the config object based on the environment given------------------------------------------------------------
 module.exports = function() {
     let env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 

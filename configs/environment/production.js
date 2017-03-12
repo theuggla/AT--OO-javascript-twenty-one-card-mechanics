@@ -12,7 +12,7 @@ module.exports = {
     githubAuthCallback: this.siteurl + '/login/github/return',
 
     //Mongo
-    dbpath: 'mongodb://theuggla:crumcrum22@ds157799.mlab.com:57799/server-play',
+    dbpath: 'mongodb://' + process.env.ADMIN_USERNAME + ':' + process.env.ADMIN_PASS + '@ds157799.mlab.com:57799/server-play',
 
     //Secrets
     cookiesecret: process.env.COOKIE_SECRET,
