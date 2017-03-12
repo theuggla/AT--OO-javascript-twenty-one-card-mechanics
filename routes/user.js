@@ -24,7 +24,7 @@ router.route('/:username/githook')
         //confirm that message was received
         res.status(200).send();
         //send to client
-        if (wss.connection(req.params.username)) { //there is a socket sonnection
+        if (wss.connection(req.params.username)) { //there is a socket connection
             wss.connection(req.params.username).sendUTF(JSON.stringify(event(req.body)));
         }
     });

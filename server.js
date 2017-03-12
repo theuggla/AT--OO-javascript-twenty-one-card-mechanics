@@ -15,26 +15,20 @@ let passport = require('passport');
 let home = require('./routes/home');
 let user = require('./routes/user');
 let issues = require('./routes/issues');
-let config = require('./config/configs');
 let db = require('./lib/dbresource');
 let auth = require('./lib/authresource');
 let wss = require('./lib/wssresource');
 
 
 let app = express();
-let port = process.env.port || 8000;
 let server = http.createServer(app);
 
 //Configurations----------------------------------------------------------------------------------------------------
-let ngrok = require('ngrok');
-console.log('setting up ngrok');
-ngrok.connect(port, function (err, url) {
-    console.log('ngrok at ' + url);
-    config.hookurl = url;
-    config.siteurl = url;
-});
 
-app.set('port', port);
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('./configs/config');
+
+app.set('port', config.port);
 db.connect();
 auth.connect();
 wss.connect(server);
@@ -48,14 +42,30 @@ app.set('view engine', '.hbs');
 
 //Middlewares-------------------------------------------------------------------------------------------------------
 
+//Environment specifics
+if (process.env.NODE_ENV === 'production') {
+    //Trust the reverse proxy
+    app.enable('trust proxy');
+} else {
+    //Expose localhost
+    let ngrok = require('ngrok');
+    console.log('setting up ngrok');
+    ngrok.connect(config.port, (err, url) => {
+        if (err) {
+            return err;
+        }
+        console.log('ngrok at ' + url);
+        config.hookurl = url;
+    });
+    //Find static resources.
+    app.use(express.static(path.join(__dirname, 'public')));
+}
+
 //JSON support
 app.use(bodyParser.json());
 
 //HTML form data support
 app.use(bodyParser.urlencoded({extended: true}));
-
-//Find static resources.
-app.use(express.static(path.join(__dirname, 'public')));
 
 //Security
 app.use(helmet());
@@ -63,7 +73,7 @@ app.use(helmet());
 //Security-CSP
 app.use(csp({
     directives: {
-        defaultSrc: ["'self'", 'ws://localhost:8000', 'github.com', '*.githubusercontent.com', 'api.github.com'],
+        defaultSrc: ["'self'", config.socket, 'github.com', '*.githubusercontent.com', 'api.github.com'],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
     },
@@ -119,6 +129,19 @@ app.use((req, res, next) => {
     next();
 });
 
+//Log out User if node process closes
+app.use((req, res, next) => {
+    process.on("SIGINT", () => {
+        req.logout();
+
+        setTimeout(() => {
+            process.exit(0);
+        }, 200);
+    });
+
+    next();
+});
+
 //Routes------------------------------------------------------------------------------------------------------------
 app.use('/', home);
 app.use('/user', user);
@@ -133,11 +156,8 @@ app.use((req, res) => {
 
 //500
 app.use((err, req, res, next) => {
-    console.error(err);
     res.status(500).render('error', {message: 'my fault. sorry. maybe try again later?'});
 });
 
-//start the server
-server.listen(port, () => {
-    console.log('server up and running, press Ctrl+C to finish');
-});
+//Start the server----------------------------------------------------------------------------------------------------
+server.listen(config.port, () => {});
