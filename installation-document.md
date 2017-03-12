@@ -59,9 +59,11 @@ Setup a reverse proxy to handle the static files and the https against the clien
       * Redirect to https
   * Set up to listen on port 443
   * Set up ssl, link in certificate
+
 ###Compression
 * Change the default file in /etc/nginx/sites-available
    * Set up gzip-compression
+
 ###Static files
-*. Change the default file in /etc/nginx/sites-available
+* Change the default file in /etc/nginx/sites-available
    * Set up path to serve static files and what files to serve
