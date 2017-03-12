@@ -18,7 +18,7 @@ let issues = require('./routes/issues');
 let db = require('./lib/dbresource');
 let auth = require('./lib/authresource');
 let wss = require('./lib/wssresource');
-let lo = require('log-to-file');
+let log = require('log-to-file');
 
 
 let app = express();
@@ -74,7 +74,7 @@ app.use(helmet());
 //Security-CSP
 app.use(csp({
     directives: {
-        defaultSrc: ["'self'", config.socket, config.secureSocket, 'github.com', '*.githubusercontent.com', 'api.github.com'],
+        defaultSrc: ["'self'", config.socket, 'github.com', '*.githubusercontent.com', 'api.github.com'],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
     },
