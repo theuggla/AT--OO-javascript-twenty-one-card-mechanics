@@ -143,3 +143,8 @@ commentsView.addEventListener('click', (event) => {
             break;
     }
 });
+
+//initiate serviceworker
+navigator.serviceWorker.register('./serviceWorker.js', {
+    scope: '/'
+});
