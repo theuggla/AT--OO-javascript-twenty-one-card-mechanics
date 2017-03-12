@@ -25,22 +25,25 @@ Before pushing the code to production, make sure the code is production ready in
   2. Set up a post-receive hook in the hooks-folder to copy all of the files that gets pushed to the site's app-folder, from which we will run them
 
 ##Install dependencies
-Install
+Install on the server:
 * nodejs
 * mongodb
-on the server
 
 ##Setup a database
 ###mlab
-Make an account on mlab. Create a database and a user for that database. Link the database in in the config-file of the server.
+* Make an account on mlab.
+* Create a database and a user for that database.
+* Link the database in in the config-file of the server.
+
 ##Setup environment
 * npm install production dependencies
 * set the node environment to production
 * set environment variables locally on the server by using the export-command
+
 ##Setup process manager
-* Install pm2
+* Install PM2
 * Configure pm2 to start running on upstart of the OS to ensure that the app keeps running even if the server reboots
-* Run pm2 with cluster support, even if the server only have 1 CPU to allow for scaling
+* Run PM2 with cluster support, even if the server only have 1 CPU to allow for scaling
 * Save the state of the app and the environment to the upstart-file, to ensure the environment variables stay the same on reboot
 
 #Client setup
@@ -56,6 +59,8 @@ Setup a reverse proxy to handle the static files and the https against the clien
   * Set up to listen on port 443
   * Set up ssl, link in certificate
 ###Compression
-* Set up gzip-compression
+* Change the default file in /etc/nginx/sites-available
+   * Set up gzip-compression
 ###Static files
-* Set up path to serve static files and what files to serve
+*. Change the default file in /etc/nginx/sites-available
+   * Set up path to serve static files and what files to serve
