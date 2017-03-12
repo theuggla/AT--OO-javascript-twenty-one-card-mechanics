@@ -8,6 +8,7 @@ module.exports = {
     // URLs
     siteurl: 'https://178.62.99.126',
     socket: 'wss://178.62.99.126',
+    secureSocket: 'ws://178.62.99.126',
     hookurl: 'https://178.62.99.126',
     githubAuthCallback: 'https://178.62.99.126/login/github/return',
 
