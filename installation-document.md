@@ -18,15 +18,18 @@ Before pushing the code to production, make sure the code is production ready in
 * Configure account on Github to associate the IP-address for this remote server with the app
 
 #Backend setup
+
 ##Git-based deployment
 * Setup a git remote to push the existing code to this server as well as Github
   1. Init a bare Git repository to push to on the server
   2. Set up a post-receive hook in the hooks-folder to copy all of the files that gets pushed to the site's app-folder, from which we will run them
+
 ##Install dependencies
 Install
 * nodejs
 * mongodb
 on the server
+
 ##Setup a database
 ###mlab
 Make an account on mlab. Create a database and a user for that database. Link the database in in the config-file of the server.
@@ -50,8 +53,8 @@ Setup a reverse proxy to handle the static files and the https against the clien
 2. Change the default file in /etc/nginx/sites-available
   * Set up to listen on port 80
       * Redirect to https
-  *Set up to listen on port 443
-  *Set up ssl, link in certificate
+  * Set up to listen on port 443
+  * Set up ssl, link in certificate
 ###Compression
 * Set up gzip-compression
 ###Static files
