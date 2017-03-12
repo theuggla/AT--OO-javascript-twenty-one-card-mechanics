@@ -6,7 +6,6 @@
 'use strict';
 
 //Requires.
-let path = require('path');
 let _ = require('lodash');
 
 //General config options----------------------------------------------------------------------------------------------
