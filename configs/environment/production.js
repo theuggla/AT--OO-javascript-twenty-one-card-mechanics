@@ -17,5 +17,4 @@ module.exports = {
 
     //Secrets
     cookiesecret: process.env.COOKIE_SECRET,
-
 };
