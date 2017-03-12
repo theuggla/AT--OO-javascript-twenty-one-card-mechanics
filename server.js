@@ -73,7 +73,7 @@ app.use(helmet());
 //Security-CSP
 app.use(csp({
     directives: {
-        defaultSrc: ["'self'", config.socket, 'github.com', '*.githubusercontent.com', 'api.github.com'],
+        defaultSrc: ["'self'", config.socket, config.secureSocket, 'github.com', '*.githubusercontent.com', 'api.github.com'],
         scriptSrc: ["'self'"],
         objectSrc: ["'none'"],
     },
