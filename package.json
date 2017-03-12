@@ -8,7 +8,7 @@
     "watch": "npm-run-all --parallel watch:*",
     "build": "browserify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js",
     "prestart": "browserify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js",
-    "start": "pm2 start  app.js -i 0",
+    "start": "pm2 start server.js -i 0",
     "watch:client": "watchify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js --debug --verbose",
     "watch:server": "nodemon -L server.js"
   },
