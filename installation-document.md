@@ -27,10 +27,9 @@ Before pushing the code to production, make sure the code is production ready in
   3. Push up the files.
 
 ## Install dependencies
-Install on the server:
+Depending on what server you choose to create at Digital Ocean, this might already be done. Otherwise install through the OS running on your server. You might have to look up additional documentation to do this. Install on the server:
 * nodejs
 * mongodb
-Depending on what server you choose to create at Digital Ocean, this might already be done. Otherwise install through the OS running on your server. You might have to look up additional documentation to do this.
 
 ## Setup a database
 ### mlab
@@ -80,7 +79,7 @@ server {
 What you'll want to do is:
 
 ### HTTPS
-1. Create self signed certificate in anyway you like. If you have a domain-name you could use [https://letsencrypt.org/]. Otherwise use the generate-ssl script that you'll find in the dev-scripts folder.
+1. Create self signed certificate in anyway you like. If you have a domain-name you could use [letsencrypt](https://letsencrypt.org/). Otherwise use the generate-ssl script that you'll find in the dev-scripts folder.
    1. [Optional] Change the script to use the name of the starting-point of your server instead of server.js.
    2. [Optional] Change the script to store the certificates somewhere else by changing the paths provided.
    3. Make the script executable by running:
