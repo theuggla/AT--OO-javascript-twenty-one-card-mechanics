@@ -1,15 +1,9 @@
 version: "3"
 services:
-  react-app:
-    image: theuggla/github-dash-react-app:test
-    ports:
-      - "80:8080"
-    networks:
-      - isolation-network
   api-gateway:
     image: theuggla/api-gateway:test
     ports:
-      - "4000:4000"
+      - "80:4000"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
@@ -63,17 +57,6 @@ services:
         condition: on-failure
     environment:
       SERVICE_NAME: "github-service"
-    networks:
-      - isolation-network
-  visualizer:
-    image: dockersamples/visualizer:stable
-    ports:
-      - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     networks:
       - isolation-network
 networks:
