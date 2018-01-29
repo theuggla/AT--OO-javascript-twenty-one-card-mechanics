@@ -6,15 +6,10 @@
 let request = require('request')
 let express = require('express')
 let bodyParser = require('body-parser')
-let path = require('path')
 let app = express()
 let port = '4000'
-let staticPath = path.join((__dirname || process.cwd()), '/public/debug')
 
 // Middlewares------------------------------------------------------------------------------------------------------
-
-// Find static resources.
-app.use(express.static(staticPath))
 
 // JSON support
 app.use(bodyParser.json())
@@ -24,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Routes---------------------------------------------------------------------------------------------------------
 app.get('/', (req, res) => {
-  res.send('Gateway on main')
+  res.json({message: 'Gateway on main'})
 })
 
 app.get('/user-service', (req, res, next) => {
@@ -32,7 +27,7 @@ app.get('/user-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.send(body)
+      res.json(body)
     }
 
     next(err, req, res)
@@ -44,7 +39,7 @@ app.get('/notification-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.send(body)
+      res.json(body)
     }
 
     next(err, req, res)
@@ -56,7 +51,7 @@ app.get('/github-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.send(body)
+      res.json(body)
     }
 
     next(err, req, res)
