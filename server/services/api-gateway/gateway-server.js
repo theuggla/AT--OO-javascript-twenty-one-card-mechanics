@@ -17,6 +17,13 @@ app.use(bodyParser.json())
 // HTML form data support
 app.use(bodyParser.urlencoded({extended: true}))
 
+// CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
 // Routes---------------------------------------------------------------------------------------------------------
 app.get('/', (req, res) => {
   res.json({message: 'Gateway on main'})
@@ -27,10 +34,10 @@ app.get('/user-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.json(body)
+      res.json(JSON.parse(body))
+    } else {
+      next(err, req, res)
     }
-
-    next(err, req, res)
   })
 })
 
@@ -39,10 +46,10 @@ app.get('/notification-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.json(body)
+      res.json(JSON.parse(body))
+    } else {
+      next(err, req, res)
     }
-
-    next(err, req, res)
   })
 })
 
@@ -51,10 +58,10 @@ app.get('/github-service', (req, res, next) => {
     method: 'GET'
   }, (err, response, body) => {
     if (!err && res.statusCode === 200) {
-      res.json(body)
+      res.json(JSON.parse(body))
+    } else {
+      next(err, req, res)
     }
-
-    next(err, req, res)
   })
 })
 
