@@ -1,5 +1,6 @@
 let express = require('express')
 let app = express()
+require('dotenv').config()
 let port = 3000
 let serviceName = process.env.SERVICE_NAME
 

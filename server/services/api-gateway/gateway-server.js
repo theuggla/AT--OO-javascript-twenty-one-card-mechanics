@@ -6,6 +6,7 @@
 let request = require('request')
 let express = require('express')
 let bodyParser = require('body-parser')
+require('dotenv').config()
 let app = express()
 let port = '4000'
 
