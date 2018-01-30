@@ -3,12 +3,15 @@
  **/
 
 // Requires
-let request = require('request')
 let express = require('express')
 let bodyParser = require('body-parser')
+let home = require('./routes/home')
+let github = require('./routes/github')
+let notifications = require('./routes/notifications')
 require('dotenv').config()
+require('./resources/authresource').connect()
 let app = express()
-let port = '4000'
+let port = '5252'
 
 // Middlewares------------------------------------------------------------------------------------------------------
 
@@ -25,46 +28,10 @@ app.use((req, res, next) => {
   next()
 })
 
-// Routes---------------------------------------------------------------------------------------------------------
-app.get('/', (req, res) => {
-  res.json({message: 'Gateway on main'})
-})
-
-app.get('/user-service', (req, res, next) => {
-  request({ url: 'http://user:3000/',
-    method: 'GET'
-  }, (err, response, body) => {
-    if (!err && res.statusCode === 200) {
-      res.json(JSON.parse(body))
-    } else {
-      next(err, req, res)
-    }
-  })
-})
-
-app.get('/notification-service', (req, res, next) => {
-  request({ url: 'http://notification:3000/',
-    method: 'GET'
-  }, (err, response, body) => {
-    if (!err && res.statusCode === 200) {
-      res.json(JSON.parse(body))
-    } else {
-      next(err, req, res)
-    }
-  })
-})
-
-app.get('/github-service', (req, res, next) => {
-  request({ url: 'http://github:3000/',
-    method: 'GET'
-  }, (err, response, body) => {
-    if (!err && res.statusCode === 200) {
-      res.json(JSON.parse(body))
-    } else {
-      next(err, req, res)
-    }
-  })
-})
+// Routes----------------------------------------------------------------------------------------------------
+app.use('/', home)
+app.use('/notifications', notifications)
+app.use('/github', github)
 
 // Custom Error Responses-------------------------------------------------------------------------------------------------
 

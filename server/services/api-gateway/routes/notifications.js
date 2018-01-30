@@ -5,7 +5,6 @@
 // Requires.
 let router = require('express').Router()
 let request = require('request')
-let log = require('log-to-file')
 
 // Routes.
 router.route('/notification-service')
