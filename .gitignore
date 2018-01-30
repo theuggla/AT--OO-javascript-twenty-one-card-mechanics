@@ -1,0 +1,7 @@
+**/node_modules
+**/env
+**/.env
+**/build
+.vscode
+docker-compose-local.yml
+client/react-app/Dockerfile
