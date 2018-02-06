@@ -9,7 +9,7 @@ let home = require('./routes/home')
 let github = require('./routes/github')
 let notifications = require('./routes/notifications')
 require('dotenv').config()
-require('./resources/authresource').connect()
+require('./resources/auth/passport-setup').connect()
 let app = express()
 let port = '5252'
 

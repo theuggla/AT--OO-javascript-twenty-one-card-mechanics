@@ -5,6 +5,7 @@
 // Requires.
 let router = require('express').Router()
 let passport = require('passport')
+let jwt = require('../resources/auth/jwt')
 
 // Routes.
 router.route('/')
@@ -25,9 +26,11 @@ router.route('/login/success')
     .get((req, res, next) => {
       passport.authenticate('github', (err, user) => {
         if (err) {
-          return res.json(err)
+          return next(err)
+        } else {
+          res.set('Authorization', 'Bearer ' + jwt.create({user: user.username}))
+          return res.json(user)
         }
-        return res.json(user)
       })(req, res, next)
     })
 
