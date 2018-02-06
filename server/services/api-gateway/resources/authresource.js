@@ -11,14 +11,16 @@ let Strategy = require('passport-github').Strategy
  * Initialize the authentication.
  */
 function connect () {
-  passport.use(new Strategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET
-  },
+  passport.use(new Strategy({ clientID: process.env.GITHUB_CLIENT_ID, clientSecret: process.env.GITHUB_CLIENT_SECRET
+  }, (accessToken, refreshToken, profile, done) => {
 
-        function (accessToken, refreshToken, profile, done) {
-          profile.accessToken = accessToken
-        }))
+    if (profile) {
+      profile.accessToken = accessToken
+      done(null, profile)
+    }
+
+    done({message: 'User did not allow delegation.'})
+  }))
 }
 
 // Exports.

@@ -15,16 +15,18 @@ router.route('/')
 /**
  * Authenticate the user through github, request scopes.
  */
-router.route('/login/github')
+router.route('/login')
     .get(passport.authenticate('github', {scope: ['user']}))
 
 /**
  * Handle the authentication.
  */
-router.route('/login-successful')
+router.route('/login/success')
     .get((req, res, next) => {
       passport.authenticate('github', (err, user) => {
-        console.log(user)
+        if (err) {
+          return res.json(err)
+        }
         return res.json(user)
       })(req, res, next)
     })
