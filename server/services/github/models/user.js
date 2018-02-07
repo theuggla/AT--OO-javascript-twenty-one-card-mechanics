@@ -4,7 +4,7 @@ let Schema = mongoose.Schema
 
 let UserSchema = new Schema(
   {
-    username: {type: String, required: true},
+    user: {type: String, required: true, unique: true},
     accessToken: {type: String, required: true},
     latestEventPoll: {type: String}
   }
