@@ -4,12 +4,12 @@
 
 // Requires.
 let router = require('express').Router()
-let request = require('request')
+let axios = require('axios')
 
 // Routes.
 router.route('/notification-service')
     .get((req, res, next) => {
-      request({ url: 'http://notification:3000/',
+      axios({ url: 'http://notification:3000/',
         method: 'GET'
       }, (err, response, body) => {
         if (!err && res.statusCode === 200) {

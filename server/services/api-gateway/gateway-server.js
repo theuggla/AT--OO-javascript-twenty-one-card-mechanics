@@ -5,6 +5,8 @@
 // Requires
 let express = require('express')
 let bodyParser = require('body-parser')
+require('dotenv').config()
+
 let home = require('./routes/home')
 let github = require('./routes/github')
 let notifications = require('./routes/notifications')
@@ -20,9 +22,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 // CORS
+/*  app.use(corser.create({
+  origins: [],
+  simpleMethods: corser.simpleMethods.concat(['PUT', 'DELETE']),
+  simpleRequestHeaders: corser.simpleRequestHeaders.concat(['Authorization'])
+})) */
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   next()
 })
 

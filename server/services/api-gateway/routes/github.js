@@ -1,22 +1,27 @@
 /**
- * Router for the notification service.
+ * Router for the github service.
  */
 
 // Requires.
 let router = require('express').Router()
-let request = require('request')
+let axios = require('axios')
 
 // Routes.
-router.route('/github-service')
-    .get((req, res, next) => {
-      request({ url: 'http://github:3000/',
-        method: 'GET'
-      }, (err, response, body) => {
-        if (!err && res.statusCode === 200) {
-          res.json(JSON.parse(body))
-        } else {
-          next(err, req, res)
-        }
+router.route('/user')
+    .put((req, res, next) => {
+      axios({
+        method: 'put',
+        headers: {'Authorization': req.headers.authorization},
+        url: process.env.GITHUB_SERVICE + '/user'
+      })
+      .then((response) => {
+        console.log('got response')
+        console.log(response.data)
+        console.log('sending')
+        return res.json(response.data)
+      })
+      .catch((err) => {
+        return next({message: err})
       })
     })
 
