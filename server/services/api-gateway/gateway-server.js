@@ -8,8 +8,6 @@ let bodyParser = require('body-parser')
 let home = require('./routes/home')
 let github = require('./routes/github')
 let notifications = require('./routes/notifications')
-require('dotenv').config()
-require('./resources/auth/passport-setup').connect()
 let app = express()
 let port = '5252'
 
@@ -36,7 +34,7 @@ app.use('/github', github)
 // Custom Error Responses-------------------------------------------------------------------------------------------------
 
 // 400 >
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(302).redirect('/')
 })
 
