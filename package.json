@@ -1,0 +1,35 @@
+{
+  "name": "travel-together-api",
+  "version": "1.0.0",
+  "description": "A simple node API to learn REST techniques",
+  "main": "api-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1dv527/ma222jp-examination-2.git"
+  },
+  "keywords": [
+    "node",
+    "rest",
+    "docker",
+    "express",
+    "jwt"
+  ],
+  "author": "Molly Arhammar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1dv527/ma222jp-examination-2/issues"
+  },
+  "homepage": "https://github.com/1dv527/ma222jp-examination-2#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "express-force-ssl": "^0.3.2",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.4",
+    "morgan": "^1.9.0"
+  }
+}
