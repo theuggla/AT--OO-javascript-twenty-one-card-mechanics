@@ -9,10 +9,6 @@ let User = require('../models/User')
 let jwt = require('../lib/auth/jwt')
 
 // Routes.
-router.get('/', (req, res) => {
-  res.json({message: 'API on main'})
-})
-
 router.post('/login', (req, res, next) => {
   if (!(req.body.email && req.body.password)) {
     return next({message: 'No credentials provided for login'})

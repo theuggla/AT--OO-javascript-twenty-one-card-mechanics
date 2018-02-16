@@ -1,6 +1,6 @@
 let errs = require('restify-errors')
 
-module.exports.acceptJSON = function acceptJSON (req, res, next) {
+module.exports.acceptJSON = function (req, res, next) {
   if (req.accepts('application/json')) {
     next()
   } else {

@@ -4,6 +4,9 @@ let fs = require('fs')
 let passport = require('passport')
 
 let mw = require('./app/middleware/middleware')
+let corsMiddleware = require('restify-cors-middleware')
+let plugins = require('restify-plugins')
+let opt = require('./app/middleware/optionsresponses')
 
 let port = process.env.PORT || 8443
 let db = require('./app/lib/db')
@@ -22,13 +25,21 @@ let httpServerOptions = {
   passphrase: process.env.CERT_PASSPHRASE
 }
 
+let cors = corsMiddleware({
+  preflightMaxAge: 5,
+  origins: ['*']
+})
+
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
   httpServerOptions: httpServerOptions,
   name: 'aircoach-api'
 })
 
-// Middleware --------------------------------------------------------------------------------------------------
+// Middleware -------------------------------------------------------------------------------------------------
+// CORS
+server.pre(cors.preflight)
+server.use(cors.actual)
 
 // Passport
 server.use(passport.initialize())
@@ -36,6 +47,7 @@ server.use(passport.initialize())
 server.use(mw.acceptJSON)
 
 // Routes ------------------------------------------------------------------------------------------------------
+server.opts('/', opt.safeResource)
 server.get('/', (req, res) => {
   res.send('Success!')
 })
