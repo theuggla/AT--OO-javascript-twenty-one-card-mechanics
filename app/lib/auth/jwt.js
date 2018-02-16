@@ -8,7 +8,7 @@ let fs = require('fs')
 let path = require('path')
 
 let cwd = __dirname || process.cwd()
-let privateKey = fs.readFileSync(path.join(cwd, '/jwtcerts/jwtRS256.key'))
+let privateKey = fs.readFileSync(path.join(cwd, '/certs/jwtRS256.key'))
 
 /**
  * Create a JWT.

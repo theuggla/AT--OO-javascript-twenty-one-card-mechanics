@@ -7,18 +7,20 @@
 // Requires.
 let fs = require('fs')
 let passport = require('passport')
-let Strategy = require('passport-jwt').Strategy
+let JWTStrategy = require('passport-jwt').Strategy
 let extractJWT = require('passport-jwt').ExtractJwt
+let path = require('path')
 
-let User = require('../models/User')
-let publicKey = fs.readFileSync('../../../certs/jwtRS256.key.pub')
+let cwd = __dirname || process.cwd()
+let User = require('../../models/User')
+let publicKey = fs.readFileSync(path.join(cwd, '/certs/jwtRS256.key'))
 
 /**
  * Initialize the authentication and set up the handling
  * against the database.
  */
 function connect () {
-  passport.use(new Strategy({
+  passport.use(new JWTStrategy({
     jwtFromRequest: extractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: publicKey
   }, (payload, done) => {

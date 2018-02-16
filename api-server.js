@@ -1,49 +1,45 @@
 // Requires ---------------------------------------------------------------------------------------------------
-let express = require('express')
-let app = express()
-let https = require('https')
+let restify = require('restify')
 let fs = require('fs')
-let bodyParser = require('body-parser')
 let passport = require('passport')
 
 let port = process.env.PORT || 8443
 let db = require('./app/lib/db')
+let auth = require('./app/lib/auth/passport-setup')
 
-let home = require('./app/routes/home')
+/*let authenticationRouter = require('./app/routes/auth')*/
 
 // Config -----------------------------------------------------------------------------------------------------
 require('dotenv').config()
 db.connect()
+auth.connect()
 
-let sslOptions = {
+let httpServerOptions = {
   key: fs.readFileSync('./certs/sslkey.pem'),
   cert: fs.readFileSync('./certs/sslcert.pem'),
   passphrase: process.env.CERT_PASSPHRASE
 }
 
+// Declare server ---------------------------------------------------------------------------------------------
+let server = restify.createServer({
+  httpServerOptions: httpServerOptions,
+  name: 'aircoach-api',
+  accept: ['application/json']
+})
+
 // Middleware --------------------------------------------------------------------------------------------------
 
 // Passport
-app.use(passport.initialize())
-
-// JSON support
-app.use(bodyParser.json())
+server.use(passport.initialize())
 
 // Routes ------------------------------------------------------------------------------------------------------
-app.use('/', home)
-
-// Custom Error Responses ---------------------------------------------------------------------------------------
-
-// 400 >
-app.use((req, res) => {
-  res.status(400)
+server.get('/', (req, res) => {
+  res.send('Success!')
 })
 
-// 500
-app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({message: err.message})
+server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.send('Success! Get Secret!')
 })
 
 // Server up ---------------------------------------------------------------------------------------------------
-https.createServer(sslOptions, app).listen(port, () => { console.log('https up') })
+server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })
