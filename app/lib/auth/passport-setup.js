@@ -12,8 +12,8 @@ let extractJWT = require('passport-jwt').ExtractJwt
 let path = require('path')
 
 let cwd = __dirname || process.cwd()
-let User = require('../../models/User')
 let publicKey = fs.readFileSync(path.join(cwd, '/certs/jwtRS256.key'))
+let db = require('../db/db-interactor')
 
 /**
  * Initialize the authentication and set up the handling
@@ -24,7 +24,7 @@ function connect () {
     jwtFromRequest: extractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: publicKey
   }, (payload, done) => {
-    User.findById(payload.id)
+    db.findUser(payload.id)
     .then((user) => {
       if (user) {
         return done(null, user)

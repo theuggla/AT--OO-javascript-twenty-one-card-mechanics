@@ -18,7 +18,8 @@ let UserSchema = new Schema({
       message: 'email is not valid'
     }
   },
-  password: String
+  password: String,
+  imageUrl: String
 })
 
 UserSchema.pre('save', function (next) {

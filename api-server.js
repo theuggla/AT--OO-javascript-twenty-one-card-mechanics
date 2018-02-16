@@ -16,7 +16,7 @@ let opt = require('./app/routes/handlers/optionshandlers')
 
 // variables
 let port = process.env.PORT || 8443
-let db = require('./app/lib/db/db')
+let db = require('./app/lib/db/db-connector')
 let auth = require('./app/lib/auth/passport-setup')
 
 // Config -----------------------------------------------------------------------------------------------------
@@ -62,6 +62,7 @@ server.get('/', (req, res) => {
 authenticationRouter.applyRoutes(server)
 
 server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log(req.user)
   res.send('Success! Get Secret!')
 })
 
