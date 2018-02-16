@@ -3,6 +3,8 @@ let restify = require('restify')
 let fs = require('fs')
 let passport = require('passport')
 
+let mw = require('./app/middleware/middleware')
+
 let port = process.env.PORT || 8443
 let db = require('./app/lib/db')
 let auth = require('./app/lib/auth/passport-setup')
@@ -23,14 +25,15 @@ let httpServerOptions = {
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
   httpServerOptions: httpServerOptions,
-  name: 'aircoach-api',
-  accept: ['application/json']
+  name: 'aircoach-api'
 })
 
 // Middleware --------------------------------------------------------------------------------------------------
 
 // Passport
 server.use(passport.initialize())
+
+server.use(mw.acceptJSON)
 
 // Routes ------------------------------------------------------------------------------------------------------
 server.get('/', (req, res) => {
@@ -40,6 +43,9 @@ server.get('/', (req, res) => {
 server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.send('Success! Get Secret!')
 })
+
+// Error handling ----------------------------------------------------------------------------------------------
+
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })
