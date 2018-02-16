@@ -5,6 +5,6 @@ module.exports.acceptJSON = function acceptJSON (req, res, next) {
     next()
   } else {
     let e = new errs.NotAcceptableError()
-    next(e)
+    res.send(e)
   }
 }
