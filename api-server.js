@@ -3,16 +3,21 @@ let restify = require('restify')
 let fs = require('fs')
 let passport = require('passport')
 
+// middleware
 let mw = require('./app/middleware/middleware')
 let corsMiddleware = require('restify-cors-middleware')
 let plugins = require('restify-plugins')
-let opt = require('./app/middleware/optionsresponses')
 
+// routers
+let authenticationRouter = require('./app/routes/routers/authenticationRouter')
+
+// handlers
+let opt = require('./app/routes/handlers/optionshandlers')
+
+// variables
 let port = process.env.PORT || 8443
-let db = require('./app/lib/db')
+let db = require('./app/lib/db/db')
 let auth = require('./app/lib/auth/passport-setup')
-
-/*let authenticationRouter = require('./app/routes/auth')*/
 
 // Config -----------------------------------------------------------------------------------------------------
 require('dotenv').config()
@@ -44,13 +49,17 @@ server.use(cors.actual)
 // Passport
 server.use(passport.initialize())
 
+// JSON
 server.use(mw.acceptJSON)
+server.use(plugins.jsonBodyParser())
 
 // Routes ------------------------------------------------------------------------------------------------------
 server.opts('/', opt.safeResource)
 server.get('/', (req, res) => {
   res.send('Success!')
 })
+
+authenticationRouter.applyRoutes(server)
 
 server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.send('Success! Get Secret!')
