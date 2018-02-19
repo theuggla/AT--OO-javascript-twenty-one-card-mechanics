@@ -63,11 +63,6 @@ server.get('/', (req, res) => {
 authenticationRouter.applyRoutes(server)
 authenticatedUserRouter.applyRoutes(server)
 
-server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log(req.user)
-  res.send('Success! Get Secret!')
-})
-
 // Error handling ----------------------------------------------------------------------------------------------
 
 
