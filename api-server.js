@@ -10,7 +10,7 @@ let plugins = require('restify-plugins')
 
 // routers
 let authenticationRouter = require('./app/routes/routers/authenticationRouter')
-let authenticatedUserRouter = require('./app/routes/routers/authenticatedUserRouter')
+let userRouter = require('./app/routes/routers/userRouter')
 
 // handlers
 let opt = require('./app/routes/handlers/optionshandlers')
@@ -61,7 +61,7 @@ server.get('/', (req, res) => {
 })
 
 authenticationRouter.applyRoutes(server)
-authenticatedUserRouter.applyRoutes(server)
+userRouter.applyRoutes(server)
 
 // Error handling ----------------------------------------------------------------------------------------------
 
