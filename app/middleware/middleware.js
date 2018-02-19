@@ -8,3 +8,13 @@ module.exports.acceptJSON = function (req, res, next) {
     res.send(e)
   }
 }
+
+module.exports.isAuthorized = function (req, res, next) {
+  if (req.user.id === req.params.id) {
+    req.user.authorized = true
+  } else {
+    req.user.authorized = false
+  }
+
+  return next()
+}

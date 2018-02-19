@@ -10,6 +10,7 @@ let plugins = require('restify-plugins')
 
 // routers
 let authenticationRouter = require('./app/routes/routers/authenticationRouter')
+let authenticatedUserRouter = require('./app/routes/routers/authenticatedUserRouter')
 
 // handlers
 let opt = require('./app/routes/handlers/optionshandlers')
@@ -60,6 +61,7 @@ server.get('/', (req, res) => {
 })
 
 authenticationRouter.applyRoutes(server)
+authenticatedUserRouter.applyRoutes(server)
 
 server.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
   console.log(req.user)
