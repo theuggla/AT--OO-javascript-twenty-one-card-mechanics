@@ -27,7 +27,17 @@ module.exports.postResource = function (req, res, next) {
 */
 module.exports.updateResource = function (req, res, next) {
   res.header('Allow', 'GET, DELETE, PUT, HEAD, OPTIONS')
-  res.header('Access-Control-Allow-Methods', 'GET, DELETE, PUT, POST, HEAD, OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'GET, DELETE, PUT, HEAD, OPTIONS')
+  res.send()
+  next(false)
+}
+
+/*
+* Response for collections where resources are added.
+*/
+module.exports.addResource = function (req, res, next) {
+  res.header('Allow', 'GET, POST, HEAD, OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, HEAD, OPTIONS')
   res.send()
   next(false)
 }
