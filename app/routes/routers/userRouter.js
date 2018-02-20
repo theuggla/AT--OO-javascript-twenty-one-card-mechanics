@@ -17,7 +17,7 @@ router.opts('/users/:id', passport.authenticate('jwt', { session: false }), mw.g
 router.get('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, user.info)
 router.put('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.update)
 router.del('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.delete)
-
+/*
 router.opts('/users/:id/desiredtrips', passport.authenticate('jwt', { session: false }), mw.authorize, opts.addResource)
 router.get('/users/:id/desiredtrips', passport.authenticate('jwt', { session: false }), mw.authorize, dt.collection)
 router.post('/users/:id/desiredtrips', passport.authenticate('jwt', { session: false }), mw.authorize, dt.add)
@@ -29,7 +29,7 @@ router.post('/users/:id/driving', passport.authenticate('jwt', { session: false 
 router.opts('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, opts.updateResource)
 router.get('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByDriver)
 router.put('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.addPassenger)
-router.del('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.deletePassenger)
+router.del('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.deletePassenger)*/
 
 // Exports.
 module.exports = router

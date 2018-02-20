@@ -3,11 +3,16 @@
  */
 
 let User = require('../../models/User')
+let userResource = require('../../lib/resources/user')
 
 module.exports.info = function (req, res, next) {
-  if (req.user.authorized) res.send({message: 'Large user info'})
-  else res.send({message: 'Small user info'})
-  next(false)
+  userResource.getUser(req.user)
+  .then((user) => {
+    if (req.user.authorized) {console.log('auth')}
+
+    res.send(user)
+    next(false)
+  })
 }
 
 module.exports.update = function (req, res, next) {
