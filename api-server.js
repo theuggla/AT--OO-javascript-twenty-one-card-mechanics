@@ -63,11 +63,6 @@ userRouter.applyRoutes(server)
 resources(server)
 
 // Error handling ----------------------------------------------------------------------------------------------
-server.on('RestError', (req, res, err, cb) => {
-  console.log('err')
-  console.log(err.message)
-  cb()
-})
 
 // Server up ---------------------------------------------------------------------------------------------------
 server.listen(port, () => { console.log('%s listening at %s', server.name, server.url) })

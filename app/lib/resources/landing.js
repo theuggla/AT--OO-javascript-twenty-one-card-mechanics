@@ -10,10 +10,12 @@ let expandedResponse
 
 // Initialize server links
 module.exports = function (server) {
-  baseContext = {
-    error: {'@id': 'https://schema.org/relatedLink/'},
-    relatedLinks: {'@id': 'https://schema.org/relatedLink/', '@type': '@id'}
-  }
+  baseContext = [
+    'http://www.w3.org/ns/hydra/core',
+    {
+      relatedLinks: {'@id': 'https://schema.org/relatedLink/', '@type': '@id'}
+    }
+  ]
 
   baseResponse = {
     '@id': server.router.render('home'),
@@ -27,9 +29,8 @@ module.exports = function (server) {
 }
 
 // Authenticated user
-module.exports.getExpanded = function (user, error) {
+module.exports.getExpanded = function (user) {
   return new Promise((resolve, reject) => {
-    if (error) expandedResponse.error = error.message
     let userlinkIndex = expandedResponse['https://schema.org/relatedLink/'].findIndex((link) => { return link.name === 'user' })
     expandedResponse['https://schema.org/relatedLink/'][userlinkIndex]['@id'] += ('/' + user._id)
 
@@ -44,9 +45,8 @@ module.exports.getExpanded = function (user, error) {
 }
 
 // Unauthenticated user
-module.exports.getBase = function (error) {
+module.exports.getBase = function () {
   return new Promise((resolve, reject) => {
-    if (error) baseResponse.error = error.message
     jsonld.compact(baseResponse, baseContext, (err, compacted) => {
       if (err) {
         reject(err)

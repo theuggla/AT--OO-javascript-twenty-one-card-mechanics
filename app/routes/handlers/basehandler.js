@@ -8,9 +8,7 @@
 
  // Handlers
  module.exports.landing = function (req, res, next) {
-   console.log('in landing handler')
    passport.authenticate('jwt', function (err, user, info) {
-     console.log('in passport auth cb')
      if (err) { return next(err) }
 
      if (!user) {

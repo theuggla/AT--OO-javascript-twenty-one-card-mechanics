@@ -9,7 +9,8 @@ let opts = require('../handlers/optionshandlers')
 let auth = require('../handlers/authhandler')
 
 // Routes.
-router.opts({name: 'authenticate', path: '/authenticate'}, opts.postResource)
+router.opts({name: 'authenticate', path: '/authenticate'}, opts.addResource)
+router.get('/authenticate', auth.info)
 router.post('/authenticate', auth.login)
 
 // Exports.

@@ -6,7 +6,16 @@
 let User = require('../../models/User')
 let jwt = require('../../lib/auth/jwt')
 let resource = require('../../lib/resources/landing')
+let authresource = require('../../lib/resources/authenticate')
 let err = require('restify-errors')
+
+// Return info about login flow
+module.exports.info = function (req, res, next) {
+  authresource.getBase()
+  .then((json) => {
+    res.send(json)
+  })
+}
 
 // Return JWT to authenticated user.
 module.exports.login = function (req, res, next) {
@@ -40,7 +49,6 @@ module.exports.login = function (req, res, next) {
       return res.send(result[0])
     })
     .catch((err) => {
-      console.log(err)
       return next(err)
     })
   }
