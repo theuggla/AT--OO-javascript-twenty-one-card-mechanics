@@ -6,11 +6,11 @@
 let RestifyRouter = require('restify-router').Router
 let router = new RestifyRouter()
 let opts = require('../handlers/optionshandlers')
-let auth = require('../handlers/authhandler')
+let base = require('../handlers/basehandler')
 
 // Routes.
-router.opts({name: 'authenticate', path: '/authenticate'}, opts.postResource)
-router.post({name: 'authenticate', path: '/authenticate'}, auth.login)
+router.opts({name: 'home', path: '/'}, opts.safeResource)
+router.get('/', base.landing)
 
 // Exports.
 module.exports = router

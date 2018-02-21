@@ -62,7 +62,6 @@ module.exports.getExpandedUser = function (user, desiredTrips, driverOf, passeng
     })
 
     jsonld.compact(expandedUser, expandedUserContext, (err, compacted) => {
-      console.log(compacted)
       if (err) reject(err)
 
       resolve(compacted)

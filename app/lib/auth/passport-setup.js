@@ -26,9 +26,11 @@ function connect () {
   }, (payload, done) => {
     db.findUser(payload.id)
     .then((user) => {
+      console.log('then')
       if (user) {
         return done(null, user)
       } else {
+        console.log('no user')
         return done(null, false)
       }
     })

@@ -8,12 +8,12 @@ let mw = require('./app/middleware/middleware')
 let corsMiddleware = require('restify-cors-middleware')
 let plugins = require('restify-plugins')
 
+let resources = require('./app/lib/resources')
+
 // routers
+let baseRouter = require('./app/routes/routers/baseRouter')
 let authenticationRouter = require('./app/routes/routers/authenticationRouter')
 let userRouter = require('./app/routes/routers/userRouter')
-
-// handlers
-let opt = require('./app/routes/handlers/optionshandlers')
 
 // variables
 let port = process.env.PORT || 8443
@@ -55,13 +55,12 @@ server.use(mw.acceptJSON)
 server.use(plugins.jsonBodyParser())
 
 // Routes ------------------------------------------------------------------------------------------------------
-server.opts('/', opt.safeResource)
-server.get('/', (req, res) => {
-  res.send('Success!')
-})
-
+baseRouter.applyRoutes(server)
 authenticationRouter.applyRoutes(server)
 userRouter.applyRoutes(server)
+
+// Initialize resources
+resources(server)
 
 // Error handling ----------------------------------------------------------------------------------------------
 
