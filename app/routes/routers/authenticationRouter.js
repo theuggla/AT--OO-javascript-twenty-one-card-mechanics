@@ -10,7 +10,7 @@ let auth = require('../handlers/authhandler')
 
 // Routes.
 router.opts({name: 'authenticate', path: '/authenticate'}, opts.postResource)
-router.post({name: 'authenticate', path: '/authenticate'}, auth.login)
+router.post('/authenticate', auth.login)
 
 // Exports.
 module.exports = router
