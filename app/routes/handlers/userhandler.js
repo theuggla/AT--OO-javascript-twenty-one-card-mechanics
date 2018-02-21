@@ -35,3 +35,9 @@ module.exports.delete = function (req, res, next) {
   res.send({message: 'user deleted'})
   next(false)
 }
+
+module.exports.list = function (req, res, next) {
+  console.log('listing users')
+  res.send({message: 'users listed'})
+  next(false)
+}

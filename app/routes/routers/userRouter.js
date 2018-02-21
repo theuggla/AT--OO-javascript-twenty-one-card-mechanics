@@ -13,7 +13,10 @@ let dt = require('../handlers/desiredtriphandler')
 let pt = require('../handlers/plannedtriphandler')
 
 // Routes.
-router.opts('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
+router.opts({name: 'users', path: '/users'}, passport.authenticate('jwt', { session: false }), opts.safeResource)
+router.get('/users', passport.authenticate('jwt', { session: false }), user.list)
+
+router.opts({name: 'user', path: '/users/:id'}, passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
 router.get('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, user.info)
 router.put('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.update)
 router.del('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.delete)
