@@ -2,6 +2,9 @@
 * Responses for OPTIONS requests.
 */
 
+// Requires
+let passport = require('passport')
+
 /*
 * Response for open GET requests.
 */
@@ -40,4 +43,26 @@ module.exports.addResource = function (req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, HEAD, OPTIONS')
   res.send()
   next(false)
+}
+
+/*
+* Response for collections where it depends on wheter the user is authenticated.
+*/
+module.exports.authLevelDependant = function (req, res, next) {
+  passport.authenticate('jwt', function (err, user, info) {
+    if (err) { return next(err) }
+
+    if (!user) {
+      res.header('Allow', 'GET, HEAD, OPTIONS')
+      res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS')
+      res.send()
+      next(false)
+    } else {
+      res.header('Allow', 'GET, POST, HEAD, OPTIONS')
+      res.header('Access-Control-Allow-Methods', 'GET, POST, HEAD, OPTIONS')
+      res.send()
+      next(false)
+    }
+  }
+  )(req, res, next)
 }

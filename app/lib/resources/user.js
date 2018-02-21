@@ -3,7 +3,6 @@
 */
 
 const jsonld = require('jsonld')
-let desiredtriproutes = require('../../routes/routers/desiredTripRouter')
 
 let simpleUser = {
   'http://schema.org/name': '',
