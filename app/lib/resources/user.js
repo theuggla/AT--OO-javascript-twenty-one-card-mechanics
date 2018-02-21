@@ -3,6 +3,7 @@
 */
 
 const jsonld = require('jsonld')
+let desiredtriproutes = require('../../routes/routers/desiredTripRouter')
 
 let simpleUser = {
   'http://schema.org/name': '',
@@ -57,10 +58,11 @@ module.exports.getExpandedUser = function (user, desiredTrips, driverOf, passeng
     expandedUser['http://schema.org/image']['@id'] = user.imageUrl
 
     expandedUser.desiredTrips = desiredTrips.map(trip => {
-      return {'@id': trip.}
+      return {'@id': desiredtriproutes.render('desiredtrip', {slug: trip._id})}
     })
 
     jsonld.compact(expandedUser, expandedUserContext, (err, compacted) => {
+      console.log(compacted)
       if (err) reject(err)
 
       resolve(compacted)

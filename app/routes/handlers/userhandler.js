@@ -3,16 +3,25 @@
  */
 
 let User = require('../../models/User')
+let DesiredTrip = require('../../models/DesiredTrip')
+let PlannedTrip = require('../../models/PlannedTrip')
 let userResource = require('../../lib/resources/user')
 
 module.exports.info = function (req, res, next) {
-  userResource.getUser(req.user)
-  .then((user) => {
-    if (req.user.authorized) {console.log('auth')}
-
-    res.send(user)
-    next(false)
-  })
+  if (req.user.authorized) {
+    Promise.all()
+    userResource.getExpandedUser(req.user)
+      .then((user) => {
+        res.send(user)
+        next(false)
+      })
+  } else {
+    userResource.getSimpleUser(req.user)
+      .then((user) => {
+        res.send(user)
+        next(false)
+      })
+  }
 }
 
 module.exports.update = function (req, res, next) {

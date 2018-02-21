@@ -5,16 +5,18 @@
 // Requires.
 let mongoose = require('mongoose')
 let tripBase = require('./TripBase')
+let findOrCreate = require('mongoose-find-or-create')
 
 /**
  * Set up additional parameters for the Trip.
  */
 let plannedTripSchema = tripBase({
-  _creator: {type: String, ref: 'User', required: true},
   time: {type: Date},
   spaces: {type: Number},
   passengers: [{type: String, ref: 'User'}]
 })
+
+plannedTripSchema.plugin(findOrCreate)
 
 /**
  * Model the trip.

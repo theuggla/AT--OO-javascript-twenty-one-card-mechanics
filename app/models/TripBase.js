@@ -7,6 +7,7 @@ let Schema = mongoose.Schema
 
 module.exports = function (paths) {
   let schema = new Schema({
+    _creator: {type: String, ref: 'User', required: true},
     from: {type: String},
     to: {type: String}
   })

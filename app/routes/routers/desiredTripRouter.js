@@ -11,10 +11,10 @@ let opts = require('../handlers/optionshandlers')
 let desiredtrips = require('../handlers/desiredtriphandler')
 
 // Routes.
-router.opts('/desiredtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
-router.get('/desiredtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, desiredtrips.info)
-router.put('/desiredtrips/:id', passport.authenticate('jwt', { session: false }), mw.authorize, desiredtrips.update)
-router.del('/desiredtrips/:id', passport.authenticate('jwt', { session: false }), mw.authorize, desiredtrips.delete)
+router.opts({name: 'desiredtrip', path: '/desiredtrips/:id'}, passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
+router.get({name: 'desiredtrip', path: '/desiredtrips/:id'}, passport.authenticate('jwt', { session: false }), mw.getAuthLevel, desiredtrips.info)
+router.put({name: 'desiredtrip', path: '/desiredtrips/:id'}, passport.authenticate('jwt', { session: false }), mw.authorize, desiredtrips.update)
+router.del({name: 'desiredtrip', path: '/desiredtrips/:id'}, passport.authenticate('jwt', { session: false }), mw.authorize, desiredtrips.delete)
 
 // Exports.
 module.exports = router

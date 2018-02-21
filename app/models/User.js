@@ -5,6 +5,7 @@
 let mongoose = require('mongoose')
 let bcrypt = require('bcrypt-nodejs')
 let Schema = mongoose.Schema
+let findOrCreate = require('mongoose-find-or-create')
 
 let UserSchema = new Schema({
   name: {type: String},
@@ -22,6 +23,8 @@ let UserSchema = new Schema({
   password: String,
   imageUrl: String
 })
+
+UserSchema.plugin(findOrCreate)
 
 UserSchema.pre('save', function (next) {
   bcrypt.hash(this.password, null, null, (err, hash) => {
