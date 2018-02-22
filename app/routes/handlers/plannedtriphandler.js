@@ -4,11 +4,35 @@
 
 let PlannedTrip = require('../../models/PlannedTrip')
 let ptresource = require('../../lib/resources/plannedTripCollection')
+let ptsingle = require('../../lib/resources/plannedTrip')
+let err = require('restify-errors')
 
 module.exports.info = function (req, res, next) {
-  if (req.user.authorized) res.send({message: 'Large trip info'})
-  else res.send({message: 'Small trip info'})
-  next(false)
+  if (req.user.authorized) {
+    PlannedTrip.findOne({_id: req.params.id})
+    .then((trip) => {
+      return ptsingle.getExtendedTrip(trip)
+    })
+    .then((jsontrip) => {
+      return res.send(jsontrip)
+    })
+    .catch((error) => {
+      let e = new err.NotFoundError({message: 'No such trip. ' + error.message})
+      return next(e)
+    })
+  } else {
+    PlannedTrip.findOne({_id: req.params.id})
+    .then((trip) => {
+      return ptsingle.getBaseTrip(trip)
+    })
+    .then((tripResource) => {
+      return res.send(tripResource)
+    })
+    .catch((error) => {
+      let e = new err.NotFoundError({message: 'No such trip. ' + error.message})
+      return next(e)
+    })
+  }
 }
 
 module.exports.update = function (req, res, next) {
