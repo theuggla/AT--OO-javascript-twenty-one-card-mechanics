@@ -48,7 +48,7 @@ module.exports.addResource = function (req, res, next) {
 /*
 * Response for collections where resources are deleted.
 */
-module.exports.addResource = function (req, res, next) {
+module.exports.deleteResource = function (req, res, next) {
   res.header('Allow', 'GET, DELETE, HEAD, OPTIONS')
   res.header('Access-Control-Allow-Methods', 'GET, DELETE, HEAD, OPTIONS')
   res.send()

@@ -4,6 +4,9 @@
 
 let jsonld = require('jsonld')
 
+let userroute
+let triproute
+
 let baseContext
 let baseResponse
 
@@ -13,16 +16,37 @@ let extendedResponse
 let passengerResponse
 let driverResponse
 
+let passengerListContext
+let passengerListResponse
+
 // Initialize server links
 module.exports = function (server) {
+  userroute = server.router.render('users')
+  triproute = server.router.render('plannedtrip')
+
   baseContext = [
     {
-      'desiredTrips': {
+      'plannedTrips': {
         '@id': 'http://schema.org/ItemList',
         '@type': '@id'
       }
     }
   ]
+
+  passengerListContext = [
+    {
+      'passengers': {
+        '@id': 'http://schema.org/ItemList',
+        '@type': '@id'
+      }
+    },
+    {hydra: 'http://www.w3.org/ns/hydra/context.jsonld'}
+  ]
+
+  passengerListResponse = {'hydra:operation': [{
+    'hydra:method': 'PUT',
+    'hydra:action': 'AddParticipantAction'
+  }]}
 
   baseResponse = {
     '@id': server.router.render('plannedtrip'),
@@ -55,9 +79,8 @@ module.exports = function (server) {
   extendedResponse = {
     'hydra:member': [
       {
-        '@id': server.router.render('plannedtrip'),
-        'http://schema.org/agent': {'@id': server.router.render('users')},
-        'http://schema.org/participant': {'@id': server.router.render('users')}
+        'http://schema.org/agent': {'@id': ''},
+        'http://schema.org/participant': {'@id': ''}
       }
     ]
   }
@@ -91,7 +114,7 @@ module.exports = function (server) {
 module.exports.getList = function (allTrips) {
   return new Promise((resolve, reject) => {
     baseResponse['http://schema.org/ItemList'] = allTrips.map(trip => {
-      let id = baseResponse['@id'] + ('/' + trip._id)
+      let id = triproute + ('/' + trip._id)
       return {'@id': id}
     })
 
@@ -103,15 +126,31 @@ module.exports.getList = function (allTrips) {
   })
 }
 
+module.exports.getPassengerList = function (trip) {
+  return new Promise((resolve, reject) => {
+    let id = triproute + '/' + trip._id + '/passengers'
+    let passengers = {
+      '@id': id,
+      'http://schema.org/ItemList': trip.passengers.map((passenger) => { return {'@id': userroute + '/' + passenger} })
+    }
+
+    jsonld.compact(passengers, passengerListContext, (err, compacted) => {
+      if (err) reject(err)
+
+      resolve(compacted)
+    })
+  })
+}
+
 module.exports.getPassengersList = function (trips) {
   return new Promise((resolve, reject) => {
     let mapped = trips.map(trip => {
-      let id = passengerResponse['hydra:member'][0]['@id'] + ('/' + trip._id)
+      let id = triproute + ('/' + trip._id)
 
       return {
         '@id': id,
-        'http://schema.org/agent': passengerResponse['hydra:member'][0]['http://schema.org/agent']['@id'] + ('/' + trip._creator),
-        'http://schema.org/participant': trip.passengers.map((passenger) => { return {'@id': passengerResponse['hydra:member'][0]['http://schema.org/participant']['@id'] + '/' + passenger}}),
+        'http://schema.org/agent': userroute + ('/' + trip._creator),
+        'http://schema.org/participant': trip.passengers.map((passenger) => { return {'@id': userroute + '/' + passenger} }),
         'http://schema.org/fromLocation': trip.from,
         'http://schema.org/toLocation': trip.to,
         'http://schema.org/seatingCapacity': trip.spaces,
@@ -132,12 +171,12 @@ module.exports.getPassengersList = function (trips) {
 module.exports.getDriverList = function (trips) {
   return new Promise((resolve, reject) => {
     let mapped = trips.map(trip => {
-      let id = driverResponse['hydra:member'][0]['@id'] + ('/' + trip._id)
+      let id = triproute + ('/' + trip._id)
 
       return {
         '@id': id,
-        'http://schema.org/agent': driverResponse['hydra:member'][0]['http://schema.org/agent']['@id'] + ('/' + trip._creator),
-        'http://schema.org/participant': trip.passengers.map((passenger) => { return {'@id': driverResponse['hydra:member'][0]['http://schema.org/participant']['@id'] + '/' + passenger} }),
+        'http://schema.org/agent': triproute + ('/' + trip._creator),
+        'http://schema.org/participant': trip.passengers.map((passenger) => { return {'@id': triproute + '/' + passenger} }),
         'http://schema.org/fromLocation': trip.from,
         'http://schema.org/toLocation': trip.to,
         'http://schema.org/seatingCapacity': trip.spaces,

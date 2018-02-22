@@ -60,6 +60,12 @@ module.exports.deletePassenger = function (req, res, next) {
   next(false)
 }
 
+module.exports.addPassenger = function (req, res, next) {
+  console.log('adding passenger')
+  res.send({message: 'passenger added'})
+  next(false)
+}
+
 module.exports.list = function (req, res, next) {
   PlannedTrip.find({})
   .then((allTrips) => {
@@ -70,10 +76,24 @@ module.exports.list = function (req, res, next) {
   })
 }
 
+module.exports.passengers = function (req, res, next) {
+  PlannedTrip.findOne({_id: req.params.id})
+  .then((trip) => {
+    return ptresource.getPassengerList(trip)
+  })
+  .then((listresource) => {
+    return res.send(listresource)
+  })
+  .catch((error) => {
+    console.log(error)
+    let e = new err.NotFoundError({message: 'No such trip.'})
+    return next(e)
+  })
+}
+
 module.exports.collectionByDriver = function (req, res, next) {
   PlannedTrip.find({_creator: req.user._id})
   .then((allTrips) => {
-    console.log(allTrips)
     return ptresource.getDriverList(allTrips)
   })
   .then((listresource) => {
