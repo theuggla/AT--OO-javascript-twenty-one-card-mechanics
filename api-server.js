@@ -1,6 +1,5 @@
 // Requires ---------------------------------------------------------------------------------------------------
 let restify = require('restify')
-let fs = require('fs')
 let passport = require('passport')
 
 // middleware
@@ -26,12 +25,6 @@ require('dotenv').config()
 db.connect()
 auth.connect()
 
-let httpServerOptions = {
-  key: fs.readFileSync('./certs/sslkey.pem'),
-  cert: fs.readFileSync('./certs/sslcert.pem'),
-  passphrase: process.env.CERT_PASSPHRASE
-}
-
 let cors = corsMiddleware({
   preflightMaxAge: 5,
   origins: ['*']
@@ -39,8 +32,7 @@ let cors = corsMiddleware({
 
 // Declare server ---------------------------------------------------------------------------------------------
 let server = restify.createServer({
-  httpServerOptions: httpServerOptions,
-  name: 'aircoach-api'
+  name: 'travel-together-api'
 })
 
 // Middleware -------------------------------------------------------------------------------------------------
