@@ -464,7 +464,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9765a2ee-543e-4391-8820-810b0d7d3b14",
+								"id": "19831624-4e15-4af6-8ffc-f8531c720b46",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -478,7 +478,7 @@
 									"",
 									"pm.test(\"Correct login returns user link\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    var id = environment.USER1_ID;",
+									"    var id = environment.USER2_ID;",
 									"    pm.expect(jsonData.relatedLinks).to.contain(\"/users/\" + id);",
 									"});",
 									"",
@@ -508,7 +508,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"email\": \"{{USER1_EMAIL}}\", \"password\": \"{{USER1_PASSWORD}}\"}"
+							"raw": "{\"email\": \"{{USER2_EMAIL}}\", \"password\": \"{{USER2_PASSWORD}}\"}"
 						},
 						"url": {
 							"raw": "{{ROOT_URL}}/authenticate",
@@ -857,7 +857,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b8e0224f-e583-4b6a-ac09-fdf2a4a4988b",
+								"id": "badffb97-14e3-4811-880e-cb0f4dc823a9",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -868,7 +868,7 @@
 									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
 									"});",
 									"",
-									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, DELETE, PUT, HEAD, OPTIONS\";"
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, PUT, HEAD, OPTIONS\";"
 								]
 							}
 						}
@@ -1159,14 +1159,13 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "{{ROOT_URL}}/users/{{USER1_ID}}/driving",
+							"raw": "{{ROOT_URL}}/users/{{USER1_ID}}",
 							"host": [
 								"{{ROOT_URL}}"
 							],
 							"path": [
 								"users",
-								"{{USER1_ID}}",
-								"driving"
+								"{{USER1_ID}}"
 							]
 						},
 						"description": ""
@@ -1228,7 +1227,7 @@
 					"response": []
 				},
 				{
-					"name": "PUT - 204 - Authenticated - Authorized - Unsupported Media Type",
+					"name": "PUT - 415 - Authenticated - Authorized - Unsupported Media Type",
 					"event": [
 						{
 							"listen": "test",
@@ -1922,7 +1921,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c6e107fb-5e40-4153-beee-a8a6dabf6a47",
+								"id": "32f497a7-28ce-4ad9-b0de-7b328559d713",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -1933,7 +1932,7 @@
 									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
 									"});",
 									"",
-									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, DELETE, PUT, HEAD, OPTIONS\";"
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, HEAD, OPTIONS\";"
 								]
 							}
 						}
@@ -2115,16 +2114,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "859d431c-c7e0-4e38-a13d-a4b8c33649ff",
+								"id": "94f1516a-af4f-4f42-8d62-e1855086b3ae",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Returns DELETE operation request\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData[\"hydra:operation\"][\"hydra:method\"]).to.eql(\"DELETE\");",
 									"});",
 									"",
 									"pm.test(\"Body is valid\", function () {",
@@ -2169,6 +2163,1924 @@
 						"description": ""
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "/plannedtrips",
+			"description": "Tests for the /plannedtrips route.",
+			"item": [
+				{
+					"name": "OPTIONS - 200 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eb09e5f3-7973-4932-8084-f9505fced50b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "32f497a7-28ce-4ad9-b0de-7b328559d713",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b2a9e449-20b4-41bf-9169-5e1ca718dbe7",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})",
+									"",
+									"pm.test(\"Body has triplist\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"plannedTrips\"]).to.exist;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b2a9e449-20b4-41bf-9169-5e1ca718dbe7",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})",
+									"",
+									"pm.test(\"Body has triplist\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"plannedTrips\"]).to.exist;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/plannedtrips/webhook",
+			"description": "Tests for the webhook.",
+			"item": [
+				{
+					"name": "OPTIONS - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc9682a5-6be5-41c3-83d0-1cfd1ab02a94",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "01e291d4-fb84-421c-8bff-965be3888385",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, POST, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98caaa2c-4728-4aa7-812f-a7d6aa4b300c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})",
+									"",
+									"pm.test(\"Body has suggested operation POST\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][\"hydra:method\"]).to.eql(\"POST\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4339275c-1251-4d37-a043-8b7ea34bf742",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4339275c-1251-4d37-a043-8b7ea34bf742",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST - 201 - Authenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e1d4626-3bfd-451b-97c0-837c25735bc8",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"callbackURL\": \"{{LOCALHOST}}\"}"
+						},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/webhook",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"webhook"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/plannedtrips/:id",
+			"description": "Tests for specific trips.",
+			"item": [
+				{
+					"name": "chained-delete-request",
+					"description": "Chaining a post and a delete request to the API to test the delete function.",
+					"item": [
+						{
+							"name": "Create Trip and Set Variable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7fe1a01a-11af-4a8a-9822-1891c2eaf7cd",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Returns link pointing to new resource\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.created_at).to.exist;",
+											"});",
+											"",
+											"pm.test(\"Body is valid\", function () {",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json",
+											"});",
+											"",
+											"",
+											"pm.environment.set(\"testtrip\", pm.response.json().created_at);"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER3_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"from\": \"Månen\", \"to\": \"Geneve\", \"seats\": 3, \"time\": \"2018, 1, 18\"}"
+								},
+								"url": {
+									"raw": "{{ROOT_URL}}/users/{{USER3_ID}}/driving",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"users",
+										"{{USER3_ID}}",
+										"driving"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Verify that resource exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "063cb5ba-92a6-4b36-9e7d-10db34e4eea1",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Returns PUT operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+											"});",
+											"",
+											"pm.test(\"Returns DELETE operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+											"});",
+											"",
+											"pm.test(\"Returns passengers\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.passengers).to.exist;",
+											"});",
+											"",
+											"pm.test(\"Is from Månen\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.from).to.eql(\"Månen\");",
+											"});",
+											"",
+											"pm.test(\"Body is valid\", function () {",
+											"    pm.response.to.be.ok;",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json",
+											"})"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER3_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}{{testtrip}}",
+									"host": [
+										"{{ROOT_URL}}{{testtrip}}"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Delete resource",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f02975e1-1046-48d7-ba82-31212f6b6169",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER3_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}{{testtrip}}",
+									"host": [
+										"{{ROOT_URL}}{{testtrip}}"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Verify that resource is deleted",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a9bd2a6a-4993-4732-85de-13baee35f1ec",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER3_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}{{testtrip}}",
+									"host": [
+										"{{ROOT_URL}}{{testtrip}}"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "OPTIONS - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "18d352ae-cdd5-4c52-b70f-3db541e299a9",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated - Authorized - Driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d60e583d-433d-469a-b871-843e77b0e323",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, DELETE, PUT, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER3_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "192f953c-a599-475f-808f-dbab36a0e8dd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d2c908c-08e6-4fcf-accc-ab71a888f0e0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns PUT operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+									"});",
+									"",
+									"pm.test(\"Returns DELETE operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+									"});",
+									"",
+									"pm.test(\"Returns passengers\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.passengers).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"    pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER3_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfd5585d-8655-4076-8c90-4521a0d5f2cb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Does not return any operation requests\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"]).to.not.exist;",
+									"});",
+									"",
+									"pm.test(\"Does not return passengers\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.passengers).to.not.exist;",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"    pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - 403 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3190422a-644c-4e57-b43b-f1118b1856bc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})",
+									"",
+									"pm.test(\"Message is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Forbidden\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - 204 - Authenticated - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5ddd4e6b-69fe-40cc-8d8f-1c5f588e98b0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Trip is updated\", function () {",
+									"    pm.sendRequest(environment.ROOT_URL + \"/plannedtrips/\" + environment.TRIP1_ID_USER3_DRIVER, function (err, response) {",
+									"    var jsonData = response.json();",
+									"    pm.expect(jsonData.from).to.eql(\"Landskrona\");",
+									"});",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER3_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"from\": \"Landskrona\", \"to\": \"Jönköping\", \"seats\": 4, \"time\": \"2019, 1, 18\"}"
+						},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - 403 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3190422a-644c-4e57-b43b-f1118b1856bc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})",
+									"",
+									"pm.test(\"Message is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Forbidden\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/plannedtrips/:id/passengers",
+			"description": "Tests for the passengers route of specific trips.",
+			"item": [
+				{
+					"name": "chained-put-and-delete-tests",
+					"description": "",
+					"item": [
+						{
+							"name": "Make sure passenger is not in list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7506ba57-dfc0-40b6-9925-aec24d00f99e",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Returns PUT operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+											"});",
+											"",
+											"pm.test(\"Returns DELETE operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"tests[\"Does not include passenger\"] = (body.passengers.indexOf(\"/users/\" + environment.USER2_ID) == -1);"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER1_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"plannedtrips",
+										"{{TRIP1_ID_USER3_DRIVER}}",
+										"passengers"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Add passenger",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "352687ce-4d35-40b3-af33-3e172afb9986",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER2_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"plannedtrips",
+										"{{TRIP1_ID_USER3_DRIVER}}",
+										"passengers"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Make sure passenger is in list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d2e77024-e952-4056-8637-a5f076a260da",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Returns PUT operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+											"});",
+											"",
+											"pm.test(\"Returns DELETE operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"tests[\"Does include passenger\"] = (body.passengers.indexOf(\"/users/\" + environment.USER2_ID) != -1);"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER1_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"plannedtrips",
+										"{{TRIP1_ID_USER3_DRIVER}}",
+										"passengers"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Delete passenger",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "352687ce-4d35-40b3-af33-3e172afb9986",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER2_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"plannedtrips",
+										"{{TRIP1_ID_USER3_DRIVER}}",
+										"passengers"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Make sure passenger is not in list again",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7506ba57-dfc0-40b6-9925-aec24d00f99e",
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Returns PUT operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+											"});",
+											"",
+											"pm.test(\"Returns DELETE operation request\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+											"});",
+											"",
+											"var body = JSON.parse(responseBody);",
+											"tests[\"Does not include passenger\"] = (body.passengers.indexOf(\"/users/\" + environment.USER2_ID) == -1);"
+										]
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{USER1_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+									"host": [
+										"{{ROOT_URL}}"
+									],
+									"path": [
+										"plannedtrips",
+										"{{TRIP1_ID_USER3_DRIVER}}",
+										"passengers"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "OPTIONS - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "18d352ae-cdd5-4c52-b70f-3db541e299a9",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated - Authorized - Driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d60e583d-433d-469a-b871-843e77b0e323",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, DELETE, PUT, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER3_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS - 200 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "192f953c-a599-475f-808f-dbab36a0e8dd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Access-Control-Allow-Methods is present\", function () {",
+									"    pm.response.to.have.header(\"Access-Control-Allow-Methods\");",
+									"});",
+									"",
+									"tests[\"Access-Control-Allow-Methods are correct\"] = postman.getResponseHeader(\"Access-Control-Allow-Methods\") === \"GET, HEAD, OPTIONS\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated - Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d2c908c-08e6-4fcf-accc-ab71a888f0e0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns PUT operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+									"});",
+									"",
+									"pm.test(\"Returns DELETE operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+									"});",
+									"",
+									"pm.test(\"Returns passengers\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.passengers).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"    pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER3_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET - 200 - Authenticated - Unauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5bedbfbc-4282-42e5-be37-ed8d37bc5996",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns PUT operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][0][\"hydra:method\"]).to.eql(\"PUT\");",
+									"});",
+									"",
+									"pm.test(\"Returns DELETE operation request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[\"hydra:operation\"][1][\"hydra:method\"]).to.eql(\"DELETE\");",
+									"});",
+									"",
+									"pm.test(\"Returns passengers\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.passengers).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Body is valid\", function () {",
+									"    pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{USER1_JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}/passengers",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}",
+								"passengers"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - 401 - Unauthenticated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86a44733-9a5c-4a9a-a234-21cbe91b7867",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{ROOT_URL}}/plannedtrips/{{TRIP1_ID_USER3_DRIVER}}",
+							"host": [
+								"{{ROOT_URL}}"
+							],
+							"path": [
+								"plannedtrips",
+								"{{TRIP1_ID_USER3_DRIVER}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "87fd0ade-4570-4361-8b6a-f7ec4296223f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8bfeaf0f-6feb-40a9-8c75-c2d7ff9cf273",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
