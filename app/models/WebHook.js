@@ -13,6 +13,6 @@ let HookSchema = new Schema({
 
 HookSchema.plugin(findOrCreate)
 
-mongoose.model('Webhook', HookSchema)
+mongoose.model('WebHook', HookSchema)
 
-module.exports = mongoose.model('Webhook')
+module.exports = mongoose.model('WebHook')

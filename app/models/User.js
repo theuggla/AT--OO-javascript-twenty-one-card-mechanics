@@ -47,10 +47,15 @@ UserSchema.pre('save', function (next) {
    */
 UserSchema.methods.comparePassword = function (pass) {
   return new Promise((resolve, reject) => {
+    console.log(pass)
+    console.log(this.password)
     bcrypt.compare(pass, this.password, (err, res) => {
       if (err) {
+        console.log(err)
         reject(err)
       } else {
+        console.log('res')
+        console.log(res)
         resolve(res)
       }
     })
