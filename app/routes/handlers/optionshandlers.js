@@ -46,6 +46,16 @@ module.exports.addResource = function (req, res, next) {
 }
 
 /*
+* Response for collections where resources are deleted.
+*/
+module.exports.addResource = function (req, res, next) {
+  res.header('Allow', 'GET, DELETE, HEAD, OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'GET, DELETE, HEAD, OPTIONS')
+  res.send()
+  next(false)
+}
+
+/*
 * Response for collections where it depends on wheter the user is authenticated.
 */
 module.exports.authLevelDependant = function (req, res, next) {

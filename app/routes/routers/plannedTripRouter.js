@@ -18,8 +18,8 @@ router.opts({name: 'pthook', path: '/plannedtrips/webhook'}, opts.addResource)
 router.get('/plannedtrips/webhook', plannedtrips.hookinfo)
 router.post('/plannedtrips/webhook', plannedtrips.addhook)
 
-router.opts('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
-router.get('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, plannedtrips.info)
+router.opts('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevelForTrip, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
+router.get('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevelForTrip, plannedtrips.info)
 router.put('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.authorize, plannedtrips.update)
 router.del('/plannedtrips/:id', passport.authenticate('jwt', { session: false }), mw.authorize, plannedtrips.delete)
 

@@ -7,7 +7,6 @@ let PlannedTrip = require('../../models/PlannedTrip')
 let userResource = require('../../lib/resources/user')
 
 module.exports.info = function (req, res, next) {
-  console.log(req.user)
   if (req.user.authorized) {
     Promise.all([PlannedTrip.find({_creator: req.user._id}), PlannedTrip.find({passengers: req.user._id})])
     .then((results) => {

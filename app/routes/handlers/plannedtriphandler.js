@@ -25,7 +25,14 @@ module.exports.delete = function (req, res, next) {
 
 module.exports.add = function (req, res, next) {
   console.log('adding trip')
+  sendHook({message: 'tripinfo'})
   res.send({message: 'trip added'})
+  next(false)
+}
+
+module.exports.deletePassenger = function (req, res, next) {
+  console.log('deleting passenger')
+  res.send({message: 'passenger deleted'})
   next(false)
 }
 
@@ -39,10 +46,36 @@ module.exports.list = function (req, res, next) {
   })
 }
 
+module.exports.collectionByDriver = function (req, res, next) {
+  PlannedTrip.find({_creator: req.user._id})
+  .then((allTrips) => {
+    console.log(allTrips)
+    return ptresource.getDriverList(allTrips)
+  })
+  .then((listresource) => {
+    return res.send(listresource)
+  })
+}
+
+module.exports.collectionByPassenger = function (req, res, next) {
+  PlannedTrip.find({passengers: req.user._id})
+  .then((allTrips) => {
+    return ptresource.getPassengersList(allTrips)
+  })
+  .then((listresource) => {
+    return res.send(listresource)
+  })
+}
+
 module.exports.hookinfo = function (req, res, next) {
   console.log('webhook')
 }
 
 module.exports.addhook = function (req, res, next) {
   console.log('add webhook')
+}
+
+function sendHook (trip) {
+  console.log('sending webhook notification')
+  console.log(trip)
 }

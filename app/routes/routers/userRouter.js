@@ -20,16 +20,13 @@ router.get('/users/:id', passport.authenticate('jwt', { session: false }), mw.ge
 router.put('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.update)
 router.del('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.delete)
 
-/*
-
 router.opts('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, opts.addResource)
 router.get('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByDriver)
 router.post('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, pt.add)
 
 router.opts('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, opts.updateResource)
-router.get('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByDriver)
-router.put('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.addPassenger)
-router.del('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.deletePassenger)*/
+router.get('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByPassenger)
+router.del('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.deletePassenger)
 
 // Exports.
 module.exports = router
