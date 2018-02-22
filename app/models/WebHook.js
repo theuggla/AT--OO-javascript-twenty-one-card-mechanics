@@ -3,7 +3,6 @@
  */
 
 let mongoose = require('mongoose')
-let bcrypt = require('bcrypt-nodejs')
 let Schema = mongoose.Schema
 let findOrCreate = require('mongoose-find-or-create')
 

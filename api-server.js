@@ -53,6 +53,7 @@ server.use(passport.initialize())
 
 // JSON
 server.use(mw.acceptJSON)
+server.use(mw.rejectWrongBodyFormat)
 server.use(plugins.jsonBodyParser())
 
 // Routes ------------------------------------------------------------------------------------------------------

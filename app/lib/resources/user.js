@@ -4,6 +4,9 @@
 
 const jsonld = require('jsonld')
 
+let userroute
+let triproute
+
 let baseContextUserList
 let baseResponseUserList
 
@@ -15,6 +18,9 @@ let expandedUserContext
 
 // Initialize server links
 module.exports = function (server) {
+  userroute = server.router.render('users')
+  triproute = server.router.render('plannedtrip')
+
   baseContextUserList = [
     {'hydra': 'http://www.w3.org/ns/hydra/context.jsonld'},
     {
@@ -26,7 +32,7 @@ module.exports = function (server) {
   ]
 
   baseResponseUserList = {
-    '@id': server.router.render('users'),
+    '@id': userroute,
     'http://schema.org/ItemList': []
   }
 
@@ -42,7 +48,6 @@ module.exports = function (server) {
     'http://schema.org/name': '',
     'http://schema.org/email': '',
     'http://schema.org/image': {'@id': ''},
-    '@id': server.router.render('users')
   }
 
   expandedUserContext = Object.assign({}, {'hydra': 'http://www.w3.org/ns/hydra/context.jsonld'}, baseUserContext[0], {
@@ -57,8 +62,6 @@ module.exports = function (server) {
   })
 
   expandedUserResponse = Object.assign({}, baseUserResponse, {
-    'http://schema.org/agent': [{'@id': server.router.render('plannedtrip')}],
-    'http://schema.org/participant': [{'@id': server.router.render('plannedtrip')}],
     'hydra:operation': [{
       'hydra:method': 'PUT',
       'hydra:expects': {
@@ -80,7 +83,7 @@ module.exports = function (server) {
 module.exports.getList = function (users) {
   return new Promise((resolve, reject) => {
     baseResponseUserList['http://schema.org/ItemList'] = users.map(trip => {
-      let id = baseResponseUserList['@id'] + ('/' + trip._id)
+      let id = userroute + ('/' + trip._id)
       return {'@id': id}
     })
 
@@ -100,7 +103,7 @@ module.exports.getSimpleUser = function (user) {
     baseUserResponse['http://schema.org/name'] = user.name
     baseUserResponse['http://schema.org/email'] = user.email
     baseUserResponse['http://schema.org/image']['@id'] = user.imageUrl
-    baseUserResponse['@id'] += ('/' + user._id)
+    baseUserResponse['@id'] = userroute + ('/' + user._id)
 
     jsonld.compact(baseUserResponse, baseUserContext, (err, compacted) => {
       if (err) reject(err)
@@ -116,21 +119,17 @@ module.exports.getExpandedUser = function (user, driverOf, passengerOf) {
     expandedUserResponse['http://schema.org/name'] = user.name
     expandedUserResponse['http://schema.org/email'] = user.email
     expandedUserResponse['http://schema.org/image']['@id'] = user.imageUrl
-    expandedUserResponse['@id'] += ('/' + user._id)
+    expandedUserResponse['@id'] = userroute + ('/' + user._id)
 
     expandedUserResponse['http://schema.org/agent'] = driverOf.map(trip => {
-      let id = expandedUserResponse['http://schema.org/agent'][0]['@id'] + ('/' + trip._id)
+      let id = userroute + ('/' + trip._id)
       return {'@id': id}
     })
-
-    console.log(expandedUserResponse['http://schema.org/agent'])
 
     expandedUserResponse['http://schema.org/participant'] = passengerOf.map(trip => {
-      let id = expandedUserResponse['http://schema.org/participant'][0]['@id'] + ('/' + trip._id)
+      let id = userroute + ('/' + trip._id)
       return {'@id': id}
     })
-
-    console.log(expandedUserResponse['http://schema.org/participant'])
 
     jsonld.compact(expandedUserResponse, expandedUserContext, (err, compacted) => {
       if (err) reject(err)

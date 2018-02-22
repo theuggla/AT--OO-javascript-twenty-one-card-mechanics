@@ -26,11 +26,21 @@ module.exports.postResource = function (req, res, next) {
 }
 
 /*
-* Response for updateable resources.
+* Response for updateable and deletable resources.
 */
 module.exports.updateResource = function (req, res, next) {
   res.header('Allow', 'GET, DELETE, PUT, HEAD, OPTIONS')
   res.header('Access-Control-Allow-Methods', 'GET, DELETE, PUT, HEAD, OPTIONS')
+  res.send()
+  next(false)
+}
+
+/*
+* Response for updateable resources.
+*/
+module.exports.putResource = function (req, res, next) {
+  res.header('Allow', 'GET, PUT, HEAD, OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, HEAD, OPTIONS')
   res.send()
   next(false)
 }

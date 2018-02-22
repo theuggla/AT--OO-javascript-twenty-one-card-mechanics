@@ -49,7 +49,7 @@ module.exports = function (server) {
   }]}
 
   baseResponse = {
-    '@id': server.router.render('plannedtrip'),
+    '@id': triproute,
     'http://schema.org/ItemList': []
   }
 
@@ -85,14 +85,7 @@ module.exports = function (server) {
     ]
   }
 
-  passengerResponse = Object.assign({}, extendedResponse, {
-    'hydra:operation': {
-      'hydra:method': 'DELETE',
-      'hydra:expects': {
-        '@id': 'http://schema.org/Person'
-      }
-    }
-  })
+  passengerResponse = Object.assign({}, extendedResponse, {})
 
   driverResponse = Object.assign({}, extendedResponse, {
     'hydra:operation': [{

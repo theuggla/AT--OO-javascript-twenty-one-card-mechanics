@@ -15,18 +15,16 @@ let pt = require('../handlers/plannedtriphandler')
 router.opts({name: 'users', path: '/users'}, passport.authenticate('jwt', { session: false }), opts.safeResource)
 router.get('/users', passport.authenticate('jwt', { session: false }), user.list)
 
-router.opts('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
+router.opts('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, (req, res, next) => { req.user.authorized ? opts.putResource(req, res, next) : opts.safeResource(req, res, next) })
 router.get('/users/:id', passport.authenticate('jwt', { session: false }), mw.getAuthLevel, user.info)
 router.put('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.update)
-router.del('/users/:id', passport.authenticate('jwt', { session: false }), mw.authorize, user.delete)
 
 router.opts('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, opts.addResource)
 router.get('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByDriver)
 router.post('/users/:id/driving', passport.authenticate('jwt', { session: false }), mw.authorize, pt.add)
 
-router.opts('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, opts.updateResource)
+router.opts('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, opts.safeResource)
 router.get('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.collectionByPassenger)
-router.del('/users/:id/passenger', passport.authenticate('jwt', { session: false }), mw.authorize, pt.deletePassenger)
 
 // Exports.
 module.exports = router

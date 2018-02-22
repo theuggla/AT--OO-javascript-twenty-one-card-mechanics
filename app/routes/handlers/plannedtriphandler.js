@@ -3,8 +3,10 @@
  */
 
 let PlannedTrip = require('../../models/PlannedTrip')
+let WebHook = require('../../models/WebHook')
 let ptresource = require('../../lib/resources/plannedTripCollection')
 let ptsingle = require('../../lib/resources/plannedTrip')
+let axios = require('axios')
 let err = require('restify-errors')
 
 module.exports.info = function (req, res, next) {
@@ -48,10 +50,25 @@ module.exports.delete = function (req, res, next) {
 }
 
 module.exports.add = function (req, res, next) {
-  console.log('adding trip')
-  sendHook({message: 'tripinfo'})
-  res.send({message: 'trip added'})
-  next(false)
+  sendHook('AddTrip', {message: 'tripinfo'})
+  if (!req.body.from || !req.body.to || !req.body.time || !req.body.seats) {
+    return next(new err.BadRequestError({message: 'Missing parameter'}))
+  } else {
+    let newTrip = new PlannedTrip()
+    newTrip.from = req.body.from
+    newTrip.to = req.body.to
+    newTrip.spaces = req.body.seats
+    newTrip.time = new Date(req.body.time)
+    newTrip._creator = req.user._id
+
+    newTrip.save()
+    .then((result) => {
+      return res.send(201, {'created_at': '/plannedtrips/' + result._id})
+    })
+    .catch((error) => {
+      next(new err.ServiceUnavailableError({}))
+    })
+  }
 }
 
 module.exports.deletePassenger = function (req, res, next) {
@@ -99,6 +116,10 @@ module.exports.collectionByDriver = function (req, res, next) {
   .then((listresource) => {
     return res.send(listresource)
   })
+  .catch((error) => {
+    let e = new err.NotFoundError({message: 'No such user.'})
+    return next(e)
+  })
 }
 
 module.exports.collectionByPassenger = function (req, res, next) {
@@ -108,6 +129,11 @@ module.exports.collectionByPassenger = function (req, res, next) {
   })
   .then((listresource) => {
     return res.send(listresource)
+  })
+  .catch((error) => {
+    console.log(error)
+    let e = new err.NotFoundError({message: 'No such user.'})
+    return next(e)
   })
 }
 
@@ -119,7 +145,12 @@ module.exports.addhook = function (req, res, next) {
   console.log('add webhook')
 }
 
-function sendHook (trip) {
+function sendHook (event, payload) {
   console.log('sending webhook notification')
-  console.log(trip)
+  /*WebHook.find({event: event}, (hooks) => {
+    return Promise.all(hooks.map((hook) => axios.post(hook.callbackURL, payload)))
+  })
+  .then(() => {
+    console.log('all hooks sent')
+  })*/
 }

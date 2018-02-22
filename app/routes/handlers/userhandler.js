@@ -3,6 +3,7 @@
  */
 
 let User = require('../../models/User')
+let errors = require('restify-errors')
 let PlannedTrip = require('../../models/PlannedTrip')
 let userResource = require('../../lib/resources/user')
 
@@ -27,15 +28,20 @@ module.exports.info = function (req, res, next) {
 }
 
 module.exports.update = function (req, res, next) {
-  console.log('updating user')
-  res.send({message: 'user updated'})
-  next(false)
-}
+  User.findOne({_id: req.params.id})
+  .then((user) => {
+    if (req.body.name) user.name = req.body.name
+    if (req.body.email) user.email = req.body.email
+    if (req.body.imageURL) user.imageUrl = req.body.imageURL
 
-module.exports.delete = function (req, res, next) {
-  console.log('deleting user')
-  res.send({message: 'user deleted'})
-  next(false)
+    return user.save()
+  })
+  .then((user) => {
+    return res.send(204)
+  })
+  .catch(() => {
+    next(new errors.ServiceUnavailableError({}))
+  })
 }
 
 module.exports.list = function (req, res, next) {
