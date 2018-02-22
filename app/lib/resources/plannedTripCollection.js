@@ -46,7 +46,11 @@ module.exports = function (server) {
   passengerListResponse = {'hydra:operation': [{
     'hydra:method': 'PUT',
     'hydra:action': 'AddParticipantAction'
-  }]}
+  },
+    {
+      'hydra:action': 'DeleteAction',
+      'hydra:method': 'DELETE'
+    }]}
 
   baseResponse = {
     '@id': triproute,
@@ -122,12 +126,10 @@ module.exports.getList = function (allTrips) {
 module.exports.getPassengerList = function (trip) {
   return new Promise((resolve, reject) => {
     let id = triproute + '/' + trip._id + '/passengers'
-    let passengers = {
-      '@id': id,
-      'http://schema.org/ItemList': trip.passengers.map((passenger) => { return {'@id': userroute + '/' + passenger} })
-    }
+    passengerListResponse['@id'] = id
+    passengerListResponse['http://schema.org/ItemList'] = trip.passengers.map((passenger) => { return {'@id': userroute + '/' + passenger} })
 
-    jsonld.compact(passengers, passengerListContext, (err, compacted) => {
+    jsonld.compact(passengerListResponse, passengerListContext, (err, compacted) => {
       if (err) reject(err)
 
       resolve(compacted)

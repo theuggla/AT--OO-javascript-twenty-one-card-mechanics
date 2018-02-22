@@ -39,15 +39,35 @@ module.exports.info = function (req, res, next) {
 }
 
 module.exports.update = function (req, res, next) {
-  console.log('updating trip')
-  res.send({message: 'trip updated'})
-  next(false)
+  PlannedTrip.findOne({_id: req.params.id})
+  .then((trip) => {
+    if (req.body.from) trip.from = req.body.from
+    if (req.body.to) trip.to = req.body.to
+    if (req.body.seats) trip.spaces = req.body.seats
+    if (req.body.time) trip.time = new Date(req.body.time)
+
+    return trip.save()
+  })
+  .then((trip) => {
+    console.log(trip)
+    return res.send(204)
+  })
+  .catch(() => {
+    next(new err.ServiceUnavailableError({}))
+  })
 }
 
 module.exports.delete = function (req, res, next) {
-  console.log('deleting trip')
-  res.send({message: 'trip deleted'})
-  next(false)
+  PlannedTrip.findOne({_id: req.params.id})
+  .then((trip) => {
+    return trip.remove()
+  })
+  .then(() => {
+    return res.send(204)
+  })
+  .catch(() => {
+    next(new err.NotFoundError({}))
+  })
 }
 
 module.exports.add = function (req, res, next) {
@@ -73,19 +93,40 @@ module.exports.add = function (req, res, next) {
 }
 
 module.exports.deletePassenger = function (req, res, next) {
-  PlannedTrip.find({})
-  .then((allTrips) => {
-    return ptresource.getList(allTrips)
+  PlannedTrip.findOne({_id: req.params.id})
+  .then((trip) => {
+    let index = trip.passengers.indexOf(req.user.id)
+    if (index !== -1) trip.passengers.splice(index, 1)
+    return trip.save()
   })
-  .then((listresource) => {
-    return res.send(listresource)
+  .then((trip) => {
+    console.log(trip)
+    return res.send(204)
+  })
+  .catch((error) => {
+    console.log(error)
+    let e = new err.NotFoundError({message: 'No such trip.'})
+    return next(e)
   })
 }
 
 module.exports.addPassenger = function (req, res, next) {
-  console.log('adding passenger')
-  res.send({message: 'passenger added'})
-  next(false)
+  PlannedTrip.findOne({_id: req.params.id})
+  .then((trip) => {
+    let index = trip.passengers.indexOf(req.user.id)
+    console.log(index)
+    if (index === -1) trip.passengers.push(req.user.id)
+    return trip.save()
+  })
+  .then((trip) => {
+    console.log(trip)
+    return res.send(204)
+  })
+  .catch((error) => {
+    console.log(error)
+    let e = new err.NotFoundError({message: 'No such trip.'})
+    return next(e)
+  })
 }
 
 module.exports.list = function (req, res, next) {

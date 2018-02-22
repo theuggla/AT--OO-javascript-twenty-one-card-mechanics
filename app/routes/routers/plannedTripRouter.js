@@ -25,7 +25,7 @@ router.del('/plannedtrips/:id', passport.authenticate('jwt', { session: false })
 
 router.opts('/plannedtrips/:id/passengers', passport.authenticate('jwt', { session: false }), mw.getAuthLevelForTrip, (req, res, next) => { req.user.authorized ? opts.updateResource(req, res, next) : opts.safeResource(req, res, next) })
 router.get('/plannedtrips/:id/passengers', passport.authenticate('jwt', { session: false }), mw.getAuthLevelForTrip, plannedtrips.passengers)
-router.put('/plannedtrips/:id/passengers', passport.authenticate('jwt', { session: false }), mw.authorizeTrip, plannedtrips.addPassenger)
+router.put('/plannedtrips/:id/passengers', passport.authenticate('jwt', { session: false }), plannedtrips.addPassenger)
 router.del('/plannedtrips/:id/passengers', passport.authenticate('jwt', { session: false }), mw.authorizeTrip, plannedtrips.deletePassenger)
 
 // Exports.
