@@ -38,3 +38,11 @@ module.exports.list = function (req, res, next) {
     return res.send(listresource)
   })
 }
+
+module.exports.hookinfo = function (req, res, next) {
+  console.log('webhook')
+}
+
+module.exports.addhook = function (req, res, next) {
+  console.log('add webhook')
+}

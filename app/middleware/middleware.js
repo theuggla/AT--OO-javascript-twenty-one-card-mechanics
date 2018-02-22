@@ -10,6 +10,10 @@ module.exports.acceptJSON = function (req, res, next) {
 }
 
 module.exports.getAuthLevel = function (req, res, next) {
+  console.log(req.user._id)
+  console.log(req.user.id)
+  console.log(req.params.id)
+  console.log(req.user.id === req.params.id)
   if (req.user.id === req.params.id) {
     req.user.authorized = true
   } else {

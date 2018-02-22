@@ -1,6 +1,5 @@
 let User = require('./app/models/User')
 let PlannedTrip = require('./app/models/PlannedTrip')
-let DesiredTrip = require('./app/models/DesiredTrip')
 let db = require('./app/lib/db/db-connector')
 
 let users = [
@@ -129,76 +128,10 @@ let plannedTrips = [
   }
 ]
 
-let desiredTrips = [
-  {
-    from: 'Gothenburg',
-    to: 'Stockholm',
-    earliest: new Date(2018, 2, 18),
-    latest: new Date(2018, 2, 20)
-  },
-  {
-    from: 'Halmstad',
-    to: 'Åre',
-    earliest: new Date(2018, 3, 18),
-    latest: new Date(2018, 3, 20)
-  },
-  {
-    from: 'Jönköping',
-    to: 'Göteborg',
-    earliest: new Date(2018, 1, 18),
-    latest: new Date(2018, 1, 18)
-  },
-  {
-    from: 'Göteborg',
-    to: 'Malmö',
-    earliest: new Date(2018, 3, 18),
-    latest: new Date(2018, 3, 20)
-  },
-  {
-    from: 'Halmstad',
-    to: 'Norrköping',
-    earliest: new Date(2018, 2, 18),
-    latest: new Date(2018, 2, 20)
-  },
-  {
-    from: 'Norrköping',
-    to: 'Umeå',
-    earliest: new Date(2018, 3, 18),
-    latest: new Date(2018, 3, 20)
-  },
-  {
-    from: 'Norrköping',
-    to: 'Malmö',
-    earliest: new Date(2018, 1, 18),
-    latest: new Date(2018, 1, 18)
-  },
-  {
-    from: 'Karlstad',
-    to: 'Göteborg',
-    earliest: new Date(2018, 2, 18),
-    latest: new Date(2018, 2, 20)
-  },
-  {
-    from: 'Karlstad',
-    to: 'Stockholm',
-    earliest: new Date(2018, 1, 18),
-    latest: new Date(2018, 1, 18)
-  },
-  {
-    from: 'Örebro',
-    to: 'Motala',
-    earliest: new Date(2018, 6, 18),
-    latest: new Date(2018, 6, 19)
-  }
-]
-
 require('dotenv').config()
 db.connect()
 
 Promise.all(users.map(addUser))
-.then(() => {
-  return Promise.all(desiredTrips.map(addDT))
-})
 .then(() => {
   plannedTrips.map(addPT)
 })
@@ -209,22 +142,6 @@ function addUser (user) {
       if (err) reject(err)
       resolve(result)
     })
-  })
-}
-
-function addDT (trip) {
-  return new Promise((resolve, reject) => {
-    User.findOne({name: users[Math.floor(Math.random() * Math.floor(users.length))].name})
-      .then((user) => {
-        trip._creator = user._id
-        DesiredTrip.findOrCreate(trip, trip, null, (err, result) => {
-          if (err) reject(err)
-          resolve(trip)
-        })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
   })
 }
 

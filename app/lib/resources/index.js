@@ -1,12 +1,12 @@
 // Initialize resources
 let landing = require('./landing')
 let auth = require('./authenticate')
-let dt = require('./desiredTripCollection')
 let pt = require('./plannedTripCollection')
+let user = require('./user')
 
 module.exports = function (server) {
   landing(server)
   auth(server)
-  dt(server)
   pt(server)
+  user(server)
 }

@@ -13,7 +13,6 @@ let resources = require('./app/lib/resources')
 // routers
 let baseRouter = require('./app/routes/routers/baseRouter')
 let authenticationRouter = require('./app/routes/routers/authenticationRouter')
-let desiredtripsRouter = require('./app/routes/routers/desiredTripRouter')
 let plannedtripsRouter = require('./app/routes/routers/plannedTripRouter')
 let userRouter = require('./app/routes/routers/userRouter')
 
@@ -59,7 +58,6 @@ server.use(plugins.jsonBodyParser())
 // Routes ------------------------------------------------------------------------------------------------------
 baseRouter.applyRoutes(server)
 authenticationRouter.applyRoutes(server)
-desiredtripsRouter.applyRoutes(server)
 plannedtripsRouter.applyRoutes(server)
 userRouter.applyRoutes(server)
 
