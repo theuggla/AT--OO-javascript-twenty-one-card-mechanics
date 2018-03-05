@@ -13,7 +13,15 @@ function create (user) {
   return jwt.sign(payload, process.env.JWT_SECRET)
 }
 
+/**
+ * Validate a JWT.
+ */
+function validate (token) {
+  return true
+}
+
 // Exports.
 module.exports = {
-  create: create
+  create: create,
+  validate: validate
 }

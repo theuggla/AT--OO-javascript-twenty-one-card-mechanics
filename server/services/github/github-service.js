@@ -4,6 +4,7 @@ let app = express()
 let bodyParser = require('body-parser')
 let jwt = require('express-jwt')
 let axios = require('axios')
+
 let port = 5353
 let serviceName = process.env.SERVICE_NAME
 let db = require('./lib/db')
@@ -23,23 +24,31 @@ app.get('/', (req, res) => {
 })
 
 app.put('/user', jwt({secret: process.env.JWT_SECRET}), (req, res) => {
+  console.log('recieved user put')
   User.findOneAndUpdate({
     user: req.user.user
-  }, {user: req.user.user, accessToken: req.body.accessToken}, { upsert: true, new: true }, (err, response) => {
+  }, {user: req.user.user, accessToken: req.user.accessToken}, { upsert: true, new: true }, (err, response) => {
     if (err) {
       console.log(err)
       res.json({message: 'Error saving user to database'})
     } else {
-      axios({
-        method: 'get',
-        headers: {'Authorization': 'token ' + response.accessToken, 'Accept': 'application/json'},
-        url: 'https://api.github.com/user/orgs'
-      })
-    .then((response) => {
-      console.log(response.data)
-      res.json(req.user)
-    })
+      res.json(response.data)
     }
+  })
+})
+
+app.get('/organizations', jwt({secret: process.env.JWT_SECRET}), (req, res) => {
+  console.log('recieved org get')
+  axios({
+    method: 'get',
+    headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+    url: 'https://api.github.com/user/orgs'
+  })
+  .then((response) => {
+    res.json(response.data)
+  })
+  .catch((error) => {
+    console.log(error)
   })
 })
 
