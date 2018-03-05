@@ -4,20 +4,28 @@
 
 // Requires.
 let jwt = require('jsonwebtoken')
+let fs = require('fs')
+let path = require('path')
+let cwd = __dirname || process.cwd
+let publicKey = fs.readFileSync(path.resolve(cwd, './jwtRS256.key.pub'), 'utf8')
+let privateKey = fs.readFileSync(path.resolve(cwd, './jwtRS256.key'), 'utf8')
 
 /**
  * Create a JWT.
  */
 function create (user) {
   let payload = user
-  return jwt.sign(payload, process.env.JWT_SECRET)
+  return jwt.sign(payload, privateKey, {algorithm: 'RS256'})
 }
 
 /**
  * Validate a JWT.
  */
 function validate (token) {
-  return true
+  jwt.verify(token, publicKey, {algoritms: ['RS256']}, (err, decoded) => {
+    if (err) return false
+    return decoded
+  })
 }
 
 // Exports.

@@ -43,9 +43,7 @@ app.use((req, res, next) => {
 
 io.use((socket, next) => {
   let token = socket.handshake.headers['authorization']
-  console.log(token)
   if (jwt.validate(token)) {
-    console.log('valid')
     // jwt is valid, chack that user is a member of the organization they are trying to join
     return next()
   }
@@ -58,8 +56,6 @@ app.use('/notifications', notifications)
 app.use('/github', github)
 
 io.on('connection', (socket) => {
-  console.log('connecting')
-  console.log(socket)
   var room = socket.handshake['query']['organization']
 
   socket.join(room)
