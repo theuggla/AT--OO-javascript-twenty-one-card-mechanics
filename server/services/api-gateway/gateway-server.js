@@ -20,9 +20,9 @@ let io = require('socket.io')(http, {
 let bodyParser = require('body-parser')
 require('dotenv').config()
 
-let home = require('./routes/home')
-let github = require('./routes/github')
-let notifications = require('./routes/notifications')
+let home = require('./routes/routes/home')
+let github = require('./routes/routes/github')
+let notifications = require('./routes/routes/notifications')
 let jwt = require('./resources/auth/jwt')
 let port = '5050'
 
