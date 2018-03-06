@@ -38,7 +38,7 @@ router.route('/organizations')
             method: 'put',
             headers: {'Authorization': req.headers.authorization},
             url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login,
-            data: {callback: process.env.CURRENT_URL + '/github/event/' + req.user}
+            data: {callback: process.env.CURRENT_URL + '/github/event/' + req.user + '/' + organization.login}
           })
         })
         return Promise.all(hooks)
@@ -51,13 +51,18 @@ router.route('/organizations')
       })
     })
 
-router.route('/event/:user')
+router.route('/event/:user/:organization')
     .post((req, res, next) => {
-      console.log(req.headers)
-      console.log(req.data)
-      console.log(socket.userConnected(req.params.user, 0))
-      console.log(socket.userConnected(req.params.user, 1))
-      socket.sendMessage(0, {message: 'hello'})
+      let type = req.headers['x-github-event']
+      let data = req.data
+      let userIsOnline = socket.userConnected(req.params.user, req.params.organization)
+
+      if (userIsOnline) {
+        socket.sendMessage(0, {type: type, data: data})
+      } else {
+        console.log('user not online')
+        // send offline notification
+      }
     })
 
 // Exports.
