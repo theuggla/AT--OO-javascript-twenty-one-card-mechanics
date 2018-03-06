@@ -41,10 +41,13 @@ app.use(bodyParser.json())
 // HTML form data support
 app.use(bodyParser.urlencoded({extended: true}))
 
+// LOgging
+app.use((req, res, next) => { console.log(req.method + ': ' + req.path); next() })
+
 // Extract and validate JWT
 app.use(jwt({
   secret: publicKey
-}).unless({path: ['/github/authorize', /(\/github\/event\/)[^ ]*/]}))
+}).unless({path: ['/github/authorize', /\/github\/event\/[^ ]*/i]}))
 
 // Cors
 app.use((req, res, next) => {

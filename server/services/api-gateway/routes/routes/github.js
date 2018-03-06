@@ -38,7 +38,7 @@ router.route('/organizations')
             method: 'put',
             headers: {'Authorization': req.headers.authorization},
             url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login,
-            data: {callback: process.env.CURRENT_URL + '/event/' + req.user}
+            data: {callback: process.env.CURRENT_URL + '/github/event/' + req.user}
           })
         })
         return Promise.all(hooks)
@@ -52,9 +52,9 @@ router.route('/organizations')
     })
 
 router.route('/event/:user')
-    .get((req, res, next) => {
-      console.log(req.params.user)
-      return res.json({message: 'event'})
+    .post((req, res, next) => {
+      console.log(req.headers)
+      console.log(req.data)
     })
 
 // Exports.

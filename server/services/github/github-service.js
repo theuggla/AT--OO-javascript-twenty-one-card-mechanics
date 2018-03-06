@@ -29,8 +29,7 @@ app.put('/user', (req, res, next) => {
   console.log('in /user')
   User.findOneAndUpdate({user: req.user.user}, {user: req.user.user, accessToken: req.user.accessToken}, { upsert: true, new: true },
   (err, result) => {
-    if (err) { return res.json({message: 'Error saving user to database'})}
-    else { return res.json(result.user) }
+    if (err) { return res.json({message: 'Error saving user to database'}) }    else { return res.json(result.user) }
   })
 })
 
@@ -55,17 +54,45 @@ app.get('/organizations', (req, res, next) => {
 })
 
 app.put('/organizations/hooks/:id', (req, res, next) => {
-  console.log('got request to make hook on org ' + req.params.id)
   axios({
     method: 'GET',
     headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
     url: 'https://api.github.com/orgs/' + req.params.id + '/hooks'
   })
   .then((response) => {
-    console.log((response.data.length) + ' hooks on this org already')
     console.log(response.data)
-    console.log(req.body)
-    res.json({message: response.data.length})
+    let exists = response.data.find((hook) => {
+      return hook.config.url === req.body.callback
+    })
+
+    if (!exists) {
+      return axios({
+        method: 'POST',
+        headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks',
+        data: {
+          'name': 'web',
+          'events': [
+            'push',
+            'repository',
+            'release'
+          ],
+          'config': {
+            'url': req.body.callback,
+            'content_type': 'json'
+          }
+        }
+      })
+    } else {
+      return axios({
+        method: 'POST',
+        headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23314457/pings'
+      })
+    }
+  })
+  .then(() => {
+    res.sendStatus(201)
   })
   .catch((error) => {
     return next(error)
