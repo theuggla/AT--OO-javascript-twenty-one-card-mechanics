@@ -20,23 +20,6 @@ router.route('/authorize')
     })
     .then((response) => {
       userJWT = jwt.create(response.data)
-      return userJWT
-    })
-    .then((jwt) => {
-      return getOrganizations('Bearer ' + jwt)
-    })
-    .then((organizations) => {
-      let hooks = organizations.map((organization) => {
-        return axios({
-          method: 'put',
-          headers: {'Authorization': 'Bearer ' + userJWT},
-          url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login
-        })
-      })
-      return Promise.all(hooks)
-    })
-    .then((result) => {
-      console.log(result)
       return res.json(userJWT)
     })
     .catch((err) => {
@@ -46,9 +29,23 @@ router.route('/authorize')
 
 router.route('/organizations')
     .get((req, res, next) => {
+      let hookedOrganizations
+
       getOrganizations(req.headers.authorization)
       .then((organizations) => {
-        res.json(organizations)
+        hookedOrganizations = organizations
+
+        let hooks = organizations.map((organization) => {
+          return axios({
+            method: 'put',
+            headers: {'Authorization': req.headers.authorization},
+            url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login
+          })
+        })
+        return Promise.all(hooks)
+      })
+      .then((result) => {
+        res.json(hookedOrganizations)
       })
       .catch((error) => {
         next(error)
