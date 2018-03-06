@@ -21,7 +21,6 @@ function validate () {
     if (!token) {
       return next({message: 'No auth-token found.'})
     } else {
-      console.log(token)
       jwt.verify(token, publicKey, {algorithms: ['RS256']}, (err, decoded) => {
         if (err) {
           return next(err)
@@ -31,8 +30,7 @@ function validate () {
             req.user = user
             return next()
           })
-          .catch((error) => {
-            console.log(error)
+          .catch(() => {
             return next({message: 'user not found in database'})
           })
         } else {

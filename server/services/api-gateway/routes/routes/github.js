@@ -11,16 +11,13 @@ let getOrganizations = require('./../handlers/organizationHandler').getOrganizat
 // Routes.
 router.route('/authorize')
   .post((req, res, next) => {
-    let userJWT
-
     axios({
       method: 'put',
       headers: {'Authorization': 'Bearer ' + jwt.create(req.body)},
       url: process.env.GITHUB_SERVICE + '/user'
     })
     .then((response) => {
-      userJWT = jwt.create(response.data)
-      return res.json(userJWT)
+      return res.json(jwt.create(response.data))
     })
     .catch((err) => {
       return next({message: err})
@@ -30,6 +27,7 @@ router.route('/authorize')
 router.route('/organizations')
     .get((req, res, next) => {
       let hookedOrganizations
+      console.log(req.user)
 
       getOrganizations(req.headers.authorization)
       .then((organizations) => {
@@ -39,7 +37,8 @@ router.route('/organizations')
           return axios({
             method: 'put',
             headers: {'Authorization': req.headers.authorization},
-            url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login
+            url: process.env.GITHUB_SERVICE + '/organizations/hooks/' + organization.login,
+            data: {callback: process.env.CURRENT_URL + '/event/' + req.user}
           })
         })
         return Promise.all(hooks)
@@ -50,6 +49,12 @@ router.route('/organizations')
       .catch((error) => {
         next(error)
       })
+    })
+
+router.route('/event/:user')
+    .get((req, res, next) => {
+      console.log(req.params.user)
+      return res.json({message: 'event'})
     })
 
 // Exports.

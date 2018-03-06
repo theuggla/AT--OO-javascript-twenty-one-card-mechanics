@@ -59,18 +59,16 @@ app.put('/organizations/hooks/:id', (req, res, next) => {
   axios({
     method: 'GET',
     headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-    url: 'https://api.github.com/orgs/' + req.params.id + '/hooks',
-    validateStatus: function (status) {
-      return ((status >= 200 && status < 300) || status === 404)
-    }
+    url: 'https://api.github.com/orgs/' + req.params.id + '/hooks'
   })
   .then((response) => {
-    console.log((response.status === 404 ? 0 : response.data.length) + ' hooks on this org already')
+    console.log((response.data.length) + ' hooks on this org already')
+    console.log(response.data)
+    console.log(req.body)
     res.json({message: response.data.length})
   })
   .catch((error) => {
-    console.log('error')
-    console.log(error)
+    return next(error)
   })
 })
 

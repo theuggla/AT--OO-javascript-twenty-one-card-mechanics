@@ -5,6 +5,21 @@
 // Requires
 let app = require('express')()
 let http = require('http').Server(app)
+let bodyParser = require('body-parser')
+let fs = require('fs')
+let path = require('path')
+
+let home = require('./routes/routes/home')
+let github = require('./routes/routes/github')
+let notifications = require('./routes/routes/notifications')
+let jwt = require('express-jwt')
+let port = '5050'
+let cwd = __dirname || process.cwd
+let publicKey = fs.readFileSync(path.resolve(cwd, './resources/auth/jwtRS256.key.pub'))
+
+// Config----------------------------------------------------------------------------------------------------------
+require('dotenv').config()
+
 let io = require('socket.io')(http, {
   handlePreflightRequest: function (req, res) {
     let headers = {
@@ -17,14 +32,6 @@ let io = require('socket.io')(http, {
     res.end()
   }
 })
-let bodyParser = require('body-parser')
-require('dotenv').config()
-
-let home = require('./routes/routes/home')
-let github = require('./routes/routes/github')
-let notifications = require('./routes/routes/notifications')
-let jwt = require('./resources/auth/jwt')
-let port = '5050'
 
 // Middlewares------------------------------------------------------------------------------------------------------
 
@@ -34,6 +41,12 @@ app.use(bodyParser.json())
 // HTML form data support
 app.use(bodyParser.urlencoded({extended: true}))
 
+// Extract and validate JWT
+app.use(jwt({
+  secret: publicKey
+}).unless({path: ['/github/authorize', /(\/github\/event\/)[^ ]*/]}))
+
+// Cors
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
@@ -41,13 +54,11 @@ app.use((req, res, next) => {
   next()
 })
 
+// Websocket
 io.use((socket, next) => {
   let token = socket.handshake.headers['authorization']
-  if (jwt.validate(token)) {
-    // jwt is valid, chack that user is a member of the organization they are trying to join
-    return next()
-  }
-  return next(new Error('authentication error'))
+  // check if jwt is valid, chack that user is a member of the organization they are trying to join
+  return next()
 })
 
 // Routes----------------------------------------------------------------------------------------------------

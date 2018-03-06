@@ -10,7 +10,6 @@ let axios = require('axios')
  */
 function getOrganizations (auth) {
   return new Promise((resolve, reject) => {
-    console.log(auth)
     axios({
       method: 'get',
       headers: {'Authorization': auth},
