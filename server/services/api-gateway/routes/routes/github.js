@@ -7,6 +7,7 @@ let router = require('express').Router()
 let axios = require('axios')
 let jwt = require('./../../resources/auth/jwt')
 let getOrganizations = require('./../handlers/organizationHandler').getOrganizations
+let socket = require('./../websocket/socket-server')
 
 // Routes.
 router.route('/authorize')
@@ -27,7 +28,6 @@ router.route('/authorize')
 router.route('/organizations')
     .get((req, res, next) => {
       let hookedOrganizations
-      console.log(req.user)
 
       getOrganizations(req.headers.authorization)
       .then((organizations) => {
@@ -55,6 +55,9 @@ router.route('/event/:user')
     .post((req, res, next) => {
       console.log(req.headers)
       console.log(req.data)
+      console.log(socket.userConnected(req.params.user, 0))
+      console.log(socket.userConnected(req.params.user, 1))
+      socket.sendMessage(0, {message: 'hello'})
     })
 
 // Exports.

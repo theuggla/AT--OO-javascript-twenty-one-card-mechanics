@@ -16,22 +16,12 @@ let jwt = require('express-jwt')
 let port = '5050'
 let cwd = __dirname || process.cwd
 let publicKey = fs.readFileSync(path.resolve(cwd, './resources/auth/jwtRS256.key.pub'))
+let websocket = require('./routes/websocket/socket-server')
 
 // Config----------------------------------------------------------------------------------------------------------
 require('dotenv').config()
 
-let io = require('socket.io')(http, {
-  handlePreflightRequest: function (req, res) {
-    let headers = {
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Origin': 'http://127.0.0.1:5151',
-      'Access-Control-Allow-Credentials': true
-    }
-
-    res.writeHead(200, headers)
-    res.end()
-  }
-})
+websocket.connect(http, app)
 
 // Middlewares------------------------------------------------------------------------------------------------------
 
@@ -58,30 +48,12 @@ app.use((req, res, next) => {
 })
 
 // Websocket
-io.use((socket, next) => {
-  let token = socket.handshake.headers['authorization']
-  // check if jwt is valid, chack that user is a member of the organization they are trying to join
-  return next()
-})
+app.use(websocket.handleConnections())
 
 // Routes----------------------------------------------------------------------------------------------------
 app.use('/', home)
 app.use('/notifications', notifications)
 app.use('/github', github)
-
-io.on('connection', (socket) => {
-  var room = socket.handshake['query']['organization']
-
-  socket.join(room)
-
-  socket.on('disconnect', () => {
-    socket.leave(room)
-  })
-
-  socket.on('chat message', (msg) => {
-    io.to(room).emit('chat message', msg)
-  })
-})
 
 // Custom Error Responses-------------------------------------------------------------------------------------------------
 

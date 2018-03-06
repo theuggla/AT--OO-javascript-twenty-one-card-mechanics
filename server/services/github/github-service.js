@@ -29,7 +29,11 @@ app.put('/user', (req, res, next) => {
   console.log('in /user')
   User.findOneAndUpdate({user: req.user.user}, {user: req.user.user, accessToken: req.user.accessToken}, { upsert: true, new: true },
   (err, result) => {
-    if (err) { return res.json({message: 'Error saving user to database'}) }    else { return res.json(result.user) }
+    if (err) {
+      return res.json({message: 'Error saving user to database'})
+    } else {
+      return res.json(result.user)
+    }
   })
 })
 

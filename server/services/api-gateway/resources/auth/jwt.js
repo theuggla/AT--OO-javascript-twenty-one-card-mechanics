@@ -4,6 +4,7 @@
 
 // Requires.
 let jwt = require('jsonwebtoken')
+let parse = require('parse-bearer-token')
 let fs = require('fs')
 let path = require('path')
 let cwd = __dirname || process.cwd
@@ -22,10 +23,8 @@ function create (user) {
  * Validate a JWT.
  */
 function validate (token) {
-  jwt.verify(token, publicKey, {algoritms: ['RS256']}, (err, decoded) => {
-    if (err) return false
-    return decoded
-  })
+  token = token.indexOf('Bearer') !== -1 ? parse(token) : token
+  return jwt.verify(token, publicKey, {algoritms: ['RS256']})
 }
 
 // Exports.
