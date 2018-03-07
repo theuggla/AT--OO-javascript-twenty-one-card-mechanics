@@ -38,16 +38,7 @@ module.exports = function (server, eventChannel) {
 
   // Handle connections
   connectAuthMiddleware()
-  console.log(io.path())
-
-  io.on('connection', (socket) => {
-    console.log('now?')
-    handleConnection(socket)
-    joinRoom(socket)
-    handleDisconnect(socket)
-  })
-
-  sendMessageOnMessageEvent()
+  handleConnections()
 }
 
 /**
@@ -80,8 +71,14 @@ function authorizeUser (socket) {
  * of external messages and disconnect events.
  */
 function handleConnections () {
+  io.on('connection', (socket) => {
+    console.log('now?')
+    handleConnection(socket)
+    joinRoom(socket)
+    handleDisconnect(socket)
+  })
 
-    
+  sendMessageOnMessageEvent()
 }
 
 /**
