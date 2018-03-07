@@ -4,7 +4,6 @@
 
 // Requires.
 let jwt = require('jsonwebtoken')
-let parse = require('parse-bearer-token')
 let fs = require('fs')
 let path = require('path')
 let cwd = __dirname || process.cwd
