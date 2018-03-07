@@ -3,21 +3,20 @@
  */
 
 // Socket
-let root
-let socketUsers
-let rootUsers
+let io
 let jwt = require('./../../resources/auth/jwt')
+let clients = {
+  name: {
+    sockets: []
+  }
+}
 
 /**
  * Connect to the socket.
  * @param {*} server The server to connect through.
  */
-module.exports.connect = function (server, app) {
-  socketUsers = require('socket.io.users')
-  rootUsers = socketUsers.Users
-  socketUsers.Session(app)
-
-  root = require('socket.io')(server, {
+module.exports = function (server) {
+  io = require('socket.io')(server, {
     handlePreflightRequest: function (req, res) {
       let headers = {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
@@ -29,66 +28,54 @@ module.exports.connect = function (server, app) {
       res.end()
     }
   })
-}
 
-module.exports.handleConnections = function () {
-  return function (req, res, next) {
-    root.use(socketUsers.Middleware())
+  io.use((socket, next) => {
+    if (socket.request.method !== 'OPTIONS') {
+      let user = jwt.validate(socket.handshake.headers.authorization)
 
-    /*root.on('connection', (socket) => {
-      console.log('main connection')
-      // Do auth on jwt, move id t query, check that user is an admin of the organization they are trying to join
-      /*console.log('ths happens first')
-      console.log('IO DEBUG: Socket ' + socket.id + ' is ready \n')
-      console.log('got socket connection')
-      console.log(socket.handshake.headers.authorization)
-      console.log(socket.handshake['query'])
-      console.log('user ' + socket.id + ' connected')
-
-      // Have global array with rooms?
-
-      console.log(socket.handshake.headers.authorization)
-      socket.handshake['query'].id = jwt.validate(socket.handshake.headers.authorization)
-    })*/
-
-    rootUsers.on('connection', (user) => {
-      user.socket.rooms = []
-      let alreadyConnected = user.get('username') === user.id
-
-      if (!alreadyConnected) {
-        user.id = jwt.validate(user.id)
-        user.set('username', user.id)
-        root.emit('set username', user.get('username'))
+      if (user) {
+        if (!clients[user]) {
+          clients[user] = { sockets: [] }
+        }
+        socket.user = user
+        return next()
       }
-      
-      console.log('User with ID: ' + user.id + ' is here')
-      console.log(user.socket.handshake['query']['organization'])
 
-      var room = user.socket.handshake['query']['organization']
+      return next({message: 'Unauthorized'})
+    }
+  })
 
-      console.log(user.socket.rooms)
-      user.join(room)
-      console.log(user.rooms)
+  io.on('connection', (socket) => {
+    clients[socket.user].sockets.push(socket.id)
+    let room = socket.handshake.query.organization
+    socket.join(room)
+
+    io.to(room).emit('event', {message: 'connected to ' + room})
+
+    socket.on('disconnect', () => {
+      let index = clients[socket.user].sockets.indexOf(socket.id)
+      if (index > -1) {
+        clients[socket.user].sockets.splice(index, 1)
+      }
     })
-    
-    rootUsers.on('disconnected', function (user) {
-      console.log('User with ID: ' + user.id + 'is gone away :(')
-      user.leaveAll()
-    })
-
-    return next()
-  }
+  })
 }
 
 module.exports.userConnected = function (username, room) {
-  let user = rootUsers.users.find((user) => {
-    return user.id === username
-  })
+  return new Promise((resolve, reject) => {
+    io.of('/').in(room).clients((err, clientsInRoom) => {
+      if (err) reject(err)
 
-  return user.rooms.indexOf(room.toString()) !== -1
+      let connectedSockets = clients[username].sockets.filter((socket) => {
+        return io.sockets.connected(socket) && (clientsInRoom.indexOf(socket) !== -1)
+      })
+      console.log('resolving with ' + (connectedSockets.length && connectedSockets.length > 0))
+      resolve(connectedSockets.length && (connectedSockets.length > 0))
+    })
+  })
 }
 
 module.exports.sendMessage = function (room, data) {
   console.log('sending ' + data.message + ' to ' + room)
-  root.to(room).emit('event', data)
+  io.to(room).emit('event', data)
 }

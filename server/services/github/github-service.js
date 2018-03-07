@@ -64,7 +64,8 @@ app.put('/organizations/hooks/:id', (req, res, next) => {
     url: 'https://api.github.com/orgs/' + req.params.id + '/hooks'
   })
   .then((response) => {
-    console.log(response.data)
+    console.log(response)
+    console.log('putting hook for ' + req.body.callback)
     let exists = response.data.find((hook) => {
       return hook.config.url === req.body.callback
     })
@@ -91,7 +92,7 @@ app.put('/organizations/hooks/:id', (req, res, next) => {
       return axios({
         method: 'POST',
         headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23314457/pings'
+        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23330625/pings'
       })
     }
   })
@@ -100,6 +101,28 @@ app.put('/organizations/hooks/:id', (req, res, next) => {
   })
   .catch((error) => {
     return next(error)
+  })
+})
+
+app.get('/organizations/:org/events', (req, res, next) => {
+  console.log('in /organizations/id')
+  console.log('for ' + req.params)
+  axios({
+    method: 'get',
+    headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+    url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
+  })
+  .then((response) => {
+    console.log('response')
+    console.log(response.headers)
+  })
+  .then((adminOrgs) => {
+    return res.sendStatus(204)
+  })
+  .catch((error) => {
+    console.log('error')
+    console.log()
+    console.log(error.status)
   })
 })
 

@@ -27,12 +27,8 @@ router.route('/authorize')
 
 router.route('/organizations')
     .get((req, res, next) => {
-      let hookedOrganizations
-
       getOrganizations(req.headers.authorization)
       .then((organizations) => {
-        hookedOrganizations = organizations
-
         let hooks = organizations.map((organization) => {
           return axios({
             method: 'put',
@@ -43,9 +39,6 @@ router.route('/organizations')
         })
         return Promise.all(hooks)
       })
-      .then((result) => {
-        res.json(hookedOrganizations)
-      })
       .catch((error) => {
         next(error)
       })
@@ -55,14 +48,25 @@ router.route('/event/:user/:organization')
     .post((req, res, next) => {
       let type = req.headers['x-github-event']
       let data = req.data
-      let userIsOnline = socket.userConnected(req.params.user, req.params.organization)
 
-      if (userIsOnline) {
-        socket.sendMessage(0, {type: type, data: data})
-      } else {
-        console.log('user not online')
-        // send offline notification
-      }
+      console.log('got event for ' + req.params.organization)
+      
+      socket.userConnected(req.params.user, req.params.organization)
+      .then((connected) => {
+        if (connected) {
+          socket.sendMessage(0, {type: type, data: data})
+          axios({
+            method: 'get',
+            headers: {'Authorization': req.headers.authorization},
+            url: process.env.GITHUB_SERVICE + '/organizations/' + req.params.organization
+          })
+        } else {
+          console.log('user not online')
+          console.log(process.env.GITHUB_SERVICE + '/organizations/' + req.params.organization + '/events')
+          // send offline notification
+          // poll for etag and save it away in notifications
+        }
+      })
     })
 
 // Exports.

@@ -23,7 +23,7 @@ function create (user) {
  * Validate a JWT.
  */
 function validate (token) {
-  token = token.indexOf('Bearer') !== -1 ? parse(token) : token
+  token = token.indexOf('Bearer') !== -1 ? token.split(' ')[1] : token
   return jwt.verify(token, publicKey, {algoritms: ['RS256']})
 }
 

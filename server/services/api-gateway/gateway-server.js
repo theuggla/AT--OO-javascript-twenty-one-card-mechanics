@@ -16,12 +16,10 @@ let jwt = require('express-jwt')
 let port = '5050'
 let cwd = __dirname || process.cwd
 let publicKey = fs.readFileSync(path.resolve(cwd, './resources/auth/jwtRS256.key.pub'))
-let websocket = require('./routes/websocket/socket-server')
+require('./routes/websocket/socket-server')(http)
 
 // Config----------------------------------------------------------------------------------------------------------
 require('dotenv').config()
-
-websocket.connect(http, app)
 
 // Middlewares------------------------------------------------------------------------------------------------------
 
@@ -46,9 +44,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   next()
 })
-
-// Websocket
-app.use(websocket.handleConnections())
 
 // Routes----------------------------------------------------------------------------------------------------
 app.use('/', home)
