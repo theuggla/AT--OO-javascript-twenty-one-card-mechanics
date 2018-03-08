@@ -9,16 +9,13 @@ let fs = require('fs')
 let path = require('path')
 
 let github = require('./../routes/routes/github-routes')
-let notifications = require('./../routes/routes/notification-routes')
 let auth = require('express-jwt')
 let response = require('./../middleware/response')
 
 let cwd = __dirname || process.cwd
 let publicKey = fs.readFileSync(path.resolve(cwd, './../lib/auth/jwtRS256.key.pub'))
 
-function listen (http, eventChannel, websocket) {
-// Middlewares------------------------------------------------------------------------------------------------------
-
+function listen (eventChannel, userWebsocketConnection) {
 // JSON support
   app.use(bodyParser.json())
 
@@ -33,9 +30,6 @@ function listen (http, eventChannel, websocket) {
     secret: publicKey
   }).unless({path: ['/github/authorize', /\/github\/event\/[^ ]*/i]}))
 
-// Websocket-------------------------------------------------------------------------------------------------
-  websocket(http, eventChannel)
-
 // Cors
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -44,13 +38,11 @@ function listen (http, eventChannel, websocket) {
     next()
   })
 
-// Routes----------------------------------------------------------------------------------------------------
-  app.use('/github', github.create(eventChannel, websocket))
+// Routes-
+  app.use('/github', github.create(eventChannel, userWebsocketConnection))
 
 // Respond to client
   app.use(response())
-
-// Custom Error Responses-------------------------------------------------------------------------------------------------
 
 // 404
   app.use((req, res, next) => {
@@ -65,8 +57,9 @@ function listen (http, eventChannel, websocket) {
     res.status(status).json({message: message})
   })
 
-  return http.Server(app)
+  return app
 }
 
 // Exports.
-module.exports = listen
+module.exports = app
+module.exports.listen = listen

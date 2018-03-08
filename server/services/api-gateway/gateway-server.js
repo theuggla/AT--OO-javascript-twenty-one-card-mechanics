@@ -3,16 +3,19 @@
  **/
 
 // Requires
-let port = process.env.PORT || 5050
+let app = require('./servers/app')
+let http = require('http').Server(app)
 let EventEmitter = require('events')
 let messages = new EventEmitter()
-require('dotenv').config()
+let port = process.env.PORT || '5050'
+let userWebsocketConnection = require('./servers/socket').isUserConnected
 
-let http = require('http')
-let websocket = require('./servers/socket')
-let app = require('./servers/app')(http, messages, websocket)
+// Config----------------------------------------------------------------------------------------------------------
+require('dotenv').config()
+require('./servers/socket')(http, messages)
+app.listen(messages, userWebsocketConnection)
 
 // Start the server----------------------------------------------------------------------------------------------------
-app.listen(port, () => {
+http.listen(port, () => {
   console.log('server up on port ' + port)
 })

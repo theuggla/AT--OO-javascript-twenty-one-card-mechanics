@@ -38,7 +38,7 @@ module.exports.authorizeUser = function authorizeUser () {
 }
 
 /**
- * Gets all of a users organizations, ehere the user is an administrator.
+ * Gets all of a users organizations, where the user is an administrator.
  */
 module.exports.getAdminOrganizations = function getAdminOrganizations () {
   return function (req, res, next) {
@@ -76,8 +76,9 @@ module.exports.createWebHooks = function createWebHooks () {
         data: {callback: process.env.CURRENT_URL + '/github/event/' + req.user + '/' + organization.login}
       })
     }))
-
-    return next()
+    .then(() => {
+      return next()
+    })
   }
 }
 
@@ -86,7 +87,7 @@ module.exports.createWebHooks = function createWebHooks () {
  * Listens to messages regarding user connect or disconnect, to know wheter to emit a
  * websocket-event or a offline notification-event.
  */
-module.exports.handleGithubEvents = function handleGithubEvents (socket) {
+module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketConnection) {
   return function (req, res, next) {
     messages.on('user connect', (data) => {
       console.log('user connect')
@@ -103,9 +104,8 @@ module.exports.handleGithubEvents = function handleGithubEvents (socket) {
     let type = req.headers['x-github-event']
     let data = req.body
     console.log('got event')
-    console.log(req.body)
 
-    socket.isUserConnected(req.params.user, req.params.organization)
+    userWebsocketConnection(req.params.user, req.params.organization)
       .then((connected) => {
         if (connected) {
           console.log('user online')

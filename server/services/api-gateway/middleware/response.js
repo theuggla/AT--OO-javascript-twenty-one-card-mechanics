@@ -10,8 +10,6 @@ function send () {
     if (req.result) {
       let status = req.status || 200
       let data = req.result
-      console.log('in response')
-      console.log(req.result)
       return res.status(status).json(data)
     } else if (req.status) {
       return res.sendStatus(req.status)

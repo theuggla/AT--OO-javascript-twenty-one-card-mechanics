@@ -95,7 +95,7 @@ app.put('/organizations/hooks/:id', (req, res, next) => {
       return axios({
         method: 'POST',
         headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23383654/pings'
+        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23462664/pings'
       })
     }
   })

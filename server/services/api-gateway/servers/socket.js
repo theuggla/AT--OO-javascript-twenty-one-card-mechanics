@@ -17,7 +17,6 @@ let messages
  * @param {EventEmitter} eventChannel The event-channel of the server.
  */
 module.exports = function (server, eventChannel) {
-  console.log('do i even get here')
   // Connect IO
   io = require('socket.io')(server, {
     handlePreflightRequest: function (req, res) {
@@ -72,7 +71,6 @@ function authorizeUser (socket) {
  */
 function handleConnections () {
   io.on('connection', (socket) => {
-    console.log('now?')
     handleConnection(socket)
     joinRoom(socket)
     handleDisconnect(socket)
@@ -120,7 +118,8 @@ function handleDisconnect (socket) {
 function sendMessageOnMessageEvent () {
   messages.on('socket notification', (data) => {
     console.log('socket got message event')
-    sendMessage('astudyinascarletcode', data)
+    console.log(data)
+    sendMessage(data, data.data.organization.login)
   })
 }
 
@@ -129,8 +128,11 @@ function sendMessageOnMessageEvent () {
  * @param {String} room the room to send to.
  * @param {String} data the data to send.
  */
-function sendMessage (room, data) {
-  console.log('sending ' + data + ' to ' + room)
+function sendMessage (data, room) {
+  room = room || 'general'
+  console.log('sending ')
+  console.log(data)
+  console.log('to ' + room)
   io.to(room).emit('event', data)
 }
 
