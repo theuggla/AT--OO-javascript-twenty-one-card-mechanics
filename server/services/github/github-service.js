@@ -1,13 +1,19 @@
+/**
+ * Starting point for the github service.
+ */
+
 // Requires-----------------------------------------------------------------------------------------------------
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
-let axios = require('axios')
 
-let port = 5353
-let db = require('./lib/db')
-let User = require('./models/user')
-let jwt = require('./auth/jwt')
+let port = process.env.port || 5353
+let db = require('./lib/db/connect')
+let jwt = require('./middleware/auth/jwt')
+let response = require('./middleware/response')
+
+let user = require('./routes/routes/user-routes')
+let organizations = require('./routes/routes/organization-routes')
 
 require('dotenv').config()
 
@@ -24,117 +30,34 @@ app.use(jwt.validate())
 // JSON support
 app.use(bodyParser.json())
 
+// CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  next()
+})
+
 // Routes-------------------------------------------------------------------------------------------------------
-app.put('/user', (req, res, next) => {
-  console.log('in /user')
-  User.findOneAndUpdate({user: req.user.user}, {user: req.user.user, accessToken: req.user.accessToken}, { upsert: true, new: true },
-  (err, result) => {
-    if (err) {
-      return res.json({message: 'Error saving user to database'})
-    } else {
-      return res.json(result.user)
-    }
-  })
-})
+app.use('/user', user.create())
+app.use('/organizations', organizations.create())
 
-app.get('/organizations', (req, res, next) => {
-  console.log('in /organizations')
-  axios({
-    method: 'get',
-    headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-    url: 'https://api.github.com/user/memberships/orgs'
-  })
-  .then((response) => {
-    return response.data.filter((organization) => {
-      return organization.role === 'admin'
-    })
-  })
-  .then((adminOrgs) => {
-    console.log('returning')
-    console.log(adminOrgs.map((org) => { return org.organization }))
-    return res.json(adminOrgs.map((org) => { return org.organization }))
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-})
-
-app.put('/organizations/hooks/:id', (req, res, next) => {
-  console.log('in /organization/hooks/' + req.params.id)
-  axios({
-    method: 'GET',
-    headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-    url: 'https://api.github.com/orgs/' + req.params.id + '/hooks'
-  })
-  .then((response) => {
-    console.log(response.data)
-    console.log('putting hook for ' + req.body.callback)
-    let exists = response.data.find((hook) => {
-      return hook.config.url === req.body.callback
-    })
-
-    if (!exists) {
-      return axios({
-        method: 'POST',
-        headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks',
-        data: {
-          'name': 'web',
-          'events': [
-            'push',
-            'repository',
-            'release'
-          ],
-          'config': {
-            'url': req.body.callback,
-            'content_type': 'json'
-          }
-        }
-      })
-    } else {
-      return axios({
-        method: 'POST',
-        headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-        url: 'https://api.github.com/orgs/' + req.params.id + '/hooks/23462664/pings'
-      })
-    }
-  })
-  .then(() => {
-    res.sendStatus(201)
-  })
-  .catch((error) => {
-    return next(error)
-  })
-})
-
-app.get('/organizations/:org/events', (req, res, next) => {
-  console.log('in /organizations/id')
-  console.log('for ' + req.params)
-  axios({
-    method: 'get',
-    headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-    url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
-  })
-  .then((response) => {
-    console.log('response')
-    console.log(response.headers)
-  })
-  .then((adminOrgs) => {
-    return res.sendStatus(204)
-  })
-  .catch((error) => {
-    console.log('error')
-    console.log()
-    console.log(error.status)
-  })
-})
+// Respond to client
+app.use(response())
 
 // Custom Error Responses-------------------------------------------------------------------------------------------------
 
+// 404
+app.use((req, res, next) => {
+  res.status(404).json({message: 'Resource not found.'})
+})
+
 // 500
 app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({message: err.message})
+  console.log(err)
+  let status = err.status || 500
+  let message = err.message || 'Server failure'
+  res.status(status).json({message: message})
 })
 
 // Start service-------------------------------------------------------------------------------------------------
