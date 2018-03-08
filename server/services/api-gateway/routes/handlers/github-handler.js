@@ -84,11 +84,15 @@ module.exports.createWebHooks = function createWebHooks () {
 
 /**
  * Recieves events from Github from registred webhooks.
- * Listens to messages regarding user connect or disconnect, to know wheter to emit a
+ * Listens to messages regarding user connect or disconnect, to know wether to emit a
  * websocket-event or a offline notification-event.
  */
 module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketConnection) {
   return function (req, res, next) {
+    console.log('got event')
+    let eventType
+    let payload
+
     messages.on('user connect', (data) => {
       console.log('user connect')
       console.log(data)
@@ -101,19 +105,50 @@ module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketCo
       // poll for etag and save it away in notifications
     })
 
-    let type = req.headers['x-github-event']
-    let data = req.body
-    console.log('got event')
-
     userWebsocketConnection(req.params.user, req.params.organization)
       .then((connected) => {
         if (connected) {
           console.log('user online')
-          messages.emit('socket notification', {type: type, data: data})
+          eventType = 'socket notification'
         } else {
           console.log('user not online')
-          messages.emit('offline notification', {type: type, data: data})
+          eventType = 'offline notification'
         }
+
+        payload = req.body
+        payload.type = req.headers['x-github-event']
+
+        sendMessage(eventType, createMessage(payload, 'current'))
       })
   }
+}
+
+/**
+ * Formats the json payload.
+ */
+function createMessage (data, type) {
+  let payload = {}
+
+  if (type === 'current') {
+    payload.type = data.type || 'unknown action'
+    payload.user = data.sender.login || 'unknown user'
+    payload.repo = data.repository.name || 'no repository'
+    payload.time = new Date().toLocaleDateString()
+    payload.organization = data.organization.login
+  } else if (type === 'retrieved') {
+    payload.type = data.type || 'unknown action'
+    payload.user = data.actor.login || 'unknown user'
+    payload.repo = data.repo.name || 'no repository'
+    payload.time = new Date(data.created_at).toLocaleDateString()
+    payload.organization = data.organization.login
+  }
+
+  return payload
+}
+
+/**
+ * Emits a message event to the event channel.
+ */
+function sendMessage (event, payload) {
+  messages.emit(event, payload)
 }

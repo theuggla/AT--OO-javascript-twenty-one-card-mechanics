@@ -116,10 +116,9 @@ function handleDisconnect (socket) {
  * Listens for message events on the event channel.
  */
 function sendMessageOnMessageEvent () {
-  messages.on('socket notification', (data) => {
+  messages.on('socket notification', (message) => {
     console.log('socket got message event')
-    console.log(data)
-    sendMessage(data, data.data.organization.login)
+    sendMessage(message, message.organization)
   })
 }
 
