@@ -84,7 +84,7 @@ function handleConnections () {
  */
 function handleConnection (socket) {
   clients[socket.user].sockets.push(socket.id)
-  messages.emit('user connect', {user: socket.user})
+  messages.emit('user connect', {user: socket.user, org: socket.handshake.query.organization})
 }
 
 /**
@@ -93,8 +93,6 @@ function handleConnection (socket) {
 function joinRoom (socket) {
   let room = socket.handshake.query.organization
   socket.join(room)
-
-  io.to(room).emit('event', {message: 'connected to ' + room})
 }
 
 /**
@@ -107,8 +105,11 @@ function handleDisconnect (socket) {
     if (index > -1) {
       clients[socket.user].sockets.splice(index, 1)
     }
-
-    messages.emit('user disconnect', {user: socket.user})
+    isUserConnected(socket.user, socket.handshake.query.organization)
+    .then((connected) => {
+      console.log('connected: ' + connected)
+      if (!connected) messages.emit('user disconnect', {user: socket.user, org: socket.handshake.query.organization})
+    })
   })
 }
 
@@ -117,13 +118,12 @@ function handleDisconnect (socket) {
  */
 function sendMessageOnMessageEvent () {
   messages.on('socket notification', (message) => {
-    console.log('socket got message event')
     sendMessage(message, message.organization)
   })
 }
 
 /**
- * Sends messages to aspecific room.
+ * Sends messages to a specific room.
  * @param {String} room the room to send to.
  * @param {String} data the data to send.
  */
@@ -145,11 +145,11 @@ function isUserConnected (username, room) {
     io.of('/').in(room).clients((err, clientsInRoom) => {
       if (err) reject(err)
 
-      let connectedSockets = clients[username] ? clients[username].sockets.filter((socket) => {
+      let connectedRooms = clients[username] ? clients[username].sockets.filter((socket) => {
         return (clientsInRoom.indexOf(socket) !== -1)
       }) : []
 
-      resolve(connectedSockets.length && (connectedSockets.length > 0))
+      resolve(connectedRooms.length && (connectedRooms.length > 0))
     })
   })
 }

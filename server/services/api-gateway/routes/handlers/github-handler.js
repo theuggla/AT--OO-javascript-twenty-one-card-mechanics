@@ -27,7 +27,7 @@ module.exports.authorizeUser = function authorizeUser () {
     })
     .then((response) => {
       req.result = req.result || {}
-      req.result.token = jwt.create(response.data)
+      req.result.token = jwt.create(response.data.user)
       return next()
     })
     .catch((err) => {
@@ -47,9 +47,9 @@ module.exports.getAdminOrganizations = function getAdminOrganizations () {
       headers: {'Authorization': req.headers.authorization},
       url: process.env.GITHUB_SERVICE + '/organizations'
     })
-    .then((organizations) => {
+    .then((result) => {
       req.result = req.result || {}
-      req.result.organizations = organizations.data
+      req.result.organizations = result.data.organizations
       return next()
     })
     .catch((error) => {
@@ -63,6 +63,32 @@ module.exports.getAdminOrganizations = function getAdminOrganizations () {
  * Creates webhooks on the organizations if there are none for this client already.
  */
 module.exports.createWebHooks = function createWebHooks () {
+  messages.on('user connect', (data) => {
+    axios({
+      method: 'GET',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.GITHUB_SERVICE + '/organizations/' + data.org + '/events'
+    })
+    .then((result) => {
+      result.data.events.forEach(event => {
+        sendMessage('socket notification', createMessage(event, 'retrieved'))
+      })
+    })
+  })
+
+  messages.on('user disconnect', (data) => {
+    console.log('disconnect')
+    console.log(data)
+    axios({
+      method: 'POST',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.GITHUB_SERVICE + '/user/poll',
+      data: {
+        org: data.org
+      }
+    })
+  })
+
   return function (req, res, next) {
     if (!(req.result || (req.result && !req.result.organizations))) {
       return next({status: 500, message: 'Middleware called out of order.'})
@@ -90,23 +116,12 @@ module.exports.createWebHooks = function createWebHooks () {
 module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketConnection) {
   return function (req, res, next) {
     console.log('got event')
-    let eventType
-    let payload
-
-    messages.on('user connect', (data) => {
-      console.log('user connect')
-      console.log(data)
-      // collect events since last etag and sent them away to websocket
-    })
-
-    messages.on('user disconnect', (data) => {
-      console.log('user disconnect')
-      console.log(data)
-      // poll for etag and save it away in notifications
-    })
 
     userWebsocketConnection(req.params.user, req.params.organization)
       .then((connected) => {
+        let eventType
+        let payload
+
         if (connected) {
           console.log('user online')
           eventType = 'socket notification'
@@ -130,17 +145,19 @@ function createMessage (data, type) {
   let payload = {}
 
   if (type === 'current') {
+    let now = new Date()
+
     payload.type = data.type || 'unknown action'
     payload.user = data.sender.login || 'unknown user'
     payload.repo = data.repository.name || 'no repository'
-    payload.time = new Date().toLocaleDateString()
+    payload.time = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString()
     payload.organization = data.organization.login
   } else if (type === 'retrieved') {
-    payload.type = data.type || 'unknown action'
+    payload.type = data.type ? (data.type.charAt(0).toLowerCase() + data.type.slice(1)).replace('Event', '') : 'unknown action'
     payload.user = data.actor.login || 'unknown user'
     payload.repo = data.repo.name || 'no repository'
-    payload.time = new Date(data.created_at).toLocaleDateString()
-    payload.organization = data.organization.login
+    payload.time = new Date(data.created_at).toLocaleDateString() + ' at ' + new Date(data.created_at).toLocaleTimeString()
+    payload.organization = data.org.login
   }
 
   return payload

@@ -23,6 +23,7 @@ module.exports.getOrganizations = function getOrganizations () {
       })
     })
     .then((adminOrgs) => {
+      req.result = req.result || {}
       req.result.organizations = adminOrgs.map((org) => { return org.organization })
       return next()
     })
@@ -88,7 +89,7 @@ module.exports.getEvents = function getEvents () {
       if (user.latestEventPoll) {
         return axios({
           method: 'GET',
-          headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json', 'If-None-Match': '"' + user.latestEventPoll + '"'},
+          headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json', 'If-None-Match': user.latestEventPoll},
           url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
         })
       } else {
@@ -100,13 +101,21 @@ module.exports.getEvents = function getEvents () {
       }
     })
     .then((response) => {
-      let relevantEventList = response.body.filter((event) => {
-        return relevantEvents.indexOf(event.type) !== -1
-      })
+      let relevantEventList
+
+      if (response.status === 304) {
+        relevantEventList = []
+      } else {
+        relevantEventList = response.data.filter((event) => {
+          let eventType = (event.type.charAt(0).toLowerCase() + event.type.slice(1)).replace('Event', '')
+          return relevantEvents.indexOf(eventType) !== -1
+        })
+      }
 
       return relevantEventList
     })
     .then((events) => {
+      req.result = req.result || {}
       req.result.events = events
       return next()
     })

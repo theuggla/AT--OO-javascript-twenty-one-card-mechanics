@@ -17,6 +17,7 @@ module.exports.updateUser = function updateUser () {
         req.error = {message: 'Error saving user to database'}
         return next()
       } else {
+        req.result = req.result || {}
         req.result.user = result.user
       }
     })
@@ -31,10 +32,10 @@ module.exports.setLatestPoll = function setLatestPoll () {
     axios({
       method: 'HEAD',
       headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-      url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
+      url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.body.org
     })
     .then((response) => {
-      User.findOneAndUpdate({user: req.user.user}, {latestEventPoll: response.headers.ETag}, { new: true },
+      User.findOneAndUpdate({user: req.user.user}, {latestEventPoll: response.headers.etag}, { new: true },
         (err, result) => {
           if (err) {
             return next({message: 'Error saving ETag to database'})
