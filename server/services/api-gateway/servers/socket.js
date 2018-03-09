@@ -121,7 +121,6 @@ function sendMessageOnMessageEvent () {
  */
 function sendMessage (data, room) {
   room = room || 'general'
-  console.log('sending message to ' + room)
   io.to(room).emit('event', data)
 }
 

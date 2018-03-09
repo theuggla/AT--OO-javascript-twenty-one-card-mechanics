@@ -5,7 +5,6 @@
 // Requires.
 let axios = require('axios')
 let relevantEvents = ['push', 'repository', 'release']
-let User = require('./../../lib/db/models/user')
 
 /**
  * Returns the github organizations that the authenticated user is an administrator for.
@@ -83,10 +82,6 @@ module.exports.setWebhook = function getOrganizations () {
 module.exports.getEvents = function getEvents () {
   console.log('looking for events')
   return function (req, res, next) {
-    console.log(req.user)
-    console.log('user has latest event poll: ')
-    console.log(req.user.poll.latestETag)
-
     let axiosOptions = {
       method: 'GET',
       headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
@@ -94,7 +89,6 @@ module.exports.getEvents = function getEvents () {
     }
 
     if (req.user.poll.latestETag) {
-      console.log('we understood that the event poll existed')
       axiosOptions.validateStatus = function (status) {
         return status >= 200 && status <= 304
       }
@@ -106,18 +100,13 @@ module.exports.getEvents = function getEvents () {
       let relevantEventList
 
       if (response.status === 304) {
-        console.log('github says no update')
         relevantEventList = []
       } else {
         relevantEventList = response.data.filter((event) => {
-          console.log(event.created_at)
-          console.log(req.user.poll.atTime)
           let eventType = (event.type.charAt(0).toLowerCase() + event.type.slice(1)).replace('Event', '')
           return new Date(event.created_at) > req.user.poll.atTime && relevantEvents.indexOf(eventType) !== -1
         })
       }
-
-      console.log('we will be returning ' + relevantEventList.length + ' events')
 
       return relevantEventList
     })
