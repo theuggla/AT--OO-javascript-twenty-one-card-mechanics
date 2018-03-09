@@ -10,6 +10,8 @@ let handler = require('./../handlers/user-handler')
  * Creates the routes.
  */
 function create () {
+  handler.initialize()
+
   createUserCreationRoutes()
   createNotifyRoutes()
   createUserSubscriptionRoutes()
@@ -37,7 +39,7 @@ function createNotifyRoutes () {
  * Creates the route that subscribes or unsubscribes the user.
  */
 function createUserSubscriptionRoutes () {
-  router.route('/subscriptions/:id')
+  router.route('/subscriptions/')
   .put(handler.subscribeUser())
   .delete(handler.unsubcribeUser())
 }

@@ -5,7 +5,6 @@
 // Requires.
 let router = require('express').Router()
 let handler = require('./../handlers/notification-handler')
-let socket
 
 /**
  * Creates the routes and listens to the event channel.
@@ -25,7 +24,7 @@ function create (eventChannel, websocket) {
  * Creates the routes for adding or removing subscriptions.
  */
 function createSubscriptionsRoutes (eventChannel) {
-  router.route('/subscriptions/:id')
+  router.route('/subscriptions')
   .put(handler.authorizeUser(), handler.addSubscription())
   .delete(handler.removeSubscription())
 }

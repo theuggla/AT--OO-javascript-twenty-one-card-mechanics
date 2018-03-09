@@ -5,7 +5,7 @@ let Schema = mongoose.Schema
 let UserSchema = new Schema(
   {
     user: {type: String, required: true, unique: true},
-    subscriptionIDs: {type: [String]},
+    subscriptions: [{type: String}],
     allowed: {
       organizations: {
         name: {type: String},

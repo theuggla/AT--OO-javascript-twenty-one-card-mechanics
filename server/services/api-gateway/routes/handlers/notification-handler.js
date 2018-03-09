@@ -39,10 +39,13 @@ module.exports.authorizeUser = function authorizeUser () {
  */
 module.exports.addSubscription = function addSubscription () {
   return function (req, res, next) {
+    console.log('in put')
+    console.log(req.body)
     axios({
       method: 'PUT',
       headers: {'Authorization': req.headers.authorization},
-      url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/' + req.params.id
+      url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/',
+      data: req.body
     })
     .then((result) => {
       req.result = req.result || {}
@@ -60,10 +63,13 @@ module.exports.addSubscription = function addSubscription () {
  */
 module.exports.removeSubscription = function addSubscription () {
   return function (req, res, next) {
+    console.log('in delete')
+    console.log(req.body)
     axios({
       method: 'DELETE',
       headers: {'Authorization': req.headers.authorization},
-      url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/' + req.params.id
+      url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/',
+      data: req.body
     })
     .then((result) => {
       req.result = req.result || {}
@@ -79,10 +85,8 @@ module.exports.removeSubscription = function addSubscription () {
 /**
  * Listens for notification events to send offline notification to user.
  */
-module.exports.handleNotificationEvents = function handleUserConnectionEvents () {
+module.exports.handleNotificationEvents = function handleNotificationEvents () {
   messages.on('offline notification', (data) => {
-    console.log('got offline notification event')
-    console.log(data)
     axios({
       method: 'POST',
       headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
@@ -90,16 +94,4 @@ module.exports.handleNotificationEvents = function handleUserConnectionEvents ()
       data: data.payload
     })
   })
-
-  messages.on('user disconnect', (data) => {
-    axios({
-      method: 'POST',
-      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
-      url: process.env.GITHUB_SERVICE + '/user/poll',
-      data: {
-        org: data.org
-      }
-    })
-  })
 }
-
