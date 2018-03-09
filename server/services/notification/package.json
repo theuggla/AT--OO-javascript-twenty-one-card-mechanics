@@ -13,6 +13,7 @@
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.2.0",
+    "mongoose": "^5.0.9",
     "parse-bearer-token": "0.0.1"
   }
 }

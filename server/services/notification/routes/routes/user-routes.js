@@ -18,28 +18,28 @@ function create () {
 }
 
 /**
- * Creates the route that creates or a user.
+ * Creates the route that creates or finds a user.
  */
 function createUserCreationRoutes () {
   router.route('/')
-  .post(handler.createUser())
-}
-
-/**
- * Creates the route that subscribes or unsubscribes the user.
- */
-function createUserSubscriptionRoutes () {
-  router.route('/:id')
-  .put(handler.subscribeUser())
-  .delete(handler.unsubscribeUser())
+  .put(handler.createUser())
 }
 
 /**
  * Notifies the user of an event.
  */
 function createNotifyRoutes () {
-  router.route('/:id/notify')
+  router.route('/notify')
   .post(handler.notifyUser())
+}
+
+/**
+ * Creates the route that subscribes or unsubscribes the user.
+ */
+function createUserSubscriptionRoutes () {
+  router.route('/subscriptions/:id')
+  .put(handler.subscribeUser())
+  .delete(handler.unsubcribeUser())
 }
 
 // Exports.

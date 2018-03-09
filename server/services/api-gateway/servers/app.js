@@ -9,6 +9,7 @@ let fs = require('fs')
 let path = require('path')
 
 let github = require('./../routes/routes/github-routes')
+let notifications = require('./../routes/routes/notification-routes')
 let auth = require('express-jwt')
 let response = require('./../middleware/response')
 
@@ -40,6 +41,7 @@ function listen (eventChannel, userWebsocketConnection) {
 
 // Routes-
   app.use('/github', github.create(eventChannel, userWebsocketConnection))
+  app.use('/notifications', notifications.create(eventChannel))
 
 // Respond to client
   app.use(response())

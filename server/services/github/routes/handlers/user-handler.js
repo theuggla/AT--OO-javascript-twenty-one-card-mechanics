@@ -19,6 +19,7 @@ module.exports.updateUser = function updateUser () {
       } else {
         req.result = req.result || {}
         req.result.user = result.user
+        return next()
       }
     })
   }

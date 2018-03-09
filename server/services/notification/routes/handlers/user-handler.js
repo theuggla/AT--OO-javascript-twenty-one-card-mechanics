@@ -6,7 +6,7 @@
 let User = require('./../../lib/db/models/user')
 
 /**
- * Creates a user with the user's username.
+ * Creates or finds a user with the user's username.
  */
 module.exports.createUser = function createUser () {
   return function (req, res, next) {
@@ -18,6 +18,7 @@ module.exports.createUser = function createUser () {
       } else {
         req.result = req.result || {}
         req.result.user = result.user
+        return next()
       }
     })
   }
@@ -29,6 +30,7 @@ module.exports.createUser = function createUser () {
 module.exports.subscribeUser = function subscribeUser () {
   return function (req, res, next) {
     console.log('in /subscribe')
+    req.status = 201
     return next()
   }
 }
@@ -36,9 +38,10 @@ module.exports.subscribeUser = function subscribeUser () {
 /**
  * Deletes a users subscription IDs.
  */
-module.exports.unsubcribeUser = function unsubscribeUser () {
+module.exports.unsubcribeUser = function unsubcribeUser () {
   return function (req, res, next) {
     console.log('in /unsubscribe')
+    req.status = 204
     return next()
   }
 }

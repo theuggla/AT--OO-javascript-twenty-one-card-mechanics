@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 })
 
 // Routes-------------------------------------------------------------------------------------------------------
-app.use('/user', user.create())
+app.use('/users', user.create())
 
 // Respond to client
 app.use(response())
