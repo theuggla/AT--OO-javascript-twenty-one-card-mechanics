@@ -81,36 +81,43 @@ module.exports.setWebhook = function getOrganizations () {
  * Otherwise return max the 30 latest events.
  */
 module.exports.getEvents = function getEvents () {
+  console.log('looking for events')
   return function (req, res, next) {
-    User.findOne({user: req.user.user})
-    .then((user) => {
-      if (!user) throw new Error({message: 'This should not be possible'})
+    console.log(req.user)
+    console.log('user has latest event poll: ')
+    console.log(req.user.poll.latestETag)
 
-      if (user.latestEventPoll) {
-        return axios({
-          method: 'GET',
-          headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json', 'If-None-Match': user.latestEventPoll},
-          url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
-        })
-      } else {
-        return axios({
-          method: 'GET',
-          headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
-          url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
-        })
+    let axiosOptions = {
+      method: 'GET',
+      headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+      url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.params.org
+    }
+
+    if (req.user.poll.latestETag) {
+      console.log('we understood that the event poll existed')
+      axiosOptions.validateStatus = function (status) {
+        return status >= 200 && status <= 304
       }
-    })
+      axiosOptions.headers['If-None-Match'] = req.user.poll.latestETag
+    }
+
+    axios(axiosOptions)
     .then((response) => {
       let relevantEventList
 
       if (response.status === 304) {
+        console.log('github says no update')
         relevantEventList = []
       } else {
         relevantEventList = response.data.filter((event) => {
+          console.log(event.created_at)
+          console.log(req.user.poll.atTime)
           let eventType = (event.type.charAt(0).toLowerCase() + event.type.slice(1)).replace('Event', '')
-          return relevantEvents.indexOf(eventType) !== -1
+          return new Date(event.created_at) > req.user.poll.atTime && relevantEvents.indexOf(eventType) !== -1
         })
       }
+
+      console.log('we will be returning ' + relevantEventList.length + ' events')
 
       return relevantEventList
     })

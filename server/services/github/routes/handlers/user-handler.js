@@ -25,7 +25,7 @@ module.exports.updateUser = function updateUser () {
 }
 
 /**
- * Updates the user with the latest ETag to check for updated events from Github.
+ * Updates the user with the latest ETag  and time to check for updated events from Github.
  */
 module.exports.setLatestPoll = function setLatestPoll () {
   return function (req, res, next) {
@@ -35,7 +35,12 @@ module.exports.setLatestPoll = function setLatestPoll () {
       url: 'https://api.github.com/users/' + req.user.user + '/events/orgs/' + req.body.org
     })
     .then((response) => {
-      User.findOneAndUpdate({user: req.user.user}, {latestEventPoll: response.headers.etag}, { new: true },
+      let newEventTime = {
+        latestETag: response.headers.etag,
+        atTime: new Date()
+      }
+
+      User.findOneAndUpdate({user: req.user.user}, {poll: newEventTime}, { new: true },
         (err, result) => {
           if (err) {
             return next({message: 'Error saving ETag to database'})

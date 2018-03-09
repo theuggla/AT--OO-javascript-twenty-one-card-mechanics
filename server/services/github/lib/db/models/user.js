@@ -6,7 +6,10 @@ let UserSchema = new Schema(
   {
     user: {type: String, required: true, unique: true},
     accessToken: {type: String, required: true},
-    latestEventPoll: {type: String}
+    poll: {
+      latestETag: {type: String},
+      atTime: {type: Date}
+    }
   }
 )
 

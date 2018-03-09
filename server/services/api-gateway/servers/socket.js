@@ -101,15 +101,7 @@ function joinRoom (socket) {
  */
 function handleDisconnect (socket) {
   socket.on('disconnect', () => {
-    let index = clients[socket.user].sockets.indexOf(socket.id)
-    if (index > -1) {
-      clients[socket.user].sockets.splice(index, 1)
-    }
-    isUserConnected(socket.user, socket.handshake.query.organization)
-    .then((connected) => {
-      console.log('connected: ' + connected)
-      if (!connected) messages.emit('user disconnect', {user: socket.user, org: socket.handshake.query.organization})
-    })
+    messages.emit('user disconnect', {user: socket.user, org: socket.handshake.query.organization})
   })
 }
 
@@ -129,9 +121,7 @@ function sendMessageOnMessageEvent () {
  */
 function sendMessage (data, room) {
   room = room || 'general'
-  console.log('sending ')
-  console.log(data)
-  console.log('to ' + room)
+  console.log('sending message to ' + room)
   io.to(room).emit('event', data)
 }
 

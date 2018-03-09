@@ -63,32 +63,6 @@ module.exports.getAdminOrganizations = function getAdminOrganizations () {
  * Creates webhooks on the organizations if there are none for this client already.
  */
 module.exports.createWebHooks = function createWebHooks () {
-  messages.on('user connect', (data) => {
-    axios({
-      method: 'GET',
-      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
-      url: process.env.GITHUB_SERVICE + '/organizations/' + data.org + '/events'
-    })
-    .then((result) => {
-      result.data.events.forEach(event => {
-        sendMessage('socket notification', createMessage(event, 'retrieved'))
-      })
-    })
-  })
-
-  messages.on('user disconnect', (data) => {
-    console.log('disconnect')
-    console.log(data)
-    axios({
-      method: 'POST',
-      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
-      url: process.env.GITHUB_SERVICE + '/user/poll',
-      data: {
-        org: data.org
-      }
-    })
-  })
-
   return function (req, res, next) {
     if (!(req.result || (req.result && !req.result.organizations))) {
       return next({status: 500, message: 'Middleware called out of order.'})
@@ -116,6 +90,8 @@ module.exports.createWebHooks = function createWebHooks () {
 module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketConnection) {
   return function (req, res, next) {
     console.log('got event')
+    console.log(req.body)
+    console.log(req.data)
 
     userWebsocketConnection(req.params.user, req.params.organization)
       .then((connected) => {
@@ -136,6 +112,39 @@ module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketCo
         sendMessage(eventType, createMessage(payload, 'current'))
       })
   }
+}
+
+/**
+ * Listens for user connect and disconnect events to log latest online-time.
+ */
+module.exports.handleUserConnectionEvents = function handleUserConnectionEvents () {
+  messages.on('user connect', (data) => {
+    console.log('Getting events')
+    axios({
+      method: 'GET',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.GITHUB_SERVICE + '/organizations/' + data.org + '/events'
+    })
+    .then((result) => {
+      console.log('got ' + result.data.events.length + ' events')
+      result.data.events.forEach(event => {
+        sendMessage('socket notification', createMessage(event, 'retrieved'))
+      })
+    })
+  })
+
+  messages.on('user disconnect', (data) => {
+    console.log('disconnect')
+    console.log(data)
+    axios({
+      method: 'POST',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.GITHUB_SERVICE + '/user/poll',
+      data: {
+        org: data.org
+      }
+    })
+  })
 }
 
 /**
