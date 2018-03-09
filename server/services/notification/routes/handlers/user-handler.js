@@ -4,6 +4,7 @@
 
 // Requires.
 let User = require('./../../lib/db/models/user')
+let gcm = require('node-gcm')
 
 /**
  * Creates or finds a user with the user's username.
@@ -16,8 +17,7 @@ module.exports.createUser = function createUser () {
         req.error = {message: 'Error saving user to database'}
         return next()
       } else {
-        req.result = req.result || {}
-        req.result.user = result.user
+        req.status = 201
         return next()
       }
     })
@@ -29,9 +29,15 @@ module.exports.createUser = function createUser () {
  */
 module.exports.subscribeUser = function subscribeUser () {
   return function (req, res, next) {
-    console.log('in /subscribe')
-    req.status = 201
-    return next()
+    User.findOneAndUpdate({user: req.user.user}, {$push: {subscriptionIDs: req.params.id}}, { upsert: true, new: true },
+      (err, result) => {
+        if (err) {
+          req.err = err
+        } else {
+          req.status = 201
+        }
+        return next()
+      })
   }
 }
 
@@ -40,18 +46,55 @@ module.exports.subscribeUser = function subscribeUser () {
  */
 module.exports.unsubcribeUser = function unsubcribeUser () {
   return function (req, res, next) {
-    console.log('in /unsubscribe')
-    req.status = 204
-    return next()
+    User.update({user: req.user.user}, {$pull: {subscriptionIDs: req.params.id}}, { upsert: true, new: true },
+      (err, result) => {
+        if (err) {
+          req.err = err
+        } else {
+          req.status = 204
+        }
+        return next()
+      })
   }
 }
 
 /**
  * Notifies the user of an event.
  */
-module.exports.notifyUser = function verifyUser () {
+module.exports.notifyUser = function notifyUser () {
   return function (req, res, next) {
     console.log('in /notify')
-    return next()
+    console.log(req.body)
+    let sender = new gcm.Sender(process.env.FCM_API_KEY)
+
+    // Prepare a message to be sent
+    let message = new gcm.Message({
+      notification: {
+        title: 'Hello, World',
+        icon: 'ic_launcher',
+        body: 'Click to see the latest commit'
+      },
+      data: req.body
+    })
+
+    let userIDs = req.user.subscriptionIDs
+
+    console.log('User Ids', userIDs)
+    console.log(sender)
+
+      // Actually send the message
+    sender.send(message, { registrationTokens: userIDs }, (err, response) => {
+      if (err) {
+        req.error = err
+        console.log('got error')
+        console.log(err)
+      } else {
+        console.log('got response')
+        console.log(response)
+        req.status = 204
+      }
+
+      return next()
+    })
   }
 }

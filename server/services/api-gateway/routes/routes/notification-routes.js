@@ -14,6 +14,7 @@ let socket
  */
 function create (eventChannel, websocket) {
   handler(eventChannel)
+  handler.handleNotificationEvents()
 
   createSubscriptionsRoutes()
 

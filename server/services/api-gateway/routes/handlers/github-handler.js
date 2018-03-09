@@ -91,19 +91,14 @@ module.exports.handleGithubEvents = function handleGithubEvents (userWebsocketCo
   return function (req, res, next) {
     userWebsocketConnection(req.params.user, req.params.organization)
       .then((connected) => {
-        let eventType
-        let payload
-
-        if (connected) {
-          eventType = 'socket notification'
-        } else {
-          eventType = 'offline notification'
-        }
-
-        payload = req.body
+        let payload = req.body
         payload.type = req.headers['x-github-event']
 
-        sendMessage(eventType, createMessage(payload, 'current'))
+        if (connected) {
+          sendMessage('socket notification', createMessage(payload, 'current'))
+        } else {
+          sendMessage('offline notification', {user: req.params.user, payload: createMessage(payload, 'current')})
+        }
       })
   }
 }

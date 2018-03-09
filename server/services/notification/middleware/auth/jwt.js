@@ -36,7 +36,7 @@ function validate () {
             return next()
           })
         } else {
-          req.user = decoded
+          req.user = {user: decoded}
           return next()
         }
       })

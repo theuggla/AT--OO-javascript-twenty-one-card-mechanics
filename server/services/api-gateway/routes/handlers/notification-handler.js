@@ -19,14 +19,12 @@ module.exports = function (eventChannel) {
  */
 module.exports.authorizeUser = function authorizeUser () {
   return function (req, res, next) {
-    console.log('authorizing')
     axios({
       method: 'PUT',
-      headers: {'Authorization': 'Bearer ' + jwt.create(req.body)},
+      headers: {'Authorization': req.headers.authorization},
       url: process.env.NOTIFICATION_SERVICE + '/users'
     })
     .then(() => {
-      console.log('back from auth')
       return next()
     })
     .catch((err) => {
@@ -41,14 +39,12 @@ module.exports.authorizeUser = function authorizeUser () {
  */
 module.exports.addSubscription = function addSubscription () {
   return function (req, res, next) {
-    console.log('adding subscription')
     axios({
       method: 'PUT',
       headers: {'Authorization': req.headers.authorization},
       url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/' + req.params.id
     })
     .then((result) => {
-      console.log('subscribed')
       req.result = req.result || {}
       return next()
     })
@@ -64,14 +60,12 @@ module.exports.addSubscription = function addSubscription () {
  */
 module.exports.removeSubscription = function addSubscription () {
   return function (req, res, next) {
-    console.log('removing subscription')
     axios({
       method: 'DELETE',
       headers: {'Authorization': req.headers.authorization},
       url: process.env.NOTIFICATION_SERVICE + '/users/subscriptions/' + req.params.id
     })
     .then((result) => {
-      console.log('unsubscribed')
       req.result = req.result || {}
       return next()
     })
@@ -81,3 +75,31 @@ module.exports.removeSubscription = function addSubscription () {
     })
   }
 }
+
+/**
+ * Listens for notification events to send offline notification to user.
+ */
+module.exports.handleNotificationEvents = function handleUserConnectionEvents () {
+  messages.on('offline notification', (data) => {
+    console.log('got offline notification event')
+    console.log(data)
+    axios({
+      method: 'POST',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.NOTIFICATION_SERVICE + '/users/notify',
+      data: data.payload
+    })
+  })
+
+  messages.on('user disconnect', (data) => {
+    axios({
+      method: 'POST',
+      headers: {'Authorization': 'Bearer ' + jwt.create(data.user)},
+      url: process.env.GITHUB_SERVICE + '/user/poll',
+      data: {
+        org: data.org
+      }
+    })
+  })
+}
+
