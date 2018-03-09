@@ -5,12 +5,12 @@ let Schema = mongoose.Schema
 let UserSchema = new Schema(
   {
     user: {type: String, required: true, unique: true},
-    subscriptionID: {type: String, required: true},
+    subscriptionIDs: {type: [String]},
     allowed: {
       organizations: {
-        name: {type: String, required: true},
+        name: {type: String},
         repos: [{
-          name: {type: String, required: true},
+          name: {type: String},
           eventTypes: [{type: [String]}]
         }]
       }
