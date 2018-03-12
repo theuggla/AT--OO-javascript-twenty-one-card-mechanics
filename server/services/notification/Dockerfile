@@ -6,7 +6,7 @@ ADD . /home/notification-service
 
 RUN cd /home/notification-service && npm install
 
-EXPOSE 3000
+EXPOSE 5252
 
 CMD cd /home/notification-service && \
 	node notification-service.js
