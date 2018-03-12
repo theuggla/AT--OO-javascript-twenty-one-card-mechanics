@@ -6,14 +6,14 @@ let UserSchema = new Schema(
   {
     user: {type: String, required: true, unique: true},
     subscriptions: [{type: String}],
-    allowed: {
-      organizations: {
+    preferences: {
+      organizations: [{
         name: {type: String},
         repos: [{
           name: {type: String},
-          eventTypes: [{type: [String]}]
+          allowedEventTypes: [{type: [String]}]
         }]
-      }
+      }]
     }
   }
 )

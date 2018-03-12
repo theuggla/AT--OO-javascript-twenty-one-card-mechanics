@@ -12,6 +12,7 @@ let handler = require('./../handlers/organization-handler')
 function create () {
   createOrganizationsRoutes()
   createHooksRoutes()
+  createRepoRoutes()
   createEventsRoutes()
 
   return router
@@ -23,6 +24,11 @@ function create () {
 function createOrganizationsRoutes () {
   router.route('/')
   .get(handler.getOrganizations())
+}
+
+function createRepoRoutes () {
+  router.route('/:org/repos')
+  .get(handler.getRepos())
 }
 
 function createHooksRoutes () {

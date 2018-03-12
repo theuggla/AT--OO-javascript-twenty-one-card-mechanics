@@ -72,28 +72,49 @@ module.exports.unsubcribeUser = function unsubcribeUser () {
  */
 module.exports.notifyUser = function notifyUser () {
   return function (req, res, next) {
-    console.log('in /notify')
-
     let subscriptions = req.user.subscriptions
-    let message = JSON.stringify(req.body)
+    let preferences
+    let repoIndex
+    let organizationIndex
 
-    subscriptions.forEach(subscriptionString => {
-      let subscription = JSON.parse(subscriptionString)
-      console.log(subscription)
-      webpush.sendNotification({
-        endpoint: subscription.endpoint,
-        keys: subscription.keys
-      }, message)
-      .then(() => {
-        console.log('Push Application Server - Notification sent')
-        req.status = 204
-        return next()
-      })
-      .catch((err) => {
-        console.log('ERROR in sending Notification, endpoint removed')
-        console.log(err)
-        return next()
-      })
+    organizationIndex = req.user.preferences.organizations.findIndex((org) => {
+      return org.name === req.body.organization
     })
+
+    if (organizationIndex > -1) {
+      repoIndex = req.user.preferences.organizations[organizationIndex].repos.findIndex((repo) => {
+        return repo.name === req.body.repo
+      })
+    }
+
+    console.log(repoIndex)
+    console.log(organizationIndex)
+
+    preferences = (repoIndex > -1) ? req.user.preferences.organizations[organizationIndex].repos[repoIndex].allowedEventTypes : []
+
+    console.log(req.user.preferences.organizations)
+    console.log(preferences)
+    console.log(req.body)
+
+    if (preferences.indexOf(req.body.type) > -1) {
+      subscriptions.forEach(subscriptionString => {
+        let message = JSON.stringify(req.body)
+        let subscription = JSON.parse(subscriptionString)
+        webpush.sendNotification({
+          endpoint: subscription.endpoint,
+          keys: subscription.keys
+        }, message)
+        .then(() => {
+          req.status = 204
+          return next()
+        })
+        .catch((err) => {
+          return next(err)
+        })
+      })
+    } else {
+      req.status = 202
+      return next()
+    }
   }
 }

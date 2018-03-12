@@ -13,6 +13,7 @@ let jwt = require('./middleware/auth/jwt')
 let response = require('./middleware/response')
 
 let user = require('./routes/routes/user-routes')
+let preferences = require('./routes/routes/preferences-routes')
 require('dotenv').config()
 
 // Config-------------------------------------------------------------------------------------------------------
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 // Routes-------------------------------------------------------------------------------------------------------
 app.use('/users', user.create())
+app.use('/preferences', preferences.create())
 
 // Respond to client
 app.use(response())

@@ -34,6 +34,30 @@ module.exports.getOrganizations = function getOrganizations () {
 }
 
 /**
+ * Returns the repositories in the given organization.
+ */
+module.exports.getRepos = function getRepos () {
+  return function (req, res, next) {
+    console.log('get repos')
+    axios({
+      method: 'GET',
+      headers: {'Authorization': 'token ' + req.user.accessToken, 'Accept': 'application/json'},
+      url: 'https://api.github.com/orgs/' + req.params.org + '/repos'
+    })
+    .then((response) => {
+      console.log(response.data)
+      req.result = req.result || {}
+      req.result.repos = response.data.map((repo) => { return repo.name })
+      return next()
+    })
+    .catch((error) => {
+      req.error = error
+      return next()
+    })
+  }
+}
+
+/**
  * Creates a webhook for the given organization, if there isn't one already.
  */
 module.exports.setWebhook = function getOrganizations () {

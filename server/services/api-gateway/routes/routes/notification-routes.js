@@ -16,6 +16,7 @@ function create (eventChannel, websocket) {
   handler.handleNotificationEvents()
 
   createSubscriptionsRoutes()
+  createPreferencesRoutes()
 
   return router
 }
@@ -27,6 +28,15 @@ function createSubscriptionsRoutes (eventChannel) {
   router.route('/subscriptions')
   .put(handler.authorizeUser(), handler.addSubscription())
   .delete(handler.removeSubscription())
+}
+
+/**
+ * Creates the routes for getting or updating offline notification preferences.
+ */
+function createPreferencesRoutes () {
+  router.route('/preferences/:org')
+  .get(handler.getPreferences())
+  .put(handler.updatePreferences())
 }
 
 // Exports.
