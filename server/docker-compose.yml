@@ -1,18 +1,9 @@
 version: "3"
 services:
-  api-gateway:
-    image: theuggla/api-gateway
-    ports:
-      - "3000:5050"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-    networks:
-      - isolation-network
   notification:
     image: theuggla/notification-service
+    ports:
+      - "3000:5252" 
     labels:
         api_route: '/notification-service'
     deploy:
@@ -29,6 +20,8 @@ services:
       - isolation-network
   github:
     image: theuggla/github-service
+    ports:
+      - "3001:5353"
     labels:
         api_route: '/github-service'
     deploy:
