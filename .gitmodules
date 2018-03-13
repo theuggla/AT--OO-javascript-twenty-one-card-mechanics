@@ -1,0 +1,12 @@
+[submodule "client/shiny-github-dash"]
+	path = client/shiny-github-dash
+	url = https://github.com/astudyinscarletcode/shiny-github-dash
+[submodule "server/services/api-gateway"]
+	path = server/services/api-gateway
+	url = https://github.com/astudyinscarletcode/api-gateway
+[submodule "server/services/github"]
+	path = server/services/github
+	url = https://github.com/astudyinscarletcode/github-service
+[submodule "server/services/notification"]
+	path = server/services/notification
+	url = https://github.com/astudyinscarletcode/notification-service
