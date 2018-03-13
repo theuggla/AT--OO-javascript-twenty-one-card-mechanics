@@ -1,0 +1,9 @@
+**/node_modules
+**/env
+**/.env
+**/build
+**/*.key
+**/*.key.pub
+.vscode
+docker-compose-local.yml
+client/react-app/Dockerfile
