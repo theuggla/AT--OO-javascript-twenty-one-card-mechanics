@@ -3,7 +3,7 @@ services:
   notification:
     image: theuggla/notification-service
     ports:
-      - "3000:5252" 
+      - "3001:5252" 
     labels:
         api_route: '/notification-service'
     deploy:
@@ -21,7 +21,7 @@ services:
   github:
     image: theuggla/github-service
     ports:
-      - "3001:5353"
+      - "3000:5353"
     labels:
         api_route: '/github-service'
     deploy:
