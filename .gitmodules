@@ -10,10 +10,6 @@
 	path = server/services/notifications
 	url = https://github.com/astudyinscarletcode/notification-service
 	branch = master
-[submodule "src/modules/trackchanges"]
-	path = src/modules/trackchanges
-	url = https://github.com/Komodo/trackchanges.git
-	branch = master
 [submodule "client/shiny"]
 	path = client/shiny
 	url = https://github.com/astudyinscarletcode/shiny-github-dash
