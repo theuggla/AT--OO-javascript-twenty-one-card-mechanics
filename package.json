@@ -1,30 +1,18 @@
 {
-  "name": "@1dv021/examination-3",
+  "name": "twenty-one-in-javascript",
   "version": "1.0.0",
-  "homepage": "http://coursepress.lnu.se/kurs/grundlaggande-programmering/",
+  "homepage": "http://theuggla.github.io",
 
   "contributors": [
     {
-      "name": "Johan Leitet",
-      "email": "johan.leitet@lnu.se"
-    },
-    {
-      "name": "John Häggerud",
-      "email": "john.haggerud@lnu.se"
-    },
-    {
-      "name": "Mats Loock",
-      "email": "mats.loock@lnu.se"
-    },
-    {
-      "name": "Jacob Lindehoff",
-      "email": "jacob.lindehoff@lnu.se"
+      "name": "Molly Arhammar",
+      "email": "mollyarhammar@gmail.com"
     }
   ],
   "license": "CC-BY-4.0",
   "repository" :
   { "type" : "git",
-    "url" : "https://github.com/1dv021/examination-3.git"
+    "url" : "https://github.com/theuggla/AT--OO-javascript-twenty-one-card-mechanics"
   },
   "engines" : { "node" : ">=0.12.0" },
   "dependencies": {
