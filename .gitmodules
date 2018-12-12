@@ -1,0 +1,16 @@
+[submodule "server/services/api-gateway"]
+	path = server/services/api-gateway
+	url = https://github.com/astudyinscarletcode/api-gateway
+	branch = master
+[submodule "server/services/github"]
+	path = server/services/github
+	url = https://github.com/astudyinscarletcode/github-service
+	branch = master
+[submodule "server/services/notifications"]
+	path = server/services/notifications
+	url = https://github.com/astudyinscarletcode/notification-service
+	branch = master
+[submodule "client/shiny"]
+	path = client/shiny
+	url = https://github.com/astudyinscarletcode/shiny-github-dash
+	branch = master

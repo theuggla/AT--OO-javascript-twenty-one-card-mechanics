@@ -1,0 +1,41 @@
+version: "3"
+services:
+  notification:
+    image: theuggla/notification-service
+    ports:
+      - "3001:5252" 
+    labels:
+        api_route: '/notification-service'
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    environment:
+      SERVICE_NAME: "notification-service"
+    networks:
+      - isolation-network
+  github:
+    image: theuggla/github-service
+    ports:
+      - "3000:5353"
+    labels:
+        api_route: '/github-service'
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    environment:
+      SERVICE_NAME: "github-service"
+    networks:
+      - isolation-network
+networks:
+  isolation-network:
+    driver: overlay

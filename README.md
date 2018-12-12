@@ -1,18 +1,11 @@
-# Adventures in Javascript
-Ranging from small programs to full applications testing out Javascript concepts, both as standalone applications, servers and client applications.
+Exercise in building an application using a microservice architecture.
 
-## Branches
+The application is supposed to work as a notification hub and dashboard for a user's github organizations. In the application the user is able to list and select his/her organizations as well as receive notifications, for example, the latest releases, latest commits etc. for repos in the selected organization.
 
-**object-oriented-and-testing:** 
-Javascript modules for card players and a deck. Cards and deck are separate, player and dealer written for twenty-one card game.
+The application is able to notify the user about certain events that occur in the various organizations even if the user is not running the application. This is solved using browser notifications. The user is inside of the application be able to configure which organizations events will be sent as notifications in this way.
 
-Mostly an exercise in writing object-oriented code in Javascript without using syntactic sugar such as class. In addition also an exercise in writing tests in Mocha.
+The client is live at: https://shiny-github-dash.herokuapp.com/
 
-**server-webhooks-and-github-integration:** 
-A nodejs server that listens to notifications on a github repo regarding issues, and allows users to view and integrate with them in real time.
+To recieve offline notifications you will have to allow notifications from the site as well activate them when logged in. If you are the first user on your computer, the site will ask you to allow notifications when you activate. If another user of the site on the same computer has previously disallowed notifications, you will have to change the notification settings on the site by clocking the padlock to the left of the url and allowing notifications.
 
-**server-rest-api:** An exercise in building a REST-api in nodejs relying on HATEOAS priciples.
-
-**server-microservice-architecture:**
-
-**client-interactive-desktop-playgound:** Client-side vanilla javascript hobby project, the experimental desktop where I go wild with testing out new things. use it with google chrome, because new things. it displays some of my adventures in illustrator as well as small little apps to try out new techniques and relies on web-components.
+The application is availiable for adding to your homescreen on an android phone, and will then push notifications to your phone as well.
