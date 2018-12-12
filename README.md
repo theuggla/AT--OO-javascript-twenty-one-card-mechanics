@@ -8,7 +8,8 @@ Javascript modules for card players and a deck. Cards and deck are separate, pla
 
 Mostly an exercise in writing object-oriented code in Javascript without using syntactic sugar such as class. In addition also an exercise in writing tests in Mocha.
 
-**server-webhooks-and-github-integration:**
+**server-webhooks-and-github-integration:** 
+A nodejs server that listens to notifications on a github repo regarding issues, and allows users to view and integrate with them in real time.
 
 **server-rest-api:**
 
