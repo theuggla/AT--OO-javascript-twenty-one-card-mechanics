@@ -11,7 +11,7 @@ Mostly an exercise in writing object-oriented code in Javascript without using s
 **server-webhooks-and-github-integration:** 
 A nodejs server that listens to notifications on a github repo regarding issues, and allows users to view and integrate with them in real time.
 
-**server-rest-api:**
+**server-rest-api:** An exercise in building a REST-api in nodejs relying on HATEOAS priciples.
 
 **server-microservice-architecture:**
 
