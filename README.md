@@ -13,6 +13,6 @@ A nodejs server that listens to notifications on a github repo regarding issues,
 
 **server-rest-api:** An exercise in building a REST-api in nodejs relying on HATEOAS priciples.
 
-**server-microservice-architecture:**
+**server-microservice-architecture:** Exercise in building an application using a microservice architecture.
 
 **client-interactive-desktop-playgound:** Client-side vanilla javascript hobby project, the experimental desktop where I go wild with testing out new things. use it with google chrome, because new things. it displays some of my adventures in illustrator as well as small little apps to try out new techniques and relies on web-components.
