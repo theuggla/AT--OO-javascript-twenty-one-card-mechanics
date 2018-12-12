@@ -1,0 +1,16 @@
+<p>choose a repository to follow</p>
+<p>(if you are already following a repository, that one will be substituted)</p>
+<div id="repos">
+    {{#each repos}}
+        <div class="repo">
+            <form method="POST">
+                <h2><a href="{{link}}">{{name}}</a></h2>
+                <p>{{description}}</p>
+                <input type="hidden" name="url" value="{{url}}">
+                <input type="hidden" name="name" value="{{name}}">
+                <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                <input type="submit" value="follow">
+            </form>
+        </div>
+    {{/each}}
+</div>

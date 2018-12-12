@@ -1,0 +1,437 @@
+/*main styles*/
+html {
+    background-image: url('../img/bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+body {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    color: #d6d6d6;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+#content {
+    min-height: 80vh;
+    margin: 5vh;
+    padding: 5vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+a:link, a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+/*end main styles*/
+
+/*topbar styles*/
+#topbar {
+    background-color: rgba(0, 0, 0, 0.5);
+    min-height: 3em;
+    max-height: 3em;
+    width: 100%;
+    color: white;
+    font-variant: small-caps;
+    margin: 0;
+    padding-left: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#topbar #manageuser a {
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.5em;
+    margin: 0;
+}
+
+#topbar #manageuser img {
+    max-height: 2em;
+    padding: 0.5em;
+}
+
+#topbar #manageuser {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    align-items: center;
+}
+/*end topbar styles*/
+
+/*login styles*/
+#start h1 {
+    font-variant: small-caps;
+}
+
+#login {
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    width: 60%;
+    margin: 5em auto;
+}
+
+#login a {
+    background-color: rgba(28, 57, 28, 0.69);
+    display: inline-block;
+    width: 50%;
+    padding: 1em;
+    margin: 0 auto;
+    border-radius: 2em;
+    font-size: 2em;
+    font-variant: small-caps;
+}
+/*end login styles*/
+
+
+/*repo styles*/
+#repos {
+    flex: 1;
+    width: 100%;
+}
+
+.repo {
+    background-color: rgba(161, 161, 161, 0.73);
+    padding: 2em;
+    color: #1c1c1c;
+    text-align: justify;
+    display: block;
+    margin: 3em;
+    min-width: 20%;
+    max-width: 70%;
+}
+
+.repo:hover, .repo:active {
+    background-color: rgba(214, 214, 214, 0.73);
+}
+
+.repo input[type=submit] {
+    text-align: center;
+    float: right;
+    background-color: rgba(71, 113, 66, 0.74);
+    border-color: rgba(48, 77, 32, 0.75);
+    padding: 1em;
+    margin: 1em;
+    margin-top: 2em;
+    margin-right: 0.5em;
+    width: 6em;
+    height: 6em;
+    border-radius: 3em;
+    font-variant: small-caps;
+}
+
+.repo input[type=submit]:hover {
+    background-color: rgba(128, 189, 120, 0.74);
+}
+
+.repo h2 {
+    font-variant: small-caps;
+    padding: 0;
+    margin: 0;
+}
+/*end repo styles*/
+
+/*issue styles*/
+#issuepage {
+    display: flex;
+    justify-content: space-between;
+}
+
+#issueview {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+
+.issue {
+    flex: 1;
+}
+
+.issue #info #timestamps {
+    font-size: smaller;
+}
+
+.issue #info p:last-of-type {
+    font-size: smaller;
+}
+
+.issue #user {
+    max-width: 20%;
+}
+/*end issue styles*/
+
+/*comment styles*/
+#commentview {
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#forms, #commentview {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+#commentview .comment #info {
+    text-align: left;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#commentview .comment {
+    display: flex;
+    justify-content: space-between;
+}
+
+#comments {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+
+#actions {
+    margin: 0;
+}
+
+#actions a {
+    background-color: rgba(119, 25, 35, 0.62);
+}
+/*end comment styles*/
+
+/*event styles*/
+#happenings {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    max-height: 20%;
+}
+
+.event {
+    max-width: 22%;
+}
+
+#happenings .comment {
+    background-color: rgba(29, 11, 119, 0.62);
+}
+
+#happenings .issue {
+    background-color: rgba(119, 119, 29, 0.62);
+}
+/*end event styles*/
+
+/*assorted happenings*/
+.issue, .event, #commentview .comment {
+    background-color: rgba(79, 79, 79, 0.62);
+    padding: 1em;
+    margin: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.issue #info, .event #info {
+    text-align: left;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#commentview .comment #user, .event #userinfo {
+    max-width: 40%;
+}
+
+.event, .comment {
+    font-size: 0.8em;
+    max-height: 15em;
+    overflow: auto;
+}
+
+#user a, #actions a {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    text-align: center;
+    margin: 1em;
+}
+
+#user a, #actions a {
+    display: block;
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: rgba(119, 119, 29, 0.62);
+}
+
+a[data-action=addissue] {
+    background-color: rgba(62, 119, 51, 0.62);
+    width: 50%;
+    padding: 1em;
+    margin: 0 auto;
+}
+/*end issue and event styles*/
+
+/*form styles*/
+#forms form, #commentview form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 2em;
+    margin: 5em auto;
+    max-width: 80%;
+    background-color: rgba(79, 79, 79, 0.62);
+}
+
+#commentview form {
+    text-align: center;
+}
+
+#forms form input, #forms form textarea, #commentview form input, #commentview form textarea {
+    margin: 1em;
+}
+
+#forms input[type=submit], #commentview input[type=submit]  {
+    max-width: 100%;
+}
+
+#forms input[name=title] {
+    max-width: 50%;
+}
+
+#forms form textarea, #commentview form textarea {
+    min-height: 15em;
+}
+
+/*confirm message styles*/
+#confirmform {
+    background-color: rgba(113, 14, 30, 0.74);
+    padding: 1em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+
+#confirmform input[type=submit]{
+    display: block;
+    font-weight: bold;
+    font-variant: small-caps;
+    background-color: rgba(26, 8, 8, 0.74);
+    border-color: rgba(71, 17, 26, 0.91);
+    margin: 1em auto;
+    padding: 0.5em;
+    color: #898989;
+}
+
+#confirmform input[type=submit]:hover {
+    background-color: rgba(83, 27, 27, 0.74);
+    color: black;
+}
+/*end confirm message styles*/
+
+/*error and flash message styles*/
+.error {
+    flex: 1;
+    margin-top: 20%;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.success {
+    background-color: rgba(71, 113, 66, 0.74);
+    padding: 0.2em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+
+.failure {
+    background-color: rgba(113, 14, 30, 0.74);
+    padding: 0.2em;
+    font-size: 1em;
+    margin: 1em;
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+}
+/*end error message styles*/
+
+/*footer styles*/
+footer {
+    overflow: auto;
+    max-height: 7em;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+footer img {
+    float: right;
+    max-height: 5em;
+}
+
+footer p {
+    margin-top: 2em;
+    display: inline-block;
+}
+/*end footer styles*/
+
+.hide {
+    display: none!important;
+}
+
+/*media queries*/
+@media screen and (min-width: 1000px) {
+    #login {
+        width: 30%;
+    }
+}
+
+@media only screen and (min-width: 500px) {
+
+    #repos {
+        border-style: none;
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .repo {
+        background-color: rgba(161, 161, 161, 0.73);
+        padding: 2em;
+        color: #1c1c1c;
+        text-align: justify;
+        display: inline-block;
+        flex-grow: 1;
+        margin: 1em;
+        min-width: 20%;
+        max-width: 50%;
+    }
+}
+/*end media queries*/

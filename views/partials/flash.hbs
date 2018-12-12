@@ -1,0 +1,14 @@
+{{#if flash}}
+    <div class="{{flash.type}}">
+        <p>{{flash.message}}</p>
+    </div>
+    {{#if flash.confirm}}
+        <div id="confirmform">
+            <form method="POST" action="{{flash.confirm.url}}">
+                <label for="confirm">{{flash.confirm.message}} </label>
+                <input type="hidden" name="_csrf" value="{{flash.confirm.csrfToken}}">
+                <input type="submit" name="confirm" value="confirm">
+            </form>
+        </div>
+    {{/if}}
+{{/if}}

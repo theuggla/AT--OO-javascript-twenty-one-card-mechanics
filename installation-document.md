@@ -1,6 +1,4 @@
 # Introduction
-A nodejs server that listens to notifications on a github repo regarding issues, and allows users to view and integrate with them in real time.
-
 These instructions are to run the app on a Digital Ocean remote server through HTTPS, with a reversed proxy in front, using PM2 as the process manager.
 
 # Before starting
@@ -103,4 +101,3 @@ What you'll want to do is:
 ### Static files
 * Change the default file in /etc/nginx/sites-available
    * Set up path to serve static files and what files to serve
-

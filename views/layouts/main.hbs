@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>issuehandler</title>
+</head>
+<body>
+<div id="topbar" data-username="{{user.username}}">
+        {{#if user}}
+            <div id="chooserepo">
+                <a href="/user/{{user.username}}/repos">choose repository to follow</a>
+            </div>
+        <div id="manageuser">
+            <a href="{{user.profileUrl}}"><img src="{{user.avatar}}" /></a>
+            <a href="/user/{{user.username}}">{{user.username}}</a>
+            <a href="/user/{{user.username}}/delete">delete user</a>
+            <a href="/logout">Log Out</a>
+        </div>
+        {{else}}
+            <a href="/">Log In</a>
+        {{/if}}
+</div>
+{{> flash }}
+<div id="content">
+    {{{body}}}
+</div>
+{{>footer}}
+</body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "name": "ma222jp-examination-3",
+  "version": "1.0.0",
+  "description": "Remote handling of Github issues",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npm-run-all --parallel watch:*",
+    "build": "browserify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js",
+    "prestart": "browserify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js",
+    "start": "pm2 start server.js -i max",
+    "watch:client": "watchify -t browserify-handlebars client/js/source/app.js -o public/javascript/bundle.js --debug --verbose",
+    "watch:server": "nodemon -L server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1dv023/ma222jp-examination-3.git"
+  },
+  "keywords": [
+    "github",
+    "notifications",
+    "service",
+    "worker",
+    "issues",
+    "oauth"
+  ],
+  "author": "Molly Arhammar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1dv023/ma222jp-examination-3/issues"
+  },
+  "homepage": "https://github.com/1dv023/ma222jp-examination-3#readme",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "browserify": "^14.1.0",
+    "browserify-handlebars": "^1.0.0",
+    "connect-ensure-login": "^0.1.1",
+    "connect-mongo": "^1.3.2",
+    "csurf": "^1.9.0",
+    "express": "^4.14.1",
+    "express-secure-handlebars": "^2.1.0",
+    "express-session": "^1.15.1",
+    "github-express-webhook-verifying": "^1.0.1",
+    "helmet": "^3.4.0",
+    "helmet-csp": "^2.3.0",
+    "lodash": "^4.17.4",
+    "log-to-file": "^1.2.1",
+    "mongoose": "^4.8.4",
+    "passport": "^0.3.2",
+    "passport-github": "^1.1.0",
+    "path": "^0.12.7",
+    "request": "^2.79.0",
+    "request-promise-native": "^1.0.3",
+    "websocket": "^1.0.24"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
+    "watchify": "^3.9.0"
+  }
+}
